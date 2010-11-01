@@ -9,6 +9,9 @@
     <property name="qa.coverage-tmp"    value="/tmp/${phing.project.name}.xml"/>
     <property name="build-phar"         value="false"/>
     <property name="pear.channel"       value="pear.erebot.net"/>
+    <property name="qa.coverage.min.project" value="75"/>
+    <property name="qa.coverage.min.class"   value="75"/>
+    <property name="qa.coverage.min.method"  value="50"/>
 
     <tstamp>
         <!-- Format is, e.g. Sat, 03 Oct 2009, 16:31 -->
@@ -216,9 +219,9 @@ Generic_Sniffs_Files_LineEndingsSniff
             <then>
                 <coverage-threshold
                     database="${qa.coverage-db}"
-                    perProject="75"
-                    perClass="75"
-                    perMethod="50"
+                    perProject="${qa.coverage.min.project}"
+                    perClass="${qa.coverage.min.class}"
+                    perMethod="${qa.coverage.min.method}"
                     verbose="true"
                     />
             </then>
