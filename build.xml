@@ -6,8 +6,8 @@
     -->
 
     <property name="qa.coverage.force"      value="true"/>
-    <property name="qa.coverage-db"         value="/tmp/${phing.project.name}.db"/>
-    <property name="qa.coverage-tmp"        value="/tmp/${phing.project.name}.xml"/>
+    <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.db"/>
+    <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.xml"/>
     <property name="build-phar"             value="false"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
 
@@ -202,7 +202,7 @@ Generic_Sniffs_Files_LineEndingsSniff
     </target>
 
     <target name="qa_pre_coverage" description="">
-        <coverage-setup database="${qa.coverage-db}">
+        <coverage-setup database="${qa.coverage.db}">
             <fileset refid="sources"/>
         </coverage-setup>
     </target>
@@ -220,14 +220,14 @@ Generic_Sniffs_Files_LineEndingsSniff
     <target name="qa_coverage" description="" depends="qa_test">
         <mkdir dir="doc"/>
         <mkdir dir="doc/coverage"/>
-        <coverage-report outfile="${qa.coverage-tmp}">
+        <coverage-report outfile="${qa.coverage.tmp}">
             <report
                 todir="doc/coverage"
                 styledir="/usr/share/php/data/phing/etc/"
             />
         </coverage-report>
         <coverage-threshold
-            database="${qa.coverage-db}"
+            database="${qa.coverage.db}"
             perProject="${qa.coverage.min.project}"
             perClass="${qa.coverage.min.class}"
             perMethod="${qa.coverage.min.method}"
