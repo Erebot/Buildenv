@@ -2,7 +2,7 @@
 <project name="Erebot_buildenv" description="" default="all">
     <property name="qa.coverage-db"     value="/tmp/${phing.project.name}.db"/>
     <property name="qa.coverage-tmp"    value="/tmp/${phing.project.name}.xml"/>
-    <property name="phar.output_file"   value="${phing.project.name}.phar"/>
+    <property name="build-phar"         value="false"/>
 
     <tstamp>
         <!-- Format is, e.g. Sat, 03 Oct 2009, 16:31 -->
@@ -97,12 +97,12 @@
 
     <!-- Release process -->
     <target name="release" description="">
-        <exec command="pyrus/pyrus.phar make" passthru="true" checkreturn="true"/>
-        <exec command="pyrus/pyrus.phar package --tgz" passthru="true" checkreturn="true"/>
+        <exec command="buildenv/pyrus.phar make" passthru="true" checkreturn="true"/>
+        <exec command="buildenv/pyrus.phar package --tgz" passthru="true" checkreturn="true"/>
         <if>
             <istrue value="${build-phar}"/>
             <then>
-                <exec command="pyrus/pyrus.phar package --phar" passthru="true" checkreturn="true"/>
+                <exec command="buildenv/pyrus.phar package --phar" passthru="true" checkreturn="true"/>
             </then>
         </if>
     </target>
