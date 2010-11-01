@@ -1,8 +1,14 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv" description="" default="all">
+    <!--
+        @TODO: Add descriptions for the targets so that they provide
+        useful information when listed using "phing -l".
+    -->
+
     <property name="qa.coverage-db"     value="/tmp/${phing.project.name}.db"/>
     <property name="qa.coverage-tmp"    value="/tmp/${phing.project.name}.xml"/>
     <property name="build-phar"         value="false"/>
+    <property name="pear.channel"       value="pear.erebot.net"/>
 
     <tstamp>
         <!-- Format is, e.g. Sat, 03 Oct 2009, 16:31 -->
@@ -97,7 +103,7 @@
 
     <!-- Release process -->
     <target name="release" description="">
-        <exec command="buildenv/pyrus.phar make" passthru="true" checkreturn="true"/>
+        <exec command="buildenv/pyrus.phar make ${phing.project.name} ${pear.channel} ." passthru="true" checkreturn="true"/>
         <exec command="buildenv/pyrus.phar package --tgz" passthru="true" checkreturn="true"/>
         <if>
             <istrue value="${build-phar}"/>
