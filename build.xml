@@ -5,13 +5,25 @@
         useful information when listed using "phing -l".
     -->
 
-    <property name="qa.coverage-db"     value="/tmp/${phing.project.name}.db"/>
-    <property name="qa.coverage-tmp"    value="/tmp/${phing.project.name}.xml"/>
-    <property name="build-phar"         value="false"/>
-    <property name="pear.channel"       value="pear.erebot.net"/>
-    <property name="qa.coverage.min.project" value="75"/>
-    <property name="qa.coverage.min.class"   value="75"/>
-    <property name="qa.coverage.min.method"  value="50"/>
+    <property name="qa.coverage.force"      value="true"/>
+    <property name="qa.coverage-db"         value="/tmp/${phing.project.name}.db"/>
+    <property name="qa.coverage-tmp"        value="/tmp/${phing.project.name}.xml"/>
+    <property name="build-phar"             value="false"/>
+    <property name="pear.channel"           value="pear.erebot.net"/>
+
+    <if>
+        <istrue value="${qa.coverage.force}"/>
+        <then>
+            <property name="qa.coverage.min.project" value="75"/>
+            <property name="qa.coverage.min.class"   value="75"/>
+            <property name="qa.coverage.min.method"  value="50"/>
+        </then>
+        <else>
+            <property name="qa.coverage.min.project" value="0"/>
+            <property name="qa.coverage.min.class"   value="0"/>
+            <property name="qa.coverage.min.method"  value="0"/>
+        </else>
+    </if>
 
     <tstamp>
         <!-- Format is, e.g. Sat, 03 Oct 2009, 16:31 -->
@@ -214,17 +226,12 @@ Generic_Sniffs_Files_LineEndingsSniff
                 styledir="/usr/share/php/data/phing/etc/"
             />
         </coverage-report>
-        <if>
-            <istrue value="${force-coverage}"/>
-            <then>
-                <coverage-threshold
-                    database="${qa.coverage-db}"
-                    perProject="${qa.coverage.min.project}"
-                    perClass="${qa.coverage.min.class}"
-                    perMethod="${qa.coverage.min.method}"
-                    verbose="true"
-                    />
-            </then>
-        </if>
+        <coverage-threshold
+            database="${qa.coverage-db}"
+            perProject="${qa.coverage.min.project}"
+            perClass="${qa.coverage.min.class}"
+            perMethod="${qa.coverage.min.method}"
+            verbose="true"
+            />
     </target>
 </project>
