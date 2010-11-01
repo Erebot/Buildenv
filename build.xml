@@ -118,12 +118,35 @@
 
     <!-- Release process -->
     <target name="release" description="">
-        <exec command="buildenv/pyrus.phar make ${phing.project.name} ${pear.channel} ." passthru="true" checkreturn="true"/>
-        <exec command="buildenv/pyrus.phar package --tgz" passthru="true" checkreturn="true"/>
+        <!-- Force channel discovery. -->
+        <exec
+            command="buildenv/pyrus.phar channel-del ${pear.channel}"
+            passthru="true"
+            checkreturn="true"
+        />
+        <exec
+            command="buildenv/pyrus.phar channel-discover ${pear.channel} ."
+            passthru="true"
+            checkreturn="true"
+        />
+        <exec
+            command="buildenv/pyrus.phar make ${phing.project.name} ${pear.channel} ."
+            passthru="true"
+            checkreturn="true"
+        />
+        <exec
+            command="buildenv/pyrus.phar package --tgz"
+            passthru="true"
+            checkreturn="true"
+        />
         <if>
             <istrue value="${build-phar}"/>
             <then>
-                <exec command="buildenv/pyrus.phar package --phar" passthru="true" checkreturn="true"/>
+                <exec
+                    command="buildenv/pyrus.phar package --phar"
+                    passthru="true"
+                    checkreturn="true"
+                />
             </then>
         </if>
     </target>
