@@ -232,7 +232,6 @@ Generic_Sniffs_Files_LineEndingsSniff
 
     <target name="qa_test" description="" depends="qa_pre_coverage">
         <phpunit
-            printsummary="true"
             codecoverage="true"
             >
             <formatter type="plain" usefile="false"/>
