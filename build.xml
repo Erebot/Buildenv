@@ -10,6 +10,7 @@
     <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.xml"/>
     <property name="build-phar"             value="false"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
+    <property name="domain"                 value="${phing.project.name}"/>
 
     <if>
         <istrue value="${qa.coverage.force}"/>
