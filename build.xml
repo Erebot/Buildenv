@@ -131,7 +131,7 @@
 <!--            checkreturn="true"-->
 <!--        />-->
         <exec
-            command="rm -rf package.xml package_compatible.xml"
+            command="rm -f package.xml package_compatible.xml"
             passthru="true"
             checkreturn="true"
         />
