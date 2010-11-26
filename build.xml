@@ -120,16 +120,16 @@
     <!-- Release process -->
     <target name="release" description="">
         <!-- Force channel discovery. -->
-        <exec
-            command="pyrus.phar channel-del ${pear.channel}"
-            passthru="true"
-            checkreturn="true"
-        />
-        <exec
-            command="pyrus.phar channel-discover ${pear.channel} ."
-            passthru="true"
-            checkreturn="true"
-        />
+<!--        <exec-->
+<!--            command="pyrus.phar channel-del ${pear.channel}"-->
+<!--            passthru="true"-->
+<!--            checkreturn="true"-->
+<!--        />-->
+<!--        <exec-->
+<!--            command="pyrus.phar channel-discover ${pear.channel} ."-->
+<!--            passthru="true"-->
+<!--            checkreturn="true"-->
+<!--        />-->
         <exec
             command="pyrus.phar make ${phing.project.name} ${pear.channel} ."
             passthru="true"
