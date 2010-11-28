@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Erebot_buildenv" description="" default="all">
+<project name="Erebot_buildenv" description="Same as 'phing all'" default="all">
     <!--
         @TODO: Add descriptions for the targets so that they provide
         useful information when listed using "phing -l".
@@ -83,42 +83,49 @@
     }
     ]]></adhoc-task>
 
-    <target name="all" depends="i18n" description=""/>
+    <target name="all" depends="i18n"
+        description="Main target -- Same as 'phing i18n'"/>
 
     <!-- Internationalization -->
-    <target name="i18n" depends="compile_catalog"/>
+    <target name="i18n" depends="compile_catalog"
+        description="Same as 'phing compile_catalog'"/>
 
-    <target name="extract_messages" description="">
+    <target name="extract_messages"
+        description="Extract messages in need of a translation from current code">
         <xgettext command="xgettext -o data/i18n/${domain}.pot --from-code utf-8 --foreign-user --no-location -E -i -w 80 -s -L PHP --omit-header --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
             <fileset refid="sources"/>
         </xgettext>
     </target>
 
-    <target name="update_catalog" description="">
+    <target name="update_catalog"
+        description="Update the translation files based on current code">
         <foreach list="${locales}" param="locale" target="update_1_catalog"/>
     </target>
 
-    <target name="update_1_catalog" description="">
+    <target name="update_1_catalog" hidden="true">
         <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -s -q --no-location data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${domain}.pot" dir="."/>
     </target>
 
-    <target name="init_catalog" description="">
+    <target name="init_catalog"
+        description="Add a new language to translation files">
         <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
         <mkdir dir="data/i18n/${locale}/LC_MESSAGES"/>
         <exec command="msginit --no-translator -w 80 -l ${locale} -i data/i18n/${domain}.pot -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="."/>
     </target>
 
-    <target name="compile_catalog" description="">
+    <target name="compile_catalog"
+        description="Compile the translation files">
         <foreach list="${locales}" param="locale" target="compile_1_catalog"/>
     </target>
 
-    <target name="compile_1_catalog" description="">
+    <target name="compile_1_catalog" hidden="true">
         <exec command="msgfmt -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="."/>
     </target>
 
 
     <!-- Release process -->
-    <target name="release" description="">
+    <target name="release"
+        description="Build a PEAR package from the current code">
         <!-- Force channel discovery. -->
 <!--        <exec-->
 <!--            command="pyrus.phar channel-del ${pear.channel}"-->
@@ -159,31 +166,37 @@
 
 
     <!-- Documentation -->
-    <target name="doc" description="" depends="doc_html,doc_pdf"/>
+    <target name="doc" depends="doc_html,doc_pdf"
+        description="Generate API documentation in both HTML and PDF format"/>
 
-    <target name="doc_html" description="">
+    <target name="doc_html" description="Generate API documentation in HTML format">
         <exec command="doxygen" dir="."/>
     </target>
 
-    <target name="doc_pdf" description="">
+    <target name="doc_pdf" description="Generate API documentation in PDF format">
         <exec command="make" dir="doc/latex"/>
     </target>
 
 
     <!-- Unit tests and code coverage -->
-    <target name="test" depends="qa_coverage"/>
-    <target name="tests" depends="qa_coverage"/>
-    <target name="coverage" depends="qa_coverage"/>
+    <target name="test" depends="qa_coverage"
+        description="Run tests and generate code coverage reports (same as 'phing qa_coverage')" />
+    <target name="tests" depends="qa_coverage"
+        description="Same as 'phing test'"/>
+    <target name="coverage" depends="qa_coverage"
+        description="Same as 'phing test'"/>
 
 
     <!-- Quality Assurance -->
-    <target name="qa" depends="qa_lint,qa_codesniffer,qa_depend,qa_mess,qa_duplicates,qa_test"/>
+    <target name="qa"
+        depends="qa_lint,qa_codesniffer,qa_depend,qa_mess,qa_duplicates,qa_test"
+        description="Run Qualify-Assurance (QA) tools"/>
 
-    <target name="qa_lint" description="">
+    <target name="qa_lint" description="Check QA using phplint">
         <phplint><fileset refid="sources"/></phplint>
     </target>
 
-    <target name="qa_codesniffer" description="">
+    <target name="qa_codesniffer" description="Check QA using PHP_CodeSniffer">
         <phpcodesniffer
             standard="Zend"
             showWarnings="true"
@@ -211,7 +224,8 @@ Generic_Sniffs_Files_LineEndingsSniff
         </phpcodesniffer>
     </target>
 
-    <target name="qa_depend">
+    <target name="qa_depend"
+        description="Check QA using PHP depend">
         <phpdepend withoutAnnotations="true" file=".">
             <fileset refid="sources"/>
             <analyzer type="coderank-mode" value="method"/>
@@ -219,24 +233,27 @@ Generic_Sniffs_Files_LineEndingsSniff
         </phpdepend>
     </target>
 
-    <target name="qa_mess">
+    <target name="qa_mess"
+        description="Check QA using phpmd (PHP Mess Detector)">
         <phpmd><fileset refid="sources"/></phpmd>
     </target>
 
-    <target name="qa_duplicates" description="">
+    <target name="qa_duplicates"
+        description="Check QA using phpcpd (PHP Copy/Paste Detector)">
         <phpcpd>
             <fileset refid="sources"/>
             <formatter type="default" outfile="/dev/null"/>
         </phpcpd>
     </target>
 
-    <target name="qa_pre_coverage" description="">
+    <target name="qa_pre_coverage" hidden="true">
         <coverage-setup database="${qa.coverage.db}">
             <fileset refid="sources"/>
         </coverage-setup>
     </target>
 
-    <target name="qa_test" description="" depends="qa_pre_coverage">
+    <target name="qa_test" depends="qa_pre_coverage"
+        description="Run (unit) tests using PHPUnit">
         <phpunit
             codecoverage="true"
             >
@@ -245,7 +262,8 @@ Generic_Sniffs_Files_LineEndingsSniff
         </phpunit>
     </target>
 
-    <target name="qa_coverage" description="" depends="qa_test">
+    <target name="qa_coverage" depends="qa_test"
+        description="Run code coverage analysis based on unit tests (see 'phing qa_test')">
         <mkdir dir="doc"/>
         <mkdir dir="doc/coverage"/>
         <coverage-report outfile="${qa.coverage.tmp}">
