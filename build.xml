@@ -92,7 +92,7 @@
 
     <target name="extract_messages"
         description="Extract messages in need of a translation from current code">
-        <xgettext command="xgettext -o data/i18n/${domain}.pot --from-code utf-8 --foreign-user --no-location -E -i -w 80 -s -L PHP --omit-header --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
+        <xgettext command="xgettext -o data/i18n/${domain}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --omit-header --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
             <fileset refid="sources"/>
         </xgettext>
     </target>
@@ -103,7 +103,7 @@
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -s -q --no-location data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${domain}.pot" dir="."/>
+        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${domain}.pot" dir="."/>
     </target>
 
     <target name="init_catalog"
@@ -119,7 +119,12 @@
     </target>
 
     <target name="compile_1_catalog" hidden="true">
-        <exec command="msgfmt -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="."/>
+        <exec command="msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="."/>
+    </target>
+
+    <target name="identity_catalog"
+        description="Applies identity filter to a catalog (each msgid becomes its own msgstr)">
+        <exec command="msgen -e -i --strict -w 80 -F --add-location -o data/i18n/en_US/LC_MESSAGES/${domain}.po data/i18n/en_US/LC_MESSAGES/${domain}.po" dir="."/>
     </target>
 
 
