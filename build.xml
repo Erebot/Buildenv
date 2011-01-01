@@ -87,8 +87,9 @@
         description="Main target -- Same as 'phing i18n'"/>
 
     <!-- Internationalization -->
-    <target name="i18n" depends="compile_catalog"
-        description="Same as 'phing compile_catalog'"/>
+    <target name="i18n"
+        depends="extract_messages,update_catalog,identity_catalog,compile_catalog"
+        description="Runs several commands to update the translation files"/>
 
     <target name="extract_messages"
         description="Extract messages in need of a translation from current code">
@@ -103,14 +104,14 @@
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${domain}.pot" dir="."/>
+        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${domain}.pot" logoutput="true" dir="."/>
     </target>
 
     <target name="init_catalog"
         description="Add a new language to translation files">
         <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
         <mkdir dir="data/i18n/${locale}/LC_MESSAGES"/>
-        <exec command="msginit --no-translator -w 80 -l ${locale} -i data/i18n/${domain}.pot -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="."/>
+        <exec command="msginit --no-translator -w 80 -l ${locale} -i data/i18n/${domain}.pot -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="compile_catalog"
@@ -119,17 +120,17 @@
     </target>
 
     <target name="compile_1_catalog" hidden="true">
-        <exec command="msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="."/>
+        <exec command="msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="identity_catalog"
         description="Applies identity filter to a catalog (each msgid becomes its own msgstr)">
-        <exec command="msgen -e -i --strict -w 80 -F --add-location -o data/i18n/en_US/LC_MESSAGES/${domain}.po data/i18n/en_US/LC_MESSAGES/${domain}.po" dir="."/>
+        <exec command="msgen -e -i --strict -w 80 -F --add-location -o data/i18n/en_US/LC_MESSAGES/${domain}.po data/i18n/en_US/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
     </target>
 
 
     <!-- Release process -->
-    <target name="release"
+    <target name="release" depends="all"
         description="Build a PEAR package from the current code">
         <!-- Force channel discovery. -->
 <!--        <exec-->
