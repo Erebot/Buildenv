@@ -268,8 +268,8 @@ Generic_Sniffs_Files_LineEndingsSniff
 
     <target name="qa_coverage" depends="qa_test"
         description="Run code coverage analysis based on unit tests (see 'phing qa_test')">
-        <mkdir dir="doc"/>
-        <mkdir dir="doc/coverage"/>
+        <mkdir dir="docs"/>
+        <mkdir dir="docs/coverage"/>
         <coverage-report outfile="${qa.coverage.tmp}">
             <report
                 todir="doc/coverage"
