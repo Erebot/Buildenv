@@ -180,7 +180,7 @@
     </target>
 
     <target name="doc_pdf" description="Generate API documentation in PDF format">
-        <exec command="make" dir="doc/latex" passthru="true"/>
+        <exec command="make" dir="docs/latex" passthru="true"/>
     </target>
 
 
@@ -272,7 +272,7 @@ Generic_Sniffs_Files_LineEndingsSniff
         <mkdir dir="docs/coverage"/>
         <coverage-report outfile="${qa.coverage.tmp}">
             <report
-                todir="doc/coverage"
+                todir="docs/coverage"
                 styledir="/usr/share/php/data/phing/etc/"
             />
         </coverage-report>
