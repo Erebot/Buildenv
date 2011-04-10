@@ -8,6 +8,7 @@
     <property name="qa.coverage.force"      value="true"/>
     <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.db"/>
     <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.xml"/>
+    <property name="i18n.template.tmp"      value="/tmp/${phing.project.name}.pot"/>
     <property name="build-phar"             value="false"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
     <property name="domain"                 value="${phing.project.name}"/>
@@ -88,14 +89,17 @@
 
     <!-- Internationalization -->
     <target name="i18n"
-        depends="extract_messages,update_catalog,identity_catalog,compile_catalog"
+        depends="extract_messages,update_catalog,compile_catalog"
         description="Runs several commands to update the translation files"/>
 
     <target name="extract_messages"
         description="Extract messages in need of a translation from current code">
-        <xgettext command="xgettext -o data/i18n/${domain}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --omit-header --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
+        <xgettext command="xgettext -o ${i18n.template.tmp} --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
             <fileset refid="sources"/>
         </xgettext>
+        <exec command="msginit --no-translator -w 80 -l ${locale} -i ${i18n.template.tmp} -o data/i18n/${domain}.po" logoutput="true" dir="."/>
+        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --no-location data/i18n/${domain}.po ${i18n.template.tmp}" logoutput="true" dir="."/>
+        <exec command="msgfmt --statistics -c -f -o data/i18n/${domain}.mo data/i18n/${domain}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="update_catalog"
@@ -104,14 +108,14 @@
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${domain}.pot" logoutput="true" dir="."/>
+        <exec command="msggrep -v -K'' data/i18n/${domain}.po | xgettext -o- -Lshell -kmsgstr -s --no-location - | msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po -" logoutput="true" dir="." escape="false"/>
     </target>
 
     <target name="init_catalog"
         description="Add a new language to translation files">
         <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
         <mkdir dir="data/i18n/${locale}/LC_MESSAGES"/>
-        <exec command="msginit --no-translator -w 80 -l ${locale} -i data/i18n/${domain}.pot -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
+        <exec command="msggrep -v -K'' data/i18n/${domain}.po | xgettext -o- -Lshell -kmsgstr -s --no-location - | msginit --no-translator -w 80 -l ${locale} -i- -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" escape="false" dir="."/>
     </target>
 
     <target name="compile_catalog"
@@ -122,12 +126,6 @@
     <target name="compile_1_catalog" hidden="true">
         <exec command="msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
     </target>
-
-    <target name="identity_catalog"
-        description="Applies identity filter to a catalog (each msgid becomes its own msgstr)">
-        <exec command="msgen -e -i --strict -w 80 -F --add-location -o data/i18n/en_US/LC_MESSAGES/${domain}.po data/i18n/en_US/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
-    </target>
-
 
     <!-- Release process -->
     <target name="release" depends="all"
