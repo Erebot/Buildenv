@@ -9,6 +9,7 @@
     <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.db"/>
     <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.xml"/>
     <property name="i18n.template.tmp"      value="/tmp/${phing.project.name}.pot"/>
+    <property name="i18n.template.exists"   value="false"/>
     <property name="build-phar"             value="false"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
     <property name="domain"                 value="${phing.project.name}"/>
@@ -97,8 +98,16 @@
         <xgettext command="xgettext -o ${i18n.template.tmp} --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
             <fileset refid="sources"/>
         </xgettext>
-        <exec command="msginit --no-translator -w 80 -l en_US -i ${i18n.template.tmp} -o data/i18n/${domain}.po" logoutput="true" dir="."/>
-        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -q --no-location data/i18n/${domain}.po ${i18n.template.tmp}" logoutput="true" dir="."/>
+        <available file="data/i18n/${domain}.po" property="i18n.template.exists"/>
+        <if>
+            <equals arg1="${i18n.template.exists}" arg2="true"/>
+            <then>
+                <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -q --no-location data/i18n/${domain}.po ${i18n.template.tmp}" logoutput="true" dir="."/>
+            </then>
+            <else>
+                <exec command="msginit --no-translator -w 80 -l en_US  -i ${i18n.template.tmp} -o data/i18n/${domain}.po" logoutput="true" dir="."/>
+            </else>
+        </if>
         <exec command="msgfmt --statistics -c -f -o data/i18n/${domain}.mo data/i18n/${domain}.po" logoutput="true" dir="."/>
     </target>
 
@@ -108,14 +117,14 @@
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="msggrep -v -K'' data/i18n/${domain}.po | xgettext -o- -Lshell -kmsgstr -s --no-location - | msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po -" logoutput="true" dir="." escape="false"/>
+        <exec command="php -r '$f = file_get_contents(&#x22;data/i18n/${domain}.po&#x22;); echo(preg_replace(&#x22;/#\nmsgid\s+\&#x22;\&#x22;\nmsgstr\s+\&#x22;\&#x22;\n[^#]*/s&#x22;, &#x22;&#x22;, $f, 1));' | xgettext -o- -Lshell -kmsgstr -s --no-location --omit-header - | msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po -" logoutput="true" dir="." escape="false"/>
     </target>
 
     <target name="init_catalog"
         description="Add a new language to translation files">
         <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
         <mkdir dir="data/i18n/${locale}/LC_MESSAGES"/>
-        <exec command="msggrep -v -K'' data/i18n/${domain}.po | xgettext -o- -Lshell -kmsgstr -s --no-location - | msginit --no-translator -w 80 -l ${locale} -i- -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" escape="false" dir="."/>
+        <exec command="php -r '$f = file_get_contents(&#x22;data/i18n/${domain}.po&#x22;); echo(preg_replace(&#x22;/#\nmsgid\s+\&#x22;\&#x22;\nmsgstr\s+\&#x22;\&#x22;\n[^#]*/s&#x22;, &#x22;&#x22;, $f, 1));' | xgettext -o- -Lshell -kmsgstr -s --no-location - | msginit --no-translator -w 80 -l ${locale} -i- -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" escape="false" dir="."/>
     </target>
 
     <target name="compile_catalog"
