@@ -97,8 +97,8 @@
         <xgettext command="xgettext -o ${i18n.template.tmp} --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
             <fileset refid="sources"/>
         </xgettext>
-        <exec command="msginit --no-translator -w 80 -l ${locale} -i ${i18n.template.tmp} -o data/i18n/${domain}.po" logoutput="true" dir="."/>
-        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --no-location data/i18n/${domain}.po ${i18n.template.tmp}" logoutput="true" dir="."/>
+        <exec command="msginit --no-translator -w 80 -l en_US -i ${i18n.template.tmp} -o data/i18n/${domain}.po" logoutput="true" dir="."/>
+        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -q --no-location data/i18n/${domain}.po ${i18n.template.tmp}" logoutput="true" dir="."/>
         <exec command="msgfmt --statistics -c -f -o data/i18n/${domain}.mo data/i18n/${domain}.po" logoutput="true" dir="."/>
     </target>
 
