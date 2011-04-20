@@ -85,8 +85,49 @@
     }
     ]]></adhoc-task>
 
+    <adhoc-task name="i18nStats"><![CDATA[
+    class UntranslatedTask extends Task
+    {
+        protected $output = '';
+        protected $file = '';
+
+        public function setOutput($output)  { $this->output = $output;  }
+        public function getOutput()         { return $this->output;     }
+
+        public function setFile($file)  { $this->file = $file;  }
+        public function getFile()       { return $this->file;   }
+
+        function main()
+        {
+            $output = explode("\n", str_replace("\r\n", "\n", $this->output));
+            foreach ($output as $line) {
+                if (strpos($line, "untranslated") !== FALSE)
+                    $this->log($this->file . ":0: Warning: ".$line, Project::MSG_WARN);
+                else if (strpos($line, "translated") !== FALSE)
+                    $this->log($this->file . ":0: Information: ".$line, Project::MSG_INFO);
+                else if (strpos($line, $this->file . ":") === 0) {
+                    $fields = explode(":", $line);
+                    $file = array_shift($fields);
+                    $linr = array_shift($fields);
+                    $msg  = trim(implode(":", $fields));
+                    $this->log($file.":".$linr.": Warning: ".$msg, Project::MSG_ERR);
+                }
+                else
+                    $this->log($line, Project::MSG_ERR);
+            }
+        }
+    }
+    ]]></adhoc-task>
+
+    <!-- Automatically detect existing locales. -->
+    <exec command="ls -1 data/i18n/ -p | grep '/' | xargs echo | sed -e 's^/^^g' -e 's^ ^,^g'" escape="false" outputProperty="locales"/>
+
     <target name="all" depends="i18n"
         description="Main target -- Same as 'phing i18n'"/>
+
+    <target name="locales" description="Displays available locales">
+        <echo message="Available locales: '${locales}'"/>
+    </target>
 
     <!-- Internationalization -->
     <target name="i18n"
@@ -117,14 +158,14 @@
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="php -r '$f = file_get_contents(&#x22;data/i18n/${domain}.po&#x22;); echo(preg_replace(&#x22;/#\nmsgid\s+\&#x22;\&#x22;\nmsgstr\s+\&#x22;\&#x22;\n[^#]*/s&#x22;, &#x22;&#x22;, $f, 1));' | xgettext -o- -Lshell -kmsgstr -s --no-location --omit-header - | msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po -" logoutput="true" dir="." escape="false"/>
+        <exec command="php -r '$f = file_get_contents(&#x22;data/i18n/${domain}.po&#x22;); echo(preg_replace(&#x22;/#\nmsgid\s+\&#x22;\&#x22;\nmsgstr\s+\&#x22;.*?\&#x22;\n[^#]*/s&#x22;, &#x22;&#x22;, $f, 1));' | xgettext -o- -Lshell -kmsgstr -s --no-location --omit-header - | msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po -" logoutput="true" dir="." escape="false"/>
     </target>
 
     <target name="init_catalog"
         description="Add a new language to translation files">
         <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
         <mkdir dir="data/i18n/${locale}/LC_MESSAGES"/>
-        <exec command="php -r '$f = file_get_contents(&#x22;data/i18n/${domain}.po&#x22;); echo(preg_replace(&#x22;/#\nmsgid\s+\&#x22;\&#x22;\nmsgstr\s+\&#x22;\&#x22;\n[^#]*/s&#x22;, &#x22;&#x22;, $f, 1));' | xgettext -o- -Lshell -kmsgstr -s --no-location - | msginit --no-translator -w 80 -l ${locale} -i- -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" escape="false" dir="."/>
+        <exec command="php -r '$f = file_get_contents(&#x22;data/i18n/${domain}.po&#x22;); echo(preg_replace(&#x22;/#\nmsgid\s+\&#x22;\&#x22;\nmsgstr\s+\&#x22;.*?\&#x22;\n[^#]*/s&#x22;, &#x22;&#x22;, $f, 1));' | xgettext -o- -Lshell -kmsgstr -s --no-location - | msginit --no-translator -w 80 -l ${locale} -i- -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" escape="false" dir="."/>
     </target>
 
     <target name="compile_catalog"
@@ -133,7 +174,8 @@
     </target>
 
     <target name="compile_1_catalog" hidden="true">
-        <exec command="msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
+        <exec command="msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="." outputProperty="stats"/>
+        <i18nStats output="${stats}" file="data/i18n/${locale}/LC_MESSAGES/${domain}.po"/>
     </target>
 
     <!-- Release process -->
