@@ -1,10 +1,5 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv" description="Same as 'phing all'" default="all">
-    <!--
-        @TODO: Add descriptions for the targets so that they provide
-        useful information when listed using "phing -l".
-    -->
-
     <property name="qa.coverage.force"      value="true"/>
     <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.db"/>
     <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.xml"/>
@@ -149,6 +144,7 @@
                 <exec command="msginit --no-translator -w 80 -l en_US  -i ${i18n.template.tmp} -o data/i18n/${domain}.po" logoutput="true" dir="."/>
             </else>
         </if>
+        <delete file="${i18n.template.tmp}"/>
         <exec command="msgfmt --statistics -c -f -o data/i18n/${domain}.mo data/i18n/${domain}.po" logoutput="true" dir="."/>
     </target>
 
@@ -181,17 +177,6 @@
     <!-- Release process -->
     <target name="release" depends="all"
         description="Build a PEAR package from the current code">
-        <!-- Force channel discovery. -->
-<!--        <exec-->
-<!--            command="pyrus.phar channel-del ${pear.channel}"-->
-<!--            passthru="true"-->
-<!--            checkreturn="true"-->
-<!--        />-->
-<!--        <exec-->
-<!--            command="pyrus.phar channel-discover ${pear.channel} ."-->
-<!--            passthru="true"-->
-<!--            checkreturn="true"-->
-<!--        />-->
         <exec
             command="rm -f package.xml package_compatible.xml"
             passthru="true"
@@ -219,6 +204,65 @@
         </if>
     </target>
 
+    <!-- Tag a release -->
+    <target name="tag" depends="all">
+        <propertyprompt propertyName="tag" promptText="Version for the tag" useExistingValue="true"/>
+        <propertyprompt propertyName="next" promptText="Next trunk version" useExistingValue="true"/>
+
+        <!-- Refuse to tag if the tests don't pass. -->
+        <phing phingFile="build.xml" target="test" haltonfailure="true"/>
+        <!-- Refuse to tag something that doesn't build. -->
+        <phing phingFile="build.xml" target="release" haltonfailure="true"/>
+
+        <!-- The tag must match the latest RELEASE file. -->
+        <exec command="./buildenv/get_version -v RELEASE" checkreturn="true" outputProperty="release_version"/>
+        <if>
+            <not><equals arg1="${tag}" arg2="${release_version}"/></not>
+            <then>
+                <echo message="The latest available release is ${release_version}."/>
+                <propertyprompt propertyName="rename" defaultValue="n"
+                    promptText="Rename ${release_version} into ${tag} (y/N)"/>
+                <php function="strtolower" returnProperty="rename">
+                    <param value="${rename}"/>
+                </php>
+                <if>
+                    <not><equals arg1="${rename}" arg2="y"/></not>
+                </if>
+                <then>
+                    <fail message="Latest RELEASE doesn't match the tag (${release_version} != ${tag})"/>
+                </then>
+                <else>
+                    <move file="RELEASE-${release_version}" tofile="RELEASE-${tag}" haltonerror="true"/>
+                </else>
+            </then>
+        </if>
+
+        <!-- Update version for the tag. -->
+        <phingcall target="set_version">
+            <property name="version" value="${tag}"/>
+        </phingcall>
+        <svncommit workingcopy="." message="Prepare tag: ${phing.project.name}-${tag}"/>
+
+        <!-- Create the tag. -->
+        <exec command="svn info --xml | xmlstarlet sel -t -v '/info/entry/url'" escape="false" outputProperty="svn_repos"/>
+        <svncopy
+            repositoryurl="${svn_repos}"
+            todir="${svn_repos}/../tags/${tag}"
+            message="Tag for ${phing.project.name}-${tag}"
+        />
+
+        <!-- Update again for development. -->
+        <phingcall target="set_version">
+            <property name="version" value="${next}"/>
+        </phingcall>
+        <svncommit workingcopy="." message="Bump version: ${phing.project.name}-${next}"/>
+    </target>
+
+    <target name="set_version">
+        <propertyprompt propertyName="version" promptText="New version" useExistingValue="true"/>
+        <exec command="xmlstarlet ed -P -S -u &quot;/project/property[@name='version']/@value&quot; -v ${version} build.xml > /tmp/${phing.project.name}~" escape="false" haltonfailure="true"/>
+        <move file="mv /tmp/${phing.project.name}~" tofile="build.xml" haltonfailure="true"/>
+    </target>
 
     <!-- Documentation -->
     <target name="doc" depends="doc_html,doc_pdf"
@@ -322,7 +366,7 @@ Generic_Sniffs_Files_LineEndingsSniff
         <coverage-report outfile="${qa.coverage.tmp}">
             <report
                 todir="docs/coverage"
-                styledir="/usr/share/php/data/phing/etc/"
+                styledir="${project.basedir}/buildenv/coverage"
             />
         </coverage-report>
         <coverage-threshold
