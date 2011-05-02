@@ -4,6 +4,7 @@
     <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.db"/>
     <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.xml"/>
     <property name="i18n.template.tmp"      value="/tmp/${phing.project.name}.pot"/>
+    <property name="release.tmp"            value="/tmp/release-${phing.project.name}"/>
     <property name="i18n.template.exists"   value="false"/>
     <property name="build-phar"             value="false"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
@@ -177,18 +178,25 @@
     <!-- Release process -->
     <target name="release" depends="all"
         description="Build a PEAR package from the current code">
+        <delete verbose="true">
+            <fileset dir=".">
+                <include name="package.xml"/>
+                <include name="package_compatible.xml"/>
+            </fileset>
+        </delete>
+        <mkdir dir="${release.tmp}"/>
         <exec
-            command="rm -f package.xml package_compatible.xml"
+            command="pyrus.phar ${release.tmp} channel-discover ${pear.channel} ."
             passthru="true"
             checkreturn="true"
         />
         <exec
-            command="pyrus.phar make ${phing.project.name} ${pear.channel} ."
+            command="pyrus.phar ${release.tmp} make ${phing.project.name} ${pear.channel} ."
             passthru="true"
             checkreturn="true"
         />
         <exec
-            command="pyrus.phar package --tgz"
+            command="pyrus.phar ${release.tmp} package --tgz"
             passthru="true"
             checkreturn="true"
         />
@@ -196,12 +204,13 @@
             <istrue value="${build-phar}"/>
             <then>
                 <exec
-                    command="pyrus.phar package --phar"
+                    command="pyrus.phar ${release.tmp} package --phar"
                     passthru="true"
                     checkreturn="true"
                 />
             </then>
         </if>
+        <delete dir="${release.tmp}"/>
     </target>
 
     <!-- Tag a release -->
