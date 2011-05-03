@@ -254,12 +254,25 @@
 
         <!-- Create the tag. -->
         <exec command="svn info --xml | xmlstarlet sel -t -v '/info/entry/url'" escape="false" outputProperty="svn_path"/>
+        <exec command="svn info --xml | xmlstarlet sel -t -v '/info/entry/repository/root'" escape="false" outputProperty="svn_root"/>
         <exec command="dirname ${svn_path}" outputProperty="svn_component_root"/>
         <svncopy
             repositoryurl="${svn_path}"
             todir="${svn_component_root}/tags/${tag}"
             message="Tag for ${phing.project.name}-${tag}"
+            ignoreexternals="true"
         />
+        <svncopy
+            repositoryurl="${svn_root}/buildenv/trunk"
+            todir="${svn_component_root}/tags/${tag}/buildenv"
+            message="Copy build environment for ${phing.project.name}-${tag}"
+        />
+        <phingcall target="protected_freeze_externals">
+            <property name="tag" value="${tag}"/>
+            <property name="next" value="${next}"/>
+            <property name="svn_root" value="${svn_root}"/>
+            <property name="svn_component_root" value="${svn_component_root}"/>
+        </phingcall>
 
         <!-- Update again for development. -->
         <phingcall target="set_version">
@@ -277,8 +290,9 @@
         </phingcall>
     </target>
 
-    <target name="protected_set_version">
-    </target>
+    <!-- Protected targets, meant to facilitate extensions. -->
+    <target name="protected_set_version"></target>
+    <target name="protected_freeze_externals"></target>
 
     <!-- Documentation -->
     <target name="doc" depends="doc_html,doc_pdf"
