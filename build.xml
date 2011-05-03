@@ -224,7 +224,7 @@
         <phing phingFile="build.xml" target="release" haltonfailure="true"/>
 
         <!-- The tag must match the latest RELEASE file. -->
-        <exec command="./buildenv/get_version -v RELEASE" checkreturn="true" outputProperty="release_version"/>
+        <exec command="./buildenv/get_version.php -v RELEASE" checkreturn="true" outputProperty="release_version"/>
         <if>
             <not><equals arg1="${tag}" arg2="${release_version}"/></not>
             <then>
@@ -253,10 +253,11 @@
         <svncommit workingcopy="." message="Prepare tag: ${phing.project.name}-${tag}"/>
 
         <!-- Create the tag. -->
-        <exec command="svn info --xml | xmlstarlet sel -t -v '/info/entry/url'" escape="false" outputProperty="svn_repos"/>
+        <exec command="svn info --xml | xmlstarlet sel -t -v '/info/entry/url'" escape="false" outputProperty="svn_path"/>
+        <exec command="dirname ${svn_path}" outputProperty="svn_component_root"/>
         <svncopy
-            repositoryurl="${svn_repos}"
-            todir="${svn_repos}/../tags/${tag}"
+            repositoryurl="${svn_path}"
+            todir="${svn_component_root}/tags/${tag}"
             message="Tag for ${phing.project.name}-${tag}"
         />
 
@@ -269,8 +270,14 @@
 
     <target name="set_version">
         <propertyprompt propertyName="version" promptText="New version" useExistingValue="true"/>
-        <exec command="xmlstarlet ed -P -S -u &quot;/project/property[@name='version']/@value&quot; -v ${version} build.xml > /tmp/${phing.project.name}~" escape="false" haltonfailure="true"/>
-        <move file="mv /tmp/${phing.project.name}~" tofile="build.xml" haltonfailure="true"/>
+        <exec command="xmlstarlet ed -P -S -u &quot;/project/property[@name='version']/@value&quot; -v ${version} build.xml > /tmp/${phing.project.name}~" escape="false" checkreturn="true" logoutput="true"/>
+        <move file="/tmp/${phing.project.name}~" tofile="build.xml" haltonerror="true" overwrite="true"/>
+        <phingcall target="protected_set_version">
+            <property name="version" value="${version}"/>
+        </phingcall>
+    </target>
+
+    <target name="protected_set_version">
     </target>
 
     <!-- Documentation -->
