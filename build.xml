@@ -167,6 +167,7 @@
 
     <target name="compile_catalog"
         description="Compile the translation files">
+        <exec command="msgfmt --statistics -c -f -o data/i18n/${domain}.mo data/i18n/${domain}.po" logoutput="true" dir="."/>
         <foreach list="${locales}" param="locale" target="compile_1_catalog"/>
     </target>
 
