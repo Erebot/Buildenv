@@ -132,47 +132,41 @@
 
     <target name="extract_messages"
         description="Extract messages in need of a translation from current code">
-        <xgettext command="xgettext -o ${i18n.template.tmp} --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
+        <xgettext command="LANG=C xgettext -o data/i18n/${domain}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
             <fileset refid="sources"/>
         </xgettext>
-        <available file="data/i18n/${domain}.po" property="i18n.template.exists"/>
-        <if>
-            <equals arg1="${i18n.template.exists}" arg2="true"/>
-            <then>
-                <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -q --no-location data/i18n/${domain}.po ${i18n.template.tmp}" logoutput="true" dir="."/>
-            </then>
-            <else>
-                <exec command="msginit --no-translator -w 80 -l en_US  -i ${i18n.template.tmp} -o data/i18n/${domain}.po" logoutput="true" dir="."/>
-            </else>
-        </if>
-        <delete file="${i18n.template.tmp}"/>
-        <exec command="msgfmt --statistics -c -f -o data/i18n/${domain}.mo data/i18n/${domain}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="update_catalog"
         description="Update the translation files based on current code">
         <foreach list="${locales}" param="locale" target="update_1_catalog"/>
+        <phing phingFile="build.xml" target="identity_catalog" haltonfailure="true"/>
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="php -r '$f = file_get_contents(&#x22;data/i18n/${domain}.po&#x22;); echo(preg_replace(&#x22;/#\nmsgid\s+\&#x22;\&#x22;\nmsgstr\s+\&#x22;.*?\&#x22;\n[^#]*/s&#x22;, &#x22;&#x22;, $f, 1));' | xgettext -o- -Lshell -kmsgstr -s --no-location --omit-header - | msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po -" logoutput="true" dir="." escape="false"/>
+        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${domain}.pot" logoutput="true" dir="."/>
+    </target>
+
+    <target name="identity_catalog"
+        description="Automatically translate the catalog for the default locale">
+        <property name="locale" value="en_US"/>
+        <exec command="msgen -e -i --strict -w 80 -F --add-location -o data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="init_catalog"
         description="Add a new language to translation files">
         <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
         <mkdir dir="data/i18n/${locale}/LC_MESSAGES"/>
-        <exec command="php -r '$f = file_get_contents(&#x22;data/i18n/${domain}.po&#x22;); echo(preg_replace(&#x22;/#\nmsgid\s+\&#x22;\&#x22;\nmsgstr\s+\&#x22;.*?\&#x22;\n[^#]*/s&#x22;, &#x22;&#x22;, $f, 1));' | xgettext -o- -Lshell -kmsgstr -s --no-location - | msginit --no-translator -w 80 -l ${locale} -i- -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" escape="false" dir="."/>
+        <exec command="msginit --no-translator -w 80 -l ${locale} -i data/i18n/${domain}.pot -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="compile_catalog"
         description="Compile the translation files">
-        <exec command="msgfmt --statistics -c -f -o data/i18n/${domain}.mo data/i18n/${domain}.po" logoutput="true" dir="."/>
         <foreach list="${locales}" param="locale" target="compile_1_catalog"/>
     </target>
 
     <target name="compile_1_catalog" hidden="true">
-        <exec command="msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="." outputProperty="stats"/>
+        <exec command="LANG=C msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="." outputProperty="stats"/>
         <i18nStats output="${stats}" file="data/i18n/${locale}/LC_MESSAGES/${domain}.po"/>
     </target>
 
