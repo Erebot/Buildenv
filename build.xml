@@ -116,7 +116,8 @@
     ]]></adhoc-task>
 
     <!-- Automatically detect existing locales. -->
-    <exec command="[ -d data/i18n ] &amp;&amp; ls -1 data/i18n/ -p | grep '/' | xargs echo | sed -e 's^/^^g' -e 's^ ^,^g'" escape="false" outputProperty="locales"/>
+    <exec command="[ -d data/i18n ] &amp;&amp; ls -1 data/i18n/ -p | grep '/' | xargs echo | sed -e 's^/^^g' -e 's^ ^,^g'"
+        escape="false" outputProperty="locales"/>
 
     <target name="all" depends="i18n"
         description="Main target -- Same as 'phing i18n'"/>
@@ -278,7 +279,8 @@
 
     <target name="set_version">
         <propertyprompt propertyName="version" promptText="New version" useExistingValue="true"/>
-        <exec command="xmlstarlet ed -P -S -u &quot;/project/property[@name='version']/@value&quot; -v ${version} build.xml > /tmp/${phing.project.name}~" escape="false" checkreturn="true" logoutput="true"/>
+        <exec command="xmlstarlet ed -P -S -u &quot;/project/property[@name='version']/@value&quot; -v ${version} build.xml > /tmp/${phing.project.name}~"
+            escape="false" checkreturn="true" logoutput="true"/>
         <move file="/tmp/${phing.project.name}~" tofile="build.xml" haltonerror="true" overwrite="true"/>
         <phingcall target="protected_set_version">
             <property name="version" value="${version}"/>
@@ -294,7 +296,12 @@
         description="Generate API documentation in both HTML and PDF format"/>
 
     <target name="doc_html" description="Generate API documentation in HTML format">
-        <exec command="COMPONENT_NAME=${phing.project.name} COMPONENT_VERSION=${version} doxygen" dir="." passthru="true" checkreturn="true" logoutput="true"/>
+        <exec command="head -1 README" outputProperty="short_description"/>
+        <php function="escapeshellarg" returnProperty="short_description">
+            <param value="${short_description}"/>
+        </php>
+        <exec command="COMPONENT_NAME=${phing.project.name} COMPONENT_VERSION=${version} COMPONENT_BRIEF=${short_description} doxygen"
+            dir="." passthru="true" checkreturn="true" logoutput="true"/>
     </target>
 
     <target name="doc_pdf" description="Generate API documentation in PDF format">
