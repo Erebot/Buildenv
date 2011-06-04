@@ -116,7 +116,7 @@
     ]]></adhoc-task>
 
     <!-- Automatically detect existing locales. -->
-    <exec command="ls -1 data/i18n/ -p | grep '/' | xargs echo | sed -e 's^/^^g' -e 's^ ^,^g'" escape="false" outputProperty="locales"/>
+    <exec command="[ -d data/i18n ] &amp;&amp; ls -1 data/i18n/ -p | grep '/' | xargs echo | sed -e 's^/^^g' -e 's^ ^,^g'" escape="false" outputProperty="locales"/>
 
     <target name="all" depends="i18n"
         description="Main target -- Same as 'phing i18n'"/>
