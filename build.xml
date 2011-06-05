@@ -174,7 +174,7 @@
     <!-- Release process -->
     <target name="release" depends="all"
         description="Build a PEAR package from the current code">
-        <propertyprompt useExistingValue="true" promptText="Stability" promptName="stability" defaultValue="stable"/>
+        <propertyprompt useExistingValue="true" promptText="Stability" propertyName="stability" defaultValue="stable"/>
         <delete verbose="true">
             <fileset dir=".">
                 <include name="package.xml"/>
