@@ -8,7 +8,6 @@
     <property name="i18n.template.exists"   value="false"/>
     <property name="build-phar"             value="false"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
-    <property name="domain"                 value="${phing.project.name}"/>
 
     <if>
         <istrue value="${qa.coverage.force}"/>
@@ -118,6 +117,8 @@
     <!-- Automatically detect existing locales. -->
     <exec command="[ -d data/i18n ] &amp;&amp; ls -1 data/i18n/ -p | grep '/' | xargs echo | sed -e 's^/^^g' -e 's^ ^,^g'"
         escape="false" outputProperty="locales"/>
+    <!-- Automatically detect the version of the current RELEASE. -->
+    <exec command="./buildenv/get_version.php -v RELEASE" checkreturn="true" outputProperty="version"/>
 
     <target name="all" depends="i18n"
         description="Main target -- Same as 'phing i18n'"/>
@@ -133,7 +134,7 @@
 
     <target name="extract_messages"
         description="Extract messages in need of a translation from current code">
-        <xgettext command="LANG=C xgettext -o data/i18n/${domain}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${domain} --package-version ${version} --msgid-bugs-address ${email}">
+        <xgettext command="LANG=C xgettext -o data/i18n/${phing.project.name}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${phing.project.name} --package-version ${version} --msgid-bugs-address i18n@erebot.net">
             <fileset refid="sources"/>
         </xgettext>
     </target>
@@ -145,20 +146,20 @@
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${domain}.pot" logoutput="true" dir="."/>
+        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${phing.project.name}.pot" logoutput="true" dir="."/>
     </target>
 
     <target name="identity_catalog"
         description="Automatically translate the catalog for the default locale">
         <property name="locale" value="en_US"/>
-        <exec command="msgen -e -i --strict -w 80 -F --add-location -o data/i18n/${locale}/LC_MESSAGES/${domain}.po data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
+        <exec command="msgen -e -i --strict -w 80 -F --add-location -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="init_catalog"
         description="Add a new language to translation files">
         <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
         <mkdir dir="data/i18n/${locale}/LC_MESSAGES"/>
-        <exec command="msginit --no-translator -w 80 -l ${locale} -i data/i18n/${domain}.pot -o data/i18n/${locale}/LC_MESSAGES/${domain}.po" logoutput="true" dir="."/>
+        <exec command="msginit --no-translator -w 80 -l ${locale} -i data/i18n/${phing.project.name}.pot -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="compile_catalog"
@@ -167,8 +168,8 @@
     </target>
 
     <target name="compile_1_catalog" hidden="true">
-        <exec command="LANG=C msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${domain}.mo data/i18n/${locale}/LC_MESSAGES/${domain}.po" dir="." outputProperty="stats"/>
-        <i18nStats output="${stats}" file="data/i18n/${locale}/LC_MESSAGES/${domain}.po"/>
+        <exec command="LANG=C msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.mo data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" dir="." outputProperty="stats"/>
+        <i18nStats output="${stats}" file="data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po"/>
     </target>
 
     <!-- Release process -->
@@ -278,14 +279,12 @@
         <phingcall target="set_version">
             <property name="version" value="${next}"/>
         </phingcall>
+        <exec command="touch RELEASE-%{next}"/>
         <svncommit workingcopy="." message="Bump version: ${phing.project.name}-${next}"/>
     </target>
 
     <target name="set_version">
         <propertyprompt propertyName="version" promptText="New version" useExistingValue="true"/>
-        <exec command="xmlstarlet ed -P -S -u &quot;/project/property[@name='version']/@value&quot; -v ${version} build.xml > /tmp/${phing.project.name}~"
-            escape="false" checkreturn="true" logoutput="true"/>
-        <move file="/tmp/${phing.project.name}~" tofile="build.xml" haltonerror="true" overwrite="true"/>
         <phingcall target="protected_set_version">
             <property name="version" value="${version}"/>
         </phingcall>
