@@ -4,10 +4,11 @@
     <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.db"/>
     <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.xml"/>
     <property name="i18n.template.tmp"      value="/tmp/${phing.project.name}.pot"/>
-    <property name="release.tmp"            value="/tmp/release-${phing.project.name}"/>
     <property name="i18n.template.exists"   value="false"/>
+    <property name="release.tmp"            value="/tmp/release-${phing.project.name}"/>
     <property name="build-phar"             value="false"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
+    <property name="tagfiles"               value=""/>
 
     <if>
         <istrue value="${qa.coverage.force}"/>
@@ -43,7 +44,7 @@
             return $this->filesets[$num-1];
         }
 
-        function main()
+        public function main()
         {
             $filesToParse = array();
             foreach ($this->filesets as $fs) {
@@ -115,8 +116,7 @@
     ]]></adhoc-task>
 
     <!-- Automatically detect existing locales. -->
-    <exec command="[ -d data/i18n ] &amp;&amp; ls -1 data/i18n/ -p | grep '/' | xargs echo | sed -e 's^/^^g' -e 's^ ^,^g'"
-        escape="false" outputProperty="locales"/>
+    <exec command="./buildenv/get_locales.php" checkreturn="true" outputProperty="locales"/>
     <!-- Automatically detect the version of the current RELEASE. -->
     <exec command="./buildenv/get_version.php -v RELEASE" checkreturn="true" outputProperty="version"/>
 
@@ -299,11 +299,21 @@
         description="Generate API documentation in both HTML and PDF format"/>
 
     <target name="doc_html" description="Generate API documentation in HTML format">
+        <!-- Get the brief description from the README. -->
         <exec command="head -1 README" outputProperty="short_description"/>
         <php function="escapeshellarg" returnProperty="short_description">
             <param value="${short_description}"/>
         </php>
-        <exec command="COMPONENT_NAME=${phing.project.name} COMPONENT_VERSION=${version} COMPONENT_BRIEF=${short_description} doxygen"
+
+        <!-- Determine path to tag files. -->
+        <property name="tagfiles.reference" value="${phing.project.name}"/>
+        <exec command="./buildenv/get_filetags.php ${tagfiles.reference} ${tagfiles}"
+            checkreturn="true" outputProperty="tagfiles"/>
+        <php function="escapeshellarg" returnProperty="tagfiles">
+            <param value="${tagfiles}"/>
+        </php>
+
+        <exec command="COMPONENT_NAME=${phing.project.name} COMPONENT_VERSION=${version} COMPONENT_BRIEF=${short_description} COMPONENT_TAGFILES=${tagfiles} doxygen"
             dir="." passthru="true" checkreturn="true" logoutput="true"/>
     </target>
 
