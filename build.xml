@@ -134,7 +134,7 @@
 
     <target name="extract_messages"
         description="Extract messages in need of a translation from current code">
-        <xgettext command="LANG=C xgettext -o data/i18n/${phing.project.name}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${phing.project.name} --package-version ${version} --msgid-bugs-address i18n@erebot.net">
+        <xgettext command="LANG=C xgettext -o data/i18n/${phing.project.name}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${phing.project.name} --package-version ${version} --msgid-bugs-address i18n@erebot.net --add-comments=I18N:">
             <fileset refid="sources"/>
         </xgettext>
     </target>
