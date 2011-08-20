@@ -214,75 +214,6 @@
         <delete dir="${release.tmp}"/>
     </target>
 
-    <!-- Tag a release -->
-    <target name="tag" depends="all">
-        <propertyprompt propertyName="tag" promptText="Version for the tag" useExistingValue="true"/>
-        <propertyprompt propertyName="next" promptText="Next trunk version" useExistingValue="true"/>
-
-        <!-- Refuse to tag if the tests don't pass. -->
-        <phing phingFile="build.xml" target="test" haltonfailure="true"/>
-        <!-- Refuse to tag something that doesn't build. -->
-        <phing phingFile="build.xml" target="release" haltonfailure="true"/>
-
-        <!-- The tag must match the latest RELEASE file. -->
-        <exec command="./buildenv/get_version.php -v RELEASE" checkreturn="true" outputProperty="release_version"/>
-        <if>
-            <not><equals arg1="${tag}" arg2="${release_version}"/></not>
-            <then>
-                <echo message="The latest available release is ${release_version}."/>
-                <propertyprompt propertyName="rename" defaultValue="n"
-                    promptText="Rename ${release_version} into ${tag} (y/N)"/>
-                <php function="strtolower" returnProperty="rename">
-                    <param value="${rename}"/>
-                </php>
-                <if>
-                    <not><equals arg1="${rename}" arg2="y"/></not>
-                </if>
-                <then>
-                    <fail message="Latest RELEASE doesn't match the tag (${release_version} != ${tag})"/>
-                </then>
-                <else>
-                    <move file="RELEASE-${release_version}" tofile="RELEASE-${tag}" haltonerror="true"/>
-                </else>
-            </then>
-        </if>
-
-        <!-- Update version for the tag. -->
-        <phingcall target="set_version">
-            <property name="version" value="${tag}"/>
-        </phingcall>
-        <svncommit workingcopy="." message="Prepare tag: ${phing.project.name}-${tag}"/>
-
-        <!-- Create the tag. -->
-        <exec command="svn info --xml | xmlstarlet sel -t -v '/info/entry/url'" escape="false" outputProperty="svn_path"/>
-        <exec command="svn info --xml | xmlstarlet sel -t -v '/info/entry/repository/root'" escape="false" outputProperty="svn_root"/>
-        <exec command="dirname ${svn_path}" outputProperty="svn_component_root"/>
-        <svncopy
-            repositoryurl="${svn_path}"
-            todir="${svn_component_root}/tags/${tag}"
-            message="Tag for ${phing.project.name}-${tag}"
-            ignoreexternals="true"
-        />
-        <svncopy
-            repositoryurl="${svn_root}/buildenv/trunk"
-            todir="${svn_component_root}/tags/${tag}/buildenv"
-            message="Copy build environment for ${phing.project.name}-${tag}"
-        />
-        <phingcall target="protected_freeze_externals">
-            <property name="tag" value="${tag}"/>
-            <property name="next" value="${next}"/>
-            <property name="svn_root" value="${svn_root}"/>
-            <property name="svn_component_root" value="${svn_component_root}"/>
-        </phingcall>
-
-        <!-- Update again for development. -->
-        <phingcall target="set_version">
-            <property name="version" value="${next}"/>
-        </phingcall>
-        <exec command="touch RELEASE-%{next}"/>
-        <svncommit workingcopy="." message="Bump version: ${phing.project.name}-${next}"/>
-    </target>
-
     <target name="set_version">
         <propertyprompt propertyName="version" promptText="New version" useExistingValue="true"/>
         <phingcall target="protected_set_version">
@@ -292,7 +223,6 @@
 
     <!-- Protected targets, meant to facilitate extensions. -->
     <target name="protected_set_version"></target>
-    <target name="protected_freeze_externals"></target>
 
     <!-- Documentation -->
     <target name="doc" depends="doc_html,doc_pdf"
