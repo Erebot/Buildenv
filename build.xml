@@ -328,7 +328,8 @@ Generic_Sniffs_Files_LineEndingsSniff
 
     <target name="qa_test" depends="qa_pre_coverage"
         description="Run (unit) tests using PHPUnit">
-        <phpunit codecoverage="true">
+        <php expression="define('TESTENV_DIR', dirname('${phing.file}').DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'testenv');"/>
+        <phpunit codecoverage="true" bootstrap="tests/testenv/bootstrap.php">
             <formatter type="plain" usefile="false"/>
             <batchtest><fileset refid="tests"/></batchtest>
         </phpunit>
