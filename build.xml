@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv" description="Same as 'phing all'" default="all">
+    <eval expression="md5(PHP_VERSION.uniqid('', TRUE));" returnProperty="randomID"/>
     <property name="qa.coverage.force"      value="true"/>
-    <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.db"/>
-    <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.xml"/>
-    <property name="i18n.template.tmp"      value="/tmp/${phing.project.name}.pot"/>
-    <property name="i18n.template.exists"   value="false"/>
-    <property name="release.tmp"            value="/tmp/release-${phing.project.name}"/>
+    <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.${randomID}.db"/>
+    <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.${randomID}.xml"/>
+    <property name="release.tmp"            value="/tmp/release-${phing.project.name}.${randomID}"/>
+    <property name="file.tmp"               value="/tmp/${phing.project.name}.${randomID}"/>
     <property name="build-phar"             value="false"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
     <property name="tagfiles"               value=""/>
@@ -193,9 +193,9 @@
             passthru="true"
             checkreturn="true"
         />
-        <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u &quot;/pear:package/pear:stability/pear:release&quot; -v ${stability} package.xml > /tmp/${phing.project.name}~"
+        <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u &quot;/pear:package/pear:stability/pear:release&quot; -v ${stability} package.xml > ${file.tmp}"
             escape="false" checkreturn="true" logoutput="true"/>
-        <move file="/tmp/${phing.project.name}~" tofile="package.xml" haltonerror="true" overwrite="true"/>
+        <move file="${file.tmp}" tofile="package.xml" haltonerror="true" overwrite="true"/>
         <exec
             command="pyrus.phar ${release.tmp} package --tgz"
             passthru="true"
@@ -352,5 +352,7 @@ Generic_Sniffs_Files_LineEndingsSniff
             perMethod="${qa.coverage.min.method}"
             verbose="true"
             />
+        <delete file="${qa.coverage.db}" quiet="true"/>
+        <delete file="${qa.coverage.tmp}" quiet="true"/>
     </target>
 </project>

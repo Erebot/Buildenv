@@ -22,12 +22,19 @@ function main()
 
     $locales = array();
 
-    foreach (
-        new DirectoryIterator(
+    try {
+        $iterator = new DirectoryIterator(
             $dir.
             DIRECTORY_SEPARATOR.'data'.
             DIRECTORY_SEPARATOR.'i18n'
-        ) as $fileinfo) {
+        );
+    }
+    catch (UnexpectedValueException $e) {
+        echo "\n";
+        exit(0);
+    }
+
+    foreach ($iterator as $fileinfo) {
         if (!$fileinfo->isDir() || $fileinfo->isDot())
             continue;
         $dirname = $fileinfo->getFilename();
