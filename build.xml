@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv" description="Same as 'phing all'" default="all">
-    <eval expression="md5(PHP_VERSION.uniqid('', TRUE));" returnProperty="randomID"/>
+    <php expression="md5(PHP_VERSION.uniqid('', TRUE));" returnProperty="randomID"/>
     <property name="qa.coverage.force"      value="true"/>
     <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.${randomID}.db"/>
     <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.${randomID}.xml"/>
