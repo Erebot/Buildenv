@@ -10,12 +10,12 @@ OUTPUT_LANGUAGE        = English
 
 BRIEF_MEMBER_DESC      = YES
 REPEAT_BRIEF           = YES
-ABBREVIATE_BRIEF       = 
+ABBREVIATE_BRIEF       =
 ALWAYS_DETAILED_SEC    = NO
 INLINE_INHERITED_MEMB  = NO
 FULL_PATH_NAMES        = YES
-STRIP_FROM_PATH        = 
-STRIP_FROM_INC_PATH    = 
+STRIP_FROM_PATH        =
+STRIP_FROM_INC_PATH    =
 SHORT_NAMES            = NO
 JAVADOC_AUTOBRIEF      = NO
 QT_AUTOBRIEF           = NO
@@ -32,13 +32,14 @@ ALIASES               += "b{1}=\htmlonly <strong>\1</strong> \endhtmlonly\latexo
 ALIASES               += "FIXME=\xrefitem FIXME \"Known issues\" \"Known Issues\""
 ALIASES               += "HACK=\xrefitem HACK \"Dirty hacks\" \"Dirty Hacks\""
 ALIASES               += "format{1}=\par Format\n<tt>\1</tt>\n"
+ALIASES               += "SuppressWarnings="
 
 OPTIMIZE_OUTPUT_FOR_C  = NO
 OPTIMIZE_OUTPUT_JAVA   = NO
 OPTIMIZE_FOR_FORTRAN   = NO
 OPTIMIZE_OUTPUT_VHDL   = NO
 
-EXTENSION_MAPPING      = 
+EXTENSION_MAPPING      =
 BUILTIN_STL_SUPPORT    = NO
 CPP_CLI_SUPPORT        = NO
 SIP_SUPPORT            = NO
@@ -77,7 +78,7 @@ GENERATE_BUGLIST       = YES
 GENERATE_DEPRECATEDLIST= YES
 
 SEARCHENGINE           = NO
-ENABLED_SECTIONS       = 
+ENABLED_SECTIONS       =
 MAX_INITIALIZER_LINES  = 29
 
 SHOW_USED_FILES        = YES
@@ -91,27 +92,27 @@ WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = YES
 WARN_FORMAT            = "$file:$line: $text"
-WARN_LOGFILE           = 
+WARN_LOGFILE           =
 
 INPUT                  = src
 INPUT_ENCODING         = UTF-8
-INPUT_FILTER           = 
+INPUT_FILTER           =
 FILE_PATTERNS          = *.php
 RECURSIVE              = YES
-LAYOUT_FILE            = 
+LAYOUT_FILE            =
 
-FILE_VERSION_FILTER    = 
-FILTER_PATTERNS        = 
+FILE_VERSION_FILTER    =
+FILTER_PATTERNS        =
 FILTER_SOURCE_FILES    = NO
 
 EXCLUDE_SYMLINKS       = YES
-EXCLUDE_PATTERNS       = 
-EXCLUDE_SYMBOLS        = 
+EXCLUDE_PATTERNS       =
+EXCLUDE_SYMBOLS        =
 
-EXAMPLE_PATH           = 
-EXAMPLE_PATTERNS       = 
+EXAMPLE_PATH           =
+EXAMPLE_PATTERNS       =
 EXAMPLE_RECURSIVE      = YES
-IMAGE_PATH             = 
+IMAGE_PATH             =
 
 SOURCE_BROWSER         = YES
 INLINE_SOURCES         = NO
@@ -132,9 +133,9 @@ IGNORE_PREFIX          = $ \
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
-HTML_HEADER            = 
-HTML_FOOTER            = 
-HTML_STYLESHEET        = 
+HTML_HEADER            =
+HTML_FOOTER            =
+HTML_STYLESHEET        =
 HTML_ALIGN_MEMBERS     = YES
 HTML_DYNAMIC_SECTIONS  = YES
 
@@ -153,8 +154,8 @@ LATEX_CMD_NAME         = latex
 MAKEINDEX_CMD_NAME     = makeindex
 COMPACT_LATEX          = YES
 PAPER_TYPE             = a4wide
-EXTRA_PACKAGES         = 
-LATEX_HEADER           = 
+EXTRA_PACKAGES         =
+LATEX_HEADER           =
 PDF_HYPERLINKS         = YES
 USE_PDFLATEX           = YES
 LATEX_BATCHMODE        = YES
@@ -162,8 +163,8 @@ LATEX_HIDE_INDICES     = YES
 
 GENERATE_XML           = NO
 XML_OUTPUT             = xml
-XML_SCHEMA             = 
-XML_DTD                = 
+XML_SCHEMA             =
+XML_DTD                =
 XML_PROGRAMLISTING     = YES
 
 GENERATE_DOCSET        = NO
@@ -180,10 +181,10 @@ MACRO_EXPANSION        = NO
 EXPAND_ONLY_PREDEF     = NO
 
 SEARCH_INCLUDES        = NO
-INCLUDE_PATH           = 
-INCLUDE_FILE_PATTERNS  = 
-PREDEFINED             = 
-EXPAND_AS_DEFINED      = 
+INCLUDE_PATH           =
+INCLUDE_FILE_PATTERNS  =
+PREDEFINED             =
+EXPAND_AS_DEFINED      =
 SKIP_FUNCTION_MACROS   = YES
 
 TAGFILES                = $(COMPONENT_TAGFILES)
@@ -192,7 +193,7 @@ ALLEXTERNALS           = YES
 EXTERNAL_GROUPS        = YES
 
 UML_LOOK               = YES
-MSCGEN_PATH            = 
+MSCGEN_PATH            =
 HIDE_UNDOC_RELATIONS   = YES
 TEMPLATE_RELATIONS     = NO
 GENERATE_LEGEND        = YES
@@ -200,9 +201,9 @@ GENERATE_LEGEND        = YES
 HAVE_DOT               = YES
 DOT_FONTNAME           = FreeSans
 DOT_FONTSIZE           = 10
-DOT_FONTPATH           = 
+DOT_FONTPATH           =
 DOT_IMAGE_FORMAT       = png
-DOT_PATH               = 
+DOT_PATH               =
 DOT_GRAPH_MAX_NODES    = 20
 DOT_TRANSPARENT        = NO
 DOT_MULTI_TARGETS      = NO
@@ -210,7 +211,7 @@ DOT_CLEANUP            = YES
 # Because the server is quite
 # limited resource wise.
 DOT_NUM_THREADS        = 1
-DOTFILE_DIRS           = 
+DOTFILE_DIRS           =
 MAX_DOT_GRAPH_DEPTH    = 5
 
 CLASS_DIAGRAMS         = YES
