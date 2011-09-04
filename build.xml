@@ -272,6 +272,7 @@
     </target>
 
     <target name="qa_codesniffer" description="Check QA using PHP_CodeSniffer">
+        <php expression="@include_once('PHP/CodeSniffer/CLI.php');"/>
         <php function="class_exists" returnProperty="usable">
             <param value="PHP_CodeSniffer_CLI"/>
         </php>
@@ -289,6 +290,7 @@
 
     <target name="qa_depend"
         description="Check QA using PHP depend">
+        <php expression="@include_once('PHP/Depend/TextUI/Runner.php');"/>
         <php function="class_exists" returnProperty="usable">
             <param value="PHP_Depend_TextUI_Runner"/>
         </php>
@@ -306,6 +308,7 @@
 
     <target name="qa_mess"
         description="Check QA using phpmd (PHP Mess Detector)">
+        <php expression="@include_once('PHP/PMD.php');"/>
         <php function="class_exists" returnProperty="usable">
             <param value="PHP_PMD"/>
         </php>
@@ -323,6 +326,7 @@
 
     <target name="qa_duplicates"
         description="Check QA using phpcpd (PHP Copy/Paste Detector)">
+        <php expression="@include_once('PHPCPD/TextUI/Command.php');"/>
         <php function="class_exists" returnProperty="usable">
             <param value="PHPCPD_TextUI_Command"/>
         </php>
@@ -347,6 +351,7 @@
     <target name="qa_test" depends="qa_pre_coverage"
         description="Run (unit) tests using PHPUnit">
         <php expression="define('TESTENV_DIR', dirname('${phing.file}').DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'testenv');"/>
+        <php expression="@include_once('PHPUnit/Runner/Version.php');"/>
         <php function="class_exists" returnProperty="usable">
             <param value="PHPUnit_Runner_Version"/>
         </php>
