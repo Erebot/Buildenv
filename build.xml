@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv" description="Same as 'phing all'" default="all">
     <php expression="md5(PHP_VERSION.uniqid('', TRUE));" returnProperty="randomID"/>
-    <property name="qa.coverage.force"      value="true"/>
-    <property name="qa.coverage.db"         value="/tmp/${phing.project.name}.${randomID}.db"/>
-    <property name="qa.coverage.tmp"        value="/tmp/${phing.project.name}.${randomID}.xml"/>
-    <property name="release.tmp"            value="/tmp/release-${phing.project.name}.${randomID}"/>
-    <property name="file.tmp"               value="/tmp/${phing.project.name}.${randomID}"/>
-    <property name="build-phar"             value="false"/>
-    <property name="pear.channel"           value="pear.erebot.net"/>
-    <property name="tagfiles"               value=""/>
+    <php function="sys_get_temp_dir"    returnProperty="tmp.dir"/>
+    <property name="qa.coverage.force"  value="true"/>
+    <property name="qa.coverage.db"     value="${tmp.dir}/${phing.project.name}.${randomID}.db"/>
+    <property name="qa.coverage.tmp"    value="${tmp.dir}/${phing.project.name}.${randomID}.xml"/>
+    <property name="release.tmp"        value="${tmp.dir}/release-${phing.project.name}.${randomID}"/>
+    <property name="file.tmp"           value="${tmp.dir}/${phing.project.name}.${randomID}"/>
+    <property name="build-phar"         value="false"/>
+    <property name="pear.channel"       value="pear.erebot.net"/>
+    <property name="tagfiles"           value=""/>
 
     <if>
         <istrue value="${qa.coverage.force}"/>
@@ -116,9 +117,9 @@
     ]]></adhoc-task>
 
     <!-- Automatically detect existing locales. -->
-    <exec command="./buildenv/get_locales.php" checkreturn="true" outputProperty="locales"/>
+    <exec command="php ./buildenv/get_locales.php" checkreturn="true" outputProperty="locales"/>
     <!-- Automatically detect the version of the current RELEASE. -->
-    <exec command="./buildenv/get_version.php -v RELEASE" checkreturn="true" outputProperty="version"/>
+    <exec command="php ./buildenv/get_version.php -v RELEASE" checkreturn="true" outputProperty="version"/>
 
     <target name="all" depends="i18n"
         description="Main target -- Same as 'phing i18n'"/>
@@ -237,7 +238,7 @@
 
         <!-- Determine path to tag files. -->
         <property name="tagfiles.reference" value="${phing.project.name}"/>
-        <exec command="./buildenv/get_filetags.php ${tagfiles.reference} ${tagfiles}"
+        <exec command="php ./buildenv/get_filetags.php ${tagfiles.reference} ${tagfiles}"
             checkreturn="true" outputProperty="tagfiles"/>
         <php function="escapeshellarg" returnProperty="tagfiles">
             <param value="${tagfiles}"/>
