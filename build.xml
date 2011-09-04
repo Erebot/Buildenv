@@ -272,53 +272,70 @@
     </target>
 
     <target name="qa_codesniffer" description="Check QA using PHP_CodeSniffer">
-        <phpcodesniffer
-            standard="Zend"
-            showWarnings="true"
-            showSniffs="true"
-            tabWidth="4"
-            sniffs="
-Zend_Sniffs_Debug_CodeAnalyzerSniff
-Zend_Sniffs_Files_ClosingTagSniff
-Zend_Sniffs_NamingConventions_ValidVariableNameSniff
-Generic_Sniffs_Functions_FunctionCallArgumentSpacingSniff
-Generic_Sniffs_Functions_OpeningFunctionBraceBsdAllmanSniff
-Generic_Sniffs_PHP_DisallowShortOpenTagSniff
-Generic_Sniffs_WhiteSpace_DisallowTabIndentSniff
-PEAR_Sniffs_Classes_ClassDeclarationSniff
-PEAR_Sniffs_Functions_FunctionCallSignatureSniff
-PEAR_Sniffs_Functions_ValidDefaultValueSniff
-PEAR_Sniffs_WhiteSpace_ScopeClosingBraceSniff
-Squiz_Sniffs_Functions_GlobalFunctionSniff
-Generic_Sniffs_Files_LineLengthSniff
-Generic_Sniffs_Files_LineEndingsSniff
-"
-            verbosity="1"
-            >
-            <fileset refid="sources"/>
-        </phpcodesniffer>
+        <php function="class_exists" returnProperty="usable">
+            <param value="PHP_CodeSniffer_CLI"/>
+        </php>
+        <if>
+            <istrue value="${usable}"/>
+            <then><import file="buildenv/phing/phpcs.xml"/></then>
+            <else>
+                <echo>
+                    pear.php.net/PHP_CodeSniffer >= 1.2.2 must be installed
+                    for the "qa_codesniffer" target to be available.
+                </echo>
+            </else>
+        </if>
     </target>
 
     <target name="qa_depend"
         description="Check QA using PHP depend">
-        <phpdepend withoutAnnotations="true" file=".">
-            <fileset refid="sources"/>
-            <analyzer type="coderank-mode" value="method"/>
-            <logger type="phpunit-xml" outfile="/dev/null"/>
-        </phpdepend>
+        <php function="class_exists" returnProperty="usable">
+            <param value="PHP_Depend_TextUI_Runner"/>
+        </php>
+        <if>
+            <istrue value="${usable}"/>
+            <then><import file="buildenv/phing/pdepend.xml"/></then>
+            <else>
+                <echo>
+                    pear.pdepend.org/PHP_Depend must be installed
+                    for the "qa_depend" target to be available.
+                </echo>
+            </else>
+        </if>
     </target>
 
     <target name="qa_mess"
         description="Check QA using phpmd (PHP Mess Detector)">
-        <phpmd><fileset refid="sources"/></phpmd>
+        <php function="class_exists" returnProperty="usable">
+            <param value="PHP_PMD"/>
+        </php>
+        <if>
+            <istrue value="${usable}"/>
+            <then><import file="buildenv/phing/phpmd.xml"/></then>
+            <else>
+                <echo>
+                    pear.phpmd.org/PHP_PMD must be installed
+                    for the "qa_mess" target to be available.
+                </echo>
+            </else>
+        </if>
     </target>
 
     <target name="qa_duplicates"
         description="Check QA using phpcpd (PHP Copy/Paste Detector)">
-        <phpcpd>
-            <fileset refid="sources"/>
-            <formatter type="default" outfile="/dev/null"/>
-        </phpcpd>
+        <php function="class_exists" returnProperty="usable">
+            <param value="PHPCPD_TextUI_Command"/>
+        </php>
+        <if>
+            <istrue value="${usable}"/>
+            <then><import file="buildenv/phing/phpcpd.xml"/></then>
+            <else>
+                <echo>
+                    pear.phpunit.de/phpcpd must be installed
+                    for the "qa_duplicates" target to be available.
+                </echo>
+            </else>
+        </if>
     </target>
 
     <target name="qa_pre_coverage" hidden="true">
@@ -330,10 +347,20 @@ Generic_Sniffs_Files_LineEndingsSniff
     <target name="qa_test" depends="qa_pre_coverage"
         description="Run (unit) tests using PHPUnit">
         <php expression="define('TESTENV_DIR', dirname('${phing.file}').DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'testenv');"/>
-        <phpunit codecoverage="true" bootstrap="tests/testenv/bootstrap.php">
-            <formatter type="plain" usefile="false"/>
-            <batchtest><fileset refid="tests"/></batchtest>
-        </phpunit>
+        <php function="class_exists" returnProperty="usable">
+            <param value="PHPUnit_Runner_Version"/>
+        </php>
+        <if>
+            <istrue value="${usable}"/>
+            <then><import file="buildenv/phing/phpunit.xml"/></then>
+            <else>
+                <echo>
+                    pear.phpunit.de/PHPUnit must be installed
+                    for the "qa_test" &amp; "qa_coverage" targets
+                    to be available.
+                </echo>
+            </else>
+        </if>
     </target>
 
     <target name="qa_coverage" depends="qa_test"
