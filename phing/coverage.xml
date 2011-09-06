@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<project name="Erebot_buildenv_coverage">
+    <mkdir dir="docs"/>
+    <mkdir dir="docs/coverage"/>
+    <coverage-report outfile="${qa.coverage.tmp}">
+        <report
+            todir="docs/coverage"
+            styledir="${project.basedir}/buildenv/coverage"
+        />
+    </coverage-report>
+    <coverage-threshold
+        database="${qa.coverage.db}"
+        perProject="${qa.coverage.min.project}"
+        perClass="${qa.coverage.min.class}"
+        perMethod="${qa.coverage.min.method}"
+        verbose="true"
+        />
+    <delete file="${qa.coverage.db}" quiet="true"/>
+    <delete file="${qa.coverage.tmp}" quiet="true"/>
+</project>
