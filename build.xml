@@ -374,14 +374,27 @@
     </target>
 
     <target name="qa_pre_coverage" hidden="true">
-        <coverage-setup database="${qa.coverage.db}">
-            <fileset refid="sources"/>
-        </coverage-setup>
+        <php expression="@include_once('PHPUnit/Autoload.php');"/>
+        <php expression="@include_once('PHPUnit/Runner/Version.php');"/>
+        <php function="class_exists" returnProperty="usable">
+            <param value="PHPUnit_Runner_Version"/>
+        </php>
+        <if>
+            <istrue value="${usable}"/>
+            <then><import file="buildenv/phing/pre_coverage.xml"/></then>
+            <else>
+                <echo>
+                    pear.phpunit.de/PHPUnit must be installed
+                    for the "qa_pre_coverage" target to be available.
+                </echo>
+            </else>
+        </if>
     </target>
 
     <target name="qa_test" depends="qa_pre_coverage"
         description="Run (unit) tests using PHPUnit">
         <php expression="define('TESTENV_DIR', dirname('${phing.file}').DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'testenv');"/>
+        <php expression="@include_once('PHPUnit/Autoload.php');"/>
         <php expression="@include_once('PHPUnit/Runner/Version.php');"/>
         <php function="class_exists" returnProperty="usable">
             <param value="PHPUnit_Runner_Version"/>
@@ -392,8 +405,7 @@
             <else>
                 <echo>
                     pear.phpunit.de/PHPUnit must be installed
-                    for the "qa_test" &amp; "qa_coverage" targets
-                    to be available.
+                    for the "qa_test" target to be available.
                 </echo>
             </else>
         </if>
@@ -401,22 +413,20 @@
 
     <target name="qa_coverage" depends="qa_test"
         description="Run code coverage analysis based on unit tests (see 'phing qa_test')">
-        <mkdir dir="docs"/>
-        <mkdir dir="docs/coverage"/>
-        <coverage-report outfile="${qa.coverage.tmp}">
-            <report
-                todir="docs/coverage"
-                styledir="${project.basedir}/buildenv/coverage"
-            />
-        </coverage-report>
-        <coverage-threshold
-            database="${qa.coverage.db}"
-            perProject="${qa.coverage.min.project}"
-            perClass="${qa.coverage.min.class}"
-            perMethod="${qa.coverage.min.method}"
-            verbose="true"
-            />
-        <delete file="${qa.coverage.db}" quiet="true"/>
-        <delete file="${qa.coverage.tmp}" quiet="true"/>
+        <php expression="@include_once('PHPUnit/Autoload.php');"/>
+        <php expression="@include_once('PHPUnit/Runner/Version.php');"/>
+        <php function="class_exists" returnProperty="usable">
+            <param value="PHPUnit_Runner_Version"/>
+        </php>
+        <if>
+            <istrue value="${usable}"/>
+            <then><import file="buildenv/phing/coverage.xml"/></then>
+            <else>
+                <echo>
+                    pear.phpunit.de/PHPUnit must be installed
+                    for the "qa_coverage" target to be available.
+                </echo>
+            </else>
+        </if>
     </target>
 </project>
