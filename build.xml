@@ -134,9 +134,20 @@
 
     <target name="extract_messages"
         description="Extract messages in need of a translation from current code">
-        <xgettext command="LANG=C xgettext -o data/i18n/${phing.project.name}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${phing.project.name} --package-version ${version} --msgid-bugs-address i18n@erebot.net --add-comments=I18N:">
+        <php function="putenv">
+            <param value="LANG=C"/>
+        </php>
+        <xgettext command="xgettext -o data/i18n/${phing.project.name}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${phing.project.name} --package-version ${version} --msgid-bugs-address i18n@erebot.net --add-comments=I18N:">
             <fileset refid="sources"/>
         </xgettext>
+        <if>
+            <isset property="env.LANG"/>
+            <then>
+                <php function="putenv">
+                    <param value="LANG=${env.LANG}"/>
+                </php>
+            </then>
+        </if>
     </target>
 
     <target name="update_catalog"
@@ -164,11 +175,22 @@
 
     <target name="compile_catalog"
         description="Compile the translation files">
+        <php function="putenv">
+            <param value="LANG=C"/>
+        </php>
         <foreach list="${locales}" param="locale" target="compile_1_catalog"/>
+        <if>
+            <isset property="env.LANG"/>
+            <then>
+                <php function="putenv">
+                    <param value="LANG=${env.LANG}"/>
+                </php>
+            </then>
+        </if>
     </target>
 
     <target name="compile_1_catalog" hidden="true">
-        <exec command="LANG=C msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.mo data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" dir="." outputProperty="stats"/>
+        <exec command="msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.mo data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" dir="." outputProperty="stats"/>
         <i18nStats output="${stats}" file="data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po"/>
     </target>
 
@@ -230,7 +252,16 @@
 
     <target name="doc_html" description="Generate API documentation in HTML format">
         <!-- Get the brief description from the README. -->
-        <exec command="head -1 README" outputProperty="short_description"/>
+        <if>
+            <os family="windows"/>
+            <then>
+                <exec command="./buildenv/compat/win/head.bat README"
+                    outputProperty="short_description"/>
+            </then>
+            <else>
+                <exec command="head -1 README" outputProperty="short_description"/>
+            </else>
+        </if>
         <php function="escapeshellarg" returnProperty="short_description">
             <param value="${short_description}"/>
         </php>
