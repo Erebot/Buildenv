@@ -206,13 +206,14 @@
             </fileset>
         </delete>
         <mkdir dir="${release.tmp}"/>
+        <exec command="which pyrus.phar" outputProperty="pyrus.phar" checkreturn="true" />
         <exec
-            command="pyrus.phar ${release.tmp} channel-discover ${pear.channel} ."
+            command="php $[pyrus.phar} ${release.tmp} channel-discover ${pear.channel} ."
             passthru="true"
             checkreturn="true"
         />
         <exec
-            command="pyrus.phar ${release.tmp} make ${phing.project.name} ${pear.channel} ."
+            command="php ${pyrus.phar} ${release.tmp} make ${phing.project.name} ${pear.channel} ."
             passthru="true"
             checkreturn="true"
         />
@@ -220,7 +221,7 @@
             escape="false" checkreturn="true" logoutput="true"/>
         <move file="${file.tmp}" tofile="package.xml" haltonerror="true" overwrite="true"/>
         <exec
-            command="pyrus.phar ${release.tmp} package --tgz"
+            command="php ${pyrus.phar} ${release.tmp} package --tgz"
             passthru="true"
             checkreturn="true"
         />
@@ -228,7 +229,7 @@
             <istrue value="${build-phar}"/>
             <then>
                 <exec
-                    command="pyrus.phar ${release.tmp} package --phar"
+                    command="php ${pyrus.phar} ${release.tmp} package --phar"
                     passthru="true"
                     checkreturn="true"
                 />
