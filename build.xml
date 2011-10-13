@@ -315,6 +315,7 @@
                     pear.php.net/PHP_CodeSniffer >= 1.2.2 must be installed
                     for the "qa_codesniffer" target to be available.
                 </echo>
+                <fail message="See above"/>
             </else>
         </if>
     </target>
@@ -333,6 +334,7 @@
                     pear.pdepend.org/PHP_Depend must be installed
                     for the "qa_depend" target to be available.
                 </echo>
+                <fail message="See above"/>
             </else>
         </if>
     </target>
@@ -351,6 +353,7 @@
                     pear.phpmd.org/PHP_PMD must be installed
                     for the "qa_mess" target to be available.
                 </echo>
+                <fail message="See above"/>
             </else>
         </if>
     </target>
@@ -369,6 +372,7 @@
                     pear.phpunit.de/phpcpd must be installed
                     for the "qa_duplicates" target to be available.
                 </echo>
+                <fail message="See above"/>
             </else>
         </if>
     </target>
@@ -387,6 +391,7 @@
                     pear.phpunit.de/PHPUnit must be installed
                     for the "qa_pre_coverage" target to be available.
                 </echo>
+                <fail message="See above"/>
             </else>
         </if>
     </target>
@@ -407,6 +412,7 @@
                     pear.phpunit.de/PHPUnit must be installed
                     for the "qa_test" target to be available.
                 </echo>
+                <fail message="See above"/>
             </else>
         </if>
     </target>
@@ -426,6 +432,7 @@
                     pear.phpunit.de/PHPUnit must be installed
                     for the "qa_coverage" target to be available.
                 </echo>
+                <fail message="See above"/>
             </else>
         </if>
     </target>
