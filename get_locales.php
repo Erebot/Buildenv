@@ -30,6 +30,14 @@ function main()
         );
     }
     catch (UnexpectedValueException $e) {
+        // This exception occurs when the given directory
+        // does not exist (under PHP >= 5.3.0).
+        echo "\n";
+        exit(0);
+    }
+    catch (RuntimeException $e) {
+        // This exception occurs when the given directory
+        // does not exist (under PHP < 5.3.0).
         echo "\n";
         exit(0);
     }
