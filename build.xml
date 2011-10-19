@@ -7,7 +7,7 @@
     <property name="qa.coverage.tmp"    value="${tmp.dir}/${phing.project.name}.${randomID}.xml"/>
     <property name="release.tmp"        value="${tmp.dir}/release-${phing.project.name}.${randomID}"/>
     <property name="file.tmp"           value="${tmp.dir}/${phing.project.name}.${randomID}"/>
-    <property name="build-phar"         value="false"/>
+    <property name="build-phar"         value="true"/>
     <property name="pear.channel"       value="pear.erebot.net"/>
     <property name="tagfiles"           value=""/>
 
