@@ -219,20 +219,51 @@
         <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u &quot;/pear:package/pear:stability/pear:release&quot; -v ${stability} package.xml > ${file.tmp}"
             escape="false" checkreturn="true" logoutput="true"/>
         <move file="${file.tmp}" tofile="package.xml" haltonerror="true" overwrite="true"/>
-        <exec
-            command="pyrus.phar ${release.tmp} package --tgz"
-            passthru="true"
-            checkreturn="true"
-        />
+
         <if>
-            <istrue value="${build-phar}"/>
+            <isset property="${passfile}"/>
             <then>
+                <!--
+                    Create input for pyrus.phar:
+                    *   Answer "yes" when asked whether
+                        we want to sign the release.
+                    *   Enter the passphrase when prompted.
+                -->
+                <append destFile="${release.tmp}/sign" text="yes"/>
+                <append destFile="${release.tmp}/sign" file="${passfile}"/>
                 <exec
-                    command="pyrus.phar ${release.tmp} package --phar"
+                    command="pyrus.phar ${release.tmp} package --tgz &lt; ${release.tmp}/sign"
                     passthru="true"
                     checkreturn="true"
                 />
+                <if>
+                    <istrue value="${build-phar}"/>
+                    <then>
+                        <exec
+                            command="pyrus.phar ${release.tmp} package --phar &lt; ${release.tmp}/sign"
+                            passthru="true"
+                            checkreturn="true"
+                        />
+                    </then>
+                </if>
             </then>
+            <else>
+                <exec
+                    command="pyrus.phar ${release.tmp} package --tgz"
+                    passthru="true"
+                    checkreturn="true"
+                />
+                <if>
+                    <istrue value="${build-phar}"/>
+                    <then>
+                        <exec
+                            command="pyrus.phar ${release.tmp} package --phar"
+                            passthru="true"
+                            checkreturn="true"
+                        />
+                    </then>
+                </if>
+            </else>
         </if>
         <delete dir="${release.tmp}"/>
     </target>
