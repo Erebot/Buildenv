@@ -221,15 +221,21 @@
         <move file="${file.tmp}" tofile="package.xml" haltonerror="true" overwrite="true"/>
 
         <if>
-            <isset property="${passfile}"/>
+            <isset property="passfile"/>
             <then>
                 <!--
                     Create input for pyrus.phar:
                     *   Answer "yes" when asked whether
                         we want to sign the release.
                     *   Enter the passphrase when prompted.
+
+                    Added fun: we cannot write "yes" directly because
+                    phing automatically replaces it with the boolean
+                    value TRUE (written as 1 in the file).
+                    We must also add the line feed by hand.
                 -->
-                <append destFile="${release.tmp}/sign" text="yes"/>
+                <echo file="${release.tmp}/sign" msg="ye"/>
+                <append destFile="${release.tmp}/sign" text="s&#xA;"/>
                 <append destFile="${release.tmp}/sign" file="${passfile}"/>
                 <exec
                     command="pyrus.phar ${release.tmp} package --tgz &lt; ${release.tmp}/sign"
