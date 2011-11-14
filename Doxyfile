@@ -128,7 +128,7 @@ ALPHABETICAL_INDEX     = YES
 COLS_IN_ALPHA_INDEX    = 3
 
 IGNORE_PREFIX          = $ \
-                         Erebot
+                         Erebot_
 
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
