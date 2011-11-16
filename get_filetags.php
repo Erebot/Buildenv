@@ -45,7 +45,7 @@ function main()
                 'trunk',
             );
 
-        $parts[]        = $component . '.tagfile';
+        $parts[]        = $component . '.tagfile.xml';
         $path           = implode(DIRECTORY_SEPARATOR, $parts);
         $paths[$path]   =
             ($current == '-')
