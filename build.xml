@@ -285,10 +285,12 @@
     <target name="protected_set_version"></target>
 
     <!-- Documentation -->
-    <target name="doc" depends="doc_html,doc_pdf"
-        description="Generate API documentation in both HTML and PDF format"/>
+    <target name="doc" depends="doc_html"
+        description="Generate documentation"/>
 
-    <target name="doc_html" description="Generate API documentation in HTML format">
+    <target name="doc_html" description="Generate documentation in HTML format" depends="doc_api,doc_enduser"/>
+
+    <target name="doc_api" description="Generate API documentation in HTML format">
         <!-- Get the brief description from the README. -->
         <if>
             <os family="windows"/>
@@ -316,8 +318,9 @@
             dir="." passthru="true" checkreturn="true" logoutput="true"/>
     </target>
 
-    <target name="doc_pdf" description="Generate API documentation in PDF format">
-        <exec command="make" dir="docs/latex" passthru="true"/>
+    <target name="doc_enduser" description="Generate end-user documentation in HTML format">
+        <exec command="sphinx-build -c buildenv/sphinx/ -b html -D html_use_opensearch=http://fpoirotte.github.com/${phing.project.name} -D version=${version} -D release=${version} -D project=${phing.project.name} -d docs/enduser/doctrees docs/src docs/enduser/html"
+            passthru="true" checkreturn="true" logoutput="true"/>
     </target>
 
 
