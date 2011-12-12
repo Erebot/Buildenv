@@ -319,7 +319,8 @@
     </target>
 
     <target name="doc_enduser" description="Generate end-user documentation in HTML format">
-        <exec command="sphinx-build -c buildenv/sphinx/ -b html -D html_use_opensearch=http://fpoirotte.github.com/${phing.project.name} -D version=${version} -D release=${version} -D project=${phing.project.name} -d docs/enduser/doctrees docs/src docs/enduser/html"
+        <property name="doc_release" value=""/>
+        <exec command="sphinx-build -c buildenv/sphinx/ -b html -D html_use_opensearch=http://fpoirotte.github.com/${phing.project.name} -D version=${version} -D release=${version}${doc_release} -D project=${phing.project.name} -d docs/enduser/doctrees docs/src docs/enduser/html"
             passthru="true" checkreturn="true" logoutput="true"/>
     </target>
 
