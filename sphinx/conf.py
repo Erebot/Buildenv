@@ -27,6 +27,9 @@ import sys, os
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.pngmath', 'sphinx.ext.ifconfig']
 
+# Display items marked with the 'todo' directive.
+todo_include_todos = True
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []
 
