@@ -12,8 +12,7 @@
 # serve to show the default.
 
 import sys, os
-from sphinx import environment as env
-env.default_substitutions = set(['version', 'release', 'today', 'project'])
+execfile('patches.py')
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
