@@ -227,5 +227,5 @@ html_show_sourcelink = False
 # -- Options for manual page output --------------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {}
 
