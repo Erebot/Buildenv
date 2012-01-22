@@ -237,7 +237,7 @@ intersphinx_mapping = {}
 
 extlinks = {
     'php': ('http://php.net/%s', ''),
-    'pear': ('http://pear.php.net/%s', ''),
-    'pecl': ('http://pecl.php.net/%s', ''),
+    'pear': ('http://pear.php.net/%s', 'pear.php.net/'),
+    'pecl': ('http://pecl.php.net/%s', 'pecl.php.net/'),
 }
 
