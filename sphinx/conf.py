@@ -26,7 +26,12 @@ execfile('patches.py')
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.pngmath', 'sphinx.ext.ifconfig']
++extensions = [
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.pngmath',
+    'sphinx.ext.ifconfig',
+]
 
 # Display items marked with the 'todo' directive.
 todo_include_todos = True
@@ -228,4 +233,10 @@ html_show_sourcelink = False
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {}
+
+extlinks = {
+    'php': ('http://php.net/%s', ''),
+    'pear': ('http://pear.php.net/%s', ''),
+    'pecl': ('http://pecl.php.net/%s', ''),
+}
 

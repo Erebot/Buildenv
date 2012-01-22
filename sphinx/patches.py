@@ -41,3 +41,7 @@ directives.register_directive('parsed-code', ParsedCodeBlock)
 # Add "project" to the default substitutions.
 env.default_substitutions = set(['version', 'release', 'today', 'project'])
 
+# Additionnal lexer for inline PHP code blocks.
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+lexers['inline-php'] = PhpLexer(startinline=True)
