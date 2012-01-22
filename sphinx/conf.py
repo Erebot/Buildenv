@@ -31,6 +31,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.pngmath',
     'sphinx.ext.ifconfig',
+    'sphinx.ext.extlinks',
 ]
 
 # Display items marked with the 'todo' directive.
