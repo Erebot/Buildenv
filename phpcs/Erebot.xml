@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<ruleset name="Erebot">
+    <description>
+        Official coding standard for Erebot.
+
+        See also http://fpoirotte.github.com/Erebot/Coding_Standard.html
+        for a description of this coding standard.
+    </description>
+
+    <!--
+        Indenting and whitespaces
+    -->
+
+    <!-- *  Use 4 spaces for indent. -->
+    <rule ref="Generic.Sniffs.WhiteSpace.ScopeIndentSniff"/>
+    <!-- *  Use spaces instead of tabs for indent. -->
+    <rule ref="Generic.Sniffs.WhiteSpace.DisallowTabIndentSniff"/>
+    <!-- *  No trailing whitespace. -->
+    <rule ref="Squiz.Sniffs.WhiteSpace.SuperfluousWhitespaceSniff"/>
+    <!-- *  Use "\n" for line endings. -->
+    <rule ref="Generic.Sniffs.Files.LineEndingsSniff"/>
+    <!-- *  All text files should end in a single newline (\n). -->
+
+
+
+    <!--
+        Operators
+    -->
+
+    <!-- *  All binary operators should have a space
+            before and after the operator. -->
+    <rule ref="Squiz.Sniffs.WhiteSpace.OperatorSpacingSniff"/>
+    <rule ref="Squiz.Sniffs.WhiteSpace.LogicalOperatorSpacingSniff"/>
+
+
+
+    <!--
+        Casting
+    -->
+
+    <!-- *  Put a single space between the type
+            and the operand of a cast. -->
+    <rule ref="Generic.Sniffs.Formatting.SpaceAfterCastSniff"/>
+
+
+
+    <!--
+        Control structures
+    -->
+
+    <!-- *  Put a single space between the type
+            and the operand of a cast. -->
+
+
+
+    <!-- Line length and wrapping -->
+    <!-- Function/method calls -->
+    <!-- Function/method declarations -->
+    <!-- Class constructor calls -->
+    <!-- Arrays -->
+    <!-- Quotes -->
+    <!-- String concatenation -->
+    <!-- Comments -->
+    <!-- Filesystem paths -->
+    <!-- Including code -->
+    <!-- PHP code tags -->
+    <!-- Semicolons -->
+    <!-- Example URLs -->
+    <!-- Naming conventions: Files -->
+    <!-- Naming conventions: Classes and interfaces -->
+    <!-- Naming conventions: Class methods and properties -->
+    <!-- Naming conventions: Class constructors -->
+    <!-- Naming conventions: Functions -->
+    <!-- Naming conventions: Constants -->
+    <!-- Naming conventions: Global variables -->
+</ruleset>
+

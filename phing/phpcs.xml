@@ -1,28 +1,16 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv_phpcs">
     <phpcodesniffer
-        standard="Zend"
-        showWarnings="true"
+        encoding="utf-8"
+        haltonerror="true"
+        haltonwarning="true"
         showSniffs="true"
+        showWarnings="true"
+        standard="buildenv/phpcs/Erebot.xml"
         tabWidth="4"
-        sniffs="
-Zend_Sniffs_Debug_CodeAnalyzerSniff
-Zend_Sniffs_Files_ClosingTagSniff
-Zend_Sniffs_NamingConventions_ValidVariableNameSniff
-Generic_Sniffs_Functions_FunctionCallArgumentSpacingSniff
-Generic_Sniffs_Functions_OpeningFunctionBraceBsdAllmanSniff
-Generic_Sniffs_PHP_DisallowShortOpenTagSniff
-Generic_Sniffs_WhiteSpace_DisallowTabIndentSniff
-PEAR_Sniffs_Classes_ClassDeclarationSniff
-PEAR_Sniffs_Functions_FunctionCallSignatureSniff
-PEAR_Sniffs_Functions_ValidDefaultValueSniff
-PEAR_Sniffs_WhiteSpace_ScopeClosingBraceSniff
-Squiz_Sniffs_Functions_GlobalFunctionSniff
-Generic_Sniffs_Files_LineLengthSniff
-Generic_Sniffs_Files_LineEndingsSniff
-"
         verbosity="1"
         >
         <fileset refid="sources"/>
     </phpcodesniffer>
 </project>
+
