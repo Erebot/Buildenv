@@ -9,121 +9,432 @@
         for a description of this coding standard.
     </description>
 
-    <rule ref="Generic.Classes.DuplicateClassName"/>
-    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
-    <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
-    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
-    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
-    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
-    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
-    <rule ref="Generic.Files.ByteOrderMark"/>
-    <!-- *  Use "\n" for line endings. -->
-    <rule ref="Generic.Files.LineEndings"/>
-    <rule ref="Generic.Files.LineLength"/>
-    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
-    <rule ref="Generic.Formatting.MultipleStatementAlignment">
-        <properties>
-            <property name="error" value="false"/>
-            <property name="ignoreMultiLine" value="true"/>
-        </properties>
-    </rule>
-    <!-- *  Put a single space between the type
-            and the operand of a cast. -->
-    <rule ref="Generic.Formatting.SpaceAfterCast"/>
-    <rule ref="Generic.Functions.CallTimePassByReference"/>
-    <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
-    <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
-    <rule ref="Generic.Metrics.CyclomaticComplexity"/>
-    <rule ref="Generic.Metrics.NestingLevel"/>
-    <rule ref="Generic.NamingConventions.ConstructorName"/>
-    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
-    <rule ref="Generic.PHP.DeprecatedFunctions"/>
-    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
-    <rule ref="Generic.PHP.ForbiddenFunctions"/>
-    <rule ref="Generic.PHP.NoSilencedErrors">
-        <properties>
-            <property name="error" value="false"/>
-        </properties>
-    </rule>
-    <rule ref="Generic.PHP.UpperCaseConstant"/>
-    <!-- *  Use spaces instead of tabs for indent. -->
-    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+
+    <!--
+        Indenting and whitespaces
+        http://erebot.github.com/Erebot/Coding_Standard.html#indenting-and-whitespace
+    -->
     <!-- *  Use 4 spaces for indent. -->
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <properties>
             <property name="exact" value="false"/>
         </properties>
     </rule>
+    <!-- *  Don't use tabs for indent. -->
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+    <!-- *  No trailing whitespace. -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+    <!-- *  Use "\n" for line endings. -->
+    <rule ref="Generic.Files.LineEndings"/>
+    <!-- *  All text files should end in a single newline (\n). -->
+    <!-- @TODO -->
+    <!-- *  Don't put any whitespace before a statement's ";". -->
+    <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+
+
+    <!--
+        Operators
+        http://erebot.github.com/Erebot/Coding_Standard.html#operators
+    -->
+    <!-- *  All binary operators should have a space
+            before and after the operator. -->
+<!--    <rule ref="Squiz.WhiteSpace.OperatorSpacing"/>-->
+<!--    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>-->
+    <!-- *  Multiple assignments may be lined up using whitespaces. -->
+    <!-- @TODO -->
+    <!-- *  When the object operator (->) is the first character
+            on the line, it should be indented with 4 spaces. -->
+    <rule ref="PEAR.WhiteSpace.ObjectOperatorIndent"/>
+    <!-- *  No whitespace before unary operators. -->
+    <!-- @TODO -->
+    <!-- *  Parenthesis around a ternary's condition. -->
+    <!-- @TODO -->
+    <!-- *  Split a ternary operator before the "?" and ":" characters
+            if the line's total length exceeds 80 characters. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Casting
+        http://erebot.github.com/Erebot/Coding_Standard.html#casting
+    -->
+    <!-- *  Put a single space between the type
+            and the operand of a cast. -->
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <!-- *  The cast statement must not contain whitespace. -->
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
+
+
+    <!--
+        Control structures
+        http://erebot.github.com/Erebot/Coding_Standard.html#control-structures
+    -->
+    <!-- *  Respect the template for if...them...else
+            control structures. -->
+    <!-- @TODO -->
+    <!-- *  One space before the control statement
+            and the opening parenthesis. -->
+    <!-- @TODO -->
+    <!-- *  Use "else if" instead of "elseif". -->
+    <!-- @TODO -->
+    <!-- *  Use curly braces for multiple-line-statements. -->
+    <!-- @TODO -->
+    <!-- *  Respect the template for switch...case...break...default
+            control structures. -->
+    <!-- @TODO -->
+    <!-- *  Explicit comment for passthrough cases in a switch. -->
+    <!-- @TODO -->
+    <!-- *  Prohibit deadcode in a case statement. -->
+    <!-- @TODO -->
+    <!-- *  Respect the template for do...while
+            control structures. -->
+    <!-- @TODO -->
+    <!-- *  Prohibit alternative control structures
+            (endwhile, etc.). -->
+    <!-- @TODO -->
+
+
+    <!--
+        Line length and wrapping
+        http://erebot.github.com/Erebot/Coding_Standard.html#line-length-and-wrapping
+    -->
+    <!-- *  Lines should not be longer than 80 characters
+            in length and must not be longer than 120 characters. -->
+    <rule ref="Generic.Files.LineLength"/>
+    <!-- *  Break after logical operators in long control structures. -->
+    <!-- @TODO -->
+    <!-- *  Indent with 4 spaces after a break
+            in a long control structure. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Function/method calls
+        http://erebot.github.com/Erebot/Coding_Standard.html#function-method-calls
+    -->
+    <!-- *  No space between the function/method name
+            and the opening parenthesis. -->
+    <!-- @TODO -->
+    <!-- *  No space between the opening parenthesis
+            and the first parameter. -->
+    <!-- @TODO -->
+    <!-- *  Exactly one space after the comma that separates arguments,
+            except for multiline function/method calls. -->
+    <!-- @TODO -->
+    <!-- *  No space between the last parameter
+            and the closing parenthesis. -->
+    <!-- @TODO -->
+    <!-- *  No space between the closing parenthesis
+            and the final semi-colon. -->
+    <!-- @TODO -->
+    <!-- *  Call-time pass-by-reference is strictly prohibited. -->
+    <rule ref="Generic.Functions.CallTimePassByReference"/>
+    <!-- *  Multiple assignments may be lined up using
+            some extra whitespace. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Function/method declarations
+        http://erebot.github.com/Erebot/Coding_Standard.html#function-method-declarations
+    -->
+    <!-- *  Prefer (possibly static) classes over functions. -->
+    <!-- @TODO -->
+    <!-- *  Put the opening curly brace on a new line. -->
+    <!-- @TODO -->
+    <!-- *  And line it up with the "function" keyword. -->
+    <!-- @TODO -->
+    <!-- *  Arguments with defaults values go at the end
+            of the argument list. -->
+    <!-- @TODO -->
+    <!-- *  Type-hints may only refer to native classes
+            or native/user-defined interfaces. -->
+    <!-- @TODO -->
+    <!-- *  Respect the function/method declaration wrapping format. -->
+    <!-- @TODO -->
+    <!-- *  Don't put parenthesis around the return value. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Class constructor calls
+        http://erebot.github.com/Erebot/Coding_Standard.html#class-constructor-calls
+    -->
+    <!-- *  Use parenthesis even when calling constructors
+            with no arguments. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Arrays
+        http://erebot.github.com/Erebot/Coding_Standard.html#arrays
+    -->
+    <!-- *  Don't use the compact notation introduced in PHP 5.4. -->
+    <!-- @TODO -->
+    <!-- *  For single-line array definitions, put a single
+            space between every element (after the comma). -->
+    <!-- @TODO -->
+    <!-- *  For single-line array definitions, put exactly one
+            space around the association operator (=>). -->
+    <!-- @TODO -->
+    <!-- *  For multiline array definitions, put each element
+            on a separate line. -->
+    <!-- @TODO -->
+    <!-- *  For multiline associative array definitions,
+            line up the values by adding extra spaces before
+            the association operator (=>). -->
+    <!-- @TODO -->
+    <!-- *  For multiline array definitions, put a comma
+            after the last element. -->
+    <!-- @TODO -->
+    <!-- *  For multiline associative array definitions,
+            line up the keys by adding extra spaces before
+            each key. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Quotes
+        http://erebot.github.com/Erebot/Coding_Standard.html#quotes
+    -->
+    <!-- *  Don't use heredoc strings for translatable messages. -->
+    <!-- @TODO -->
+
+
+    <!--
+        String concatenation
+        http://erebot.github.com/Erebot/Coding_Standard.html#string-concatenations
+    -->
+    <!-- *  Use a space around the concatenation operator (dot). -->
+    <!-- @TODO -->
+    <!-- *  Add spaces around the concatenate+assign operator (".=")
+            as for any other assignment operator. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Comments
+        http://erebot.github.com/Erebot/Coding_Standard.html#comments
+    -->
+    <!-- *  Don't use Perl-style comments (#). -->
+    <!-- @TODO -->
+    <!-- *  Don't use Qt-style comments for documentation (//!). -->
+    <!-- @TODO -->
+
+
+    <!--
+        Filesystem paths
+        http://erebot.github.com/Erebot/Coding_Standard.html#filesystem-paths
+    -->
+    <!-- This section does not impose rules that can
+         automatically be checked. See the link above
+         for recommended practice in this context. -->
+
+
+    <!--
+        Including code
+        http://erebot.github.com/Erebot/Coding_Standard.html#including-code
+    -->
+    <!-- *  Don't use include/require. -->
+    <!-- @TODO -->
+    <!-- *  Use parenthesis around the filename when using
+            require_once/include_once. -->
+    <!-- @TODO -->
+    <!-- *  Never include/require relative paths. -->
+    <!-- @TODO -->
+
+
+    <!--
+        PHP code tags
+        http://erebot.github.com/Erebot/Coding_Standard.html#php-code-tags
+    -->
+    <!-- *  Don't use short-open tags. -->
+    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+    <!-- *  Don't use ASP-style tags. -->
+    <!-- @TODO -->
+    <!-- *  Don't use <script> tags. -->
+    <!-- @TODO -->
+    <!-- *  Never use a closing "?>" at the end of a file. -->
+    <rule ref="Zend.Files.ClosingTag"/>
+
+
+    <!--
+        Semicolons
+        http://erebot.github.com/Erebot/Coding_Standard.html#semicolons
+    -->
+    <!-- *  Always end a statement with a semicolon. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Example URLs
+        http://erebot.github.com/Erebot/Coding_Standard.html#example-urls
+    -->
+    <!-- This section does not impose rules that can
+         automatically be checked. See the link above
+         for recommended practice in this context. -->
+
+
+    <!--
+        Naming conventions: Files
+        http://erebot.github.com/Erebot/Coding_Standard.html#files
+    -->
+    <!-- *  A class or interface's path must match its name. -->
+    <!-- @TODO -->
+    <!-- *  Each class/interface should be in a separate file. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Naming conventions: Classes and interfaces
+        http://erebot.github.com/Erebot/Coding_Standard.html#classes-and-interfaces
+    -->
+    <!-- *  Use "UpperCamelCase" to name classes/interfaces. -->
+    <!-- @TODO -->
+    <!-- *  Put each keyword (except abstract/final) on a new line. -->
+    <!-- @TODO -->
+    <!-- *  Line up the opening brace with the other keywords. -->
+    <!-- @TODO -->
+    <!-- *  Each interface name must appear on a separate line. -->
+    <!-- @TODO -->
+    <!-- *  Don't put any space between an interface's name
+            and the trailing comma. -->
+    <!-- @TODO -->
+    <!-- *  All classes and interfaces names should be lined up. -->
+    <!-- @TODO -->
+    <!-- *  Interfaces must be easy to identify. -->
+    <!-- @TODO -->
+    <!-- *  Abstract classes must be easy to identify. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Naming conventions: Class methods and properties
+        http://erebot.github.com/Erebot/Coding_Standard.html#class-methods-and-properties
+    -->
+    <!-- *  Class methods must be named using "lowerCamelCase". -->
+    <!-- @TODO -->
+    <!-- *  Class properties must be named using "lowerCamelCase". -->
+    <rule ref="Zend.NamingConventions.ValidVariableName"/>
+    <!-- *  Use of numbers in property names is discouraged. -->
+    <rule ref="Zend.NamingConventions.ValidVariableName"/>
+    <!-- *  Use of public properties is discouraged, except when
+            they can't be avoided (eg. when used as a callback). -->
+    <!-- @TODO -->
+    <!-- *  Use an explicit visibility keyword for properties. -->
+    <!-- @TODO -->
+    <!-- *  Use an explicit visibility keyword for methods. -->
+    <!-- @TODO -->
+    <!-- *  PHP-4 style properties are prohibited. -->
+    <!-- @TODO -->
+    <!-- *  Private properties should be avoided. -->
+    <!-- @TODO -->
+    <!-- *  Private methods should be avoided. -->
+    <!-- @TODO -->
+    <!-- *  Private/protected properties should be prefixed
+            with an underscore. -->
+    <!-- @TODO -->
+    <!-- *  Private/protected methods should be prefixed
+            with an underscore. -->
+    <!-- @TODO -->
+    <!-- *  The visibility keyword should appear last for a method
+            (just before the "function" keyword). -->
+    <!-- @TODO -->
+
+
+    <!--
+        Naming conventions: Class constructors
+        http://erebot.github.com/Erebot/Coding_Standard.html#class-constructors
+    -->
+    <!-- *  Don't use PHP4-style constructors. -->
+    <rule ref="Generic.NamingConventions.ConstructorName"/>
+
+
+    <!--
+        Naming conventions: Functions
+        http://erebot.github.com/Erebot/Coding_Standard.html#functions
+    -->
+    <!-- *  Functions should be named using lowercase_with_underscores. -->
+    <!-- @TODO -->
+
+
+    <!--
+        Naming conventions: Constants
+        http://erebot.github.com/Erebot/Coding_Standard.html#constants
+    -->
+    <!-- *  Constants should be named using UPPERCASE_WITH_UNDERSCORES. -->
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+    <!-- *  Keep the UPPERCASE_WITH_UNDERSCORES scheme
+            when using the constant. -->
+    <rule ref="Generic.PHP.UpperCaseConstant"/>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+    <!-- @TODO -->
+    <!-- *  Avoid global constants -->
+    <!-- @TODO -->
+
+
+    <!--
+        Naming conventions: Variables
+    -->
+    <!-- *  Variables must be written using "lowerCamelCase". -->
+    <rule ref="Zend.NamingConventions.ValidVariableName"/>
+    <!-- *  Use of numbers in variable names is discouraged. -->
+    <rule ref="Zend.NamingConventions.ValidVariableName"/>
+
+
+    <!--
+        Naming conventions: Global variables
+        http://erebot.github.com/Erebot/Coding_Standard.html#global-variables
+    -->
+    <!-- *  Global variables are strictly prohibited. -->
+    <!-- @TODO -->
+
+    <!--
+        Other / To be sorted
+    -->
+    <!-- @FIXME:    disabled as PHP_PMD already takes
+                    care Cyclomatic Complexity. -->
+<!--    <rule ref="Generic.Metrics.CyclomaticComplexity"/>-->
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+    <rule ref="Generic.PHP.NoSilencedErrors">
+    <!-- Don't use the "nowdoc" format introduced in PHP 5.3.0. -->
+    <!-- @TODO -->
+    <rule ref="Generic.Classes.DuplicateClassName"/>
+    <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+    <rule ref="Generic.Files.ByteOrderMark"/>
+    <!-- @FIXME:    disabled due to some empty "catch"
+                    statements in the code. -->
+<!--    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>-->
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+
+    <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
+    <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
+    <rule ref="Generic.Metrics.NestingLevel"/>
+        <properties>
+            <property name="error" value="false"/>
+        </properties>
+    </rule>
+<!--    <rule ref="Generic.Formatting.MultipleStatementAlignment">-->
+<!--        <properties>-->
+<!--            <property name="error" value="false"/>-->
+<!--            <property name="ignoreMultiLine" value="true"/>-->
+<!--        </properties>-->
+<!--    </rule>-->
     <rule ref="PEAR.Classes.ClassDeclaration"/>
     <rule ref="PEAR.Commenting.InlineComment"/>
     <rule ref="PEAR.Functions.FunctionCallSignature"/>
     <rule ref="PEAR.Functions.ValidDefaultValue"/>
     <rule ref="PEAR.NamingConventions.ValidClassName"/>
-    <rule ref="PEAR.NamingConventions.ValidFunctionName"/>
-    <rule ref="PEAR.NamingConventions.ValidVariableName"/>
-    <rule ref="PEAR.WhiteSpace.ObjectOperatorIndent"/>
     <rule ref="PEAR.WhiteSpace.ScopeClosingBrace"/>
-    <rule ref="PEAR.WhiteSpace.ScopeIndent"/>
-    <rule ref="PHPUnitStandard.Testing.AllowedFunctionOverride"/>
-    <rule ref="PHPUnitStandard.Testing.ClassName"/>
-    <rule ref="PHPUnitStandard.Testing.TestOrProviderIsPublic"/>
-    <rule ref="PHPUnitStandard.Testing.UnusedProvider"/>
-    <rule ref="Zend.Files.ClosingTag"/>
-    <rule ref="Zend.NamingConventions.ValidVariableName"/>
-
-    <!--
-        Indenting and whitespaces
-    -->
-
-    <!-- *  No trailing whitespace. -->
-    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
-    <!-- *  All text files should end in a single newline (\n). -->
-
-
-    <!--
-        Operators
-    -->
-
-    <!-- *  All binary operators should have a space
-            before and after the operator. -->
-    <rule ref="Squiz.WhiteSpace.OperatorSpacing"/>
-    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
-
-
-    <!--
-        Casting
-    -->
-
-
-
-    <!--
-        Control structures
-    -->
-
-    <!-- *  Put a single space between the type
-            and the operand of a cast. -->
-
-
-
-    <!-- Line length and wrapping -->
-    <!-- Function/method calls -->
-    <!-- Function/method declarations -->
-    <!-- Class constructor calls -->
-    <!-- Arrays -->
-    <!-- Quotes -->
-    <!-- String concatenation -->
-    <!-- Comments -->
-    <!-- Filesystem paths -->
-    <!-- Including code -->
-    <!-- PHP code tags -->
-    <!-- Semicolons -->
-    <!-- Example URLs -->
-    <!-- Naming conventions: Files -->
-    <!-- Naming conventions: Classes and interfaces -->
-    <!-- Naming conventions: Class methods and properties -->
-    <!-- Naming conventions: Class constructors -->
-    <!-- Naming conventions: Functions -->
-    <!-- Naming conventions: Constants -->
-    <!-- Naming conventions: Global variables -->
+<!--    <rule ref="PEAR.WhiteSpace.ScopeIndent"/>-->
+<!--    <rule ref="PHPUnitStandard.Testing.AllowedFunctionOverride"/>-->
+<!--    <rule ref="PHPUnitStandard.Testing.ClassName"/>-->
+<!--    <rule ref="PHPUnitStandard.Testing.TestOrProviderIsPublic"/>-->
+<!--    <rule ref="PHPUnitStandard.Testing.UnusedProvider"/>-->
 </ruleset>
 
