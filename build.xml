@@ -1,15 +1,22 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv" description="Same as 'phing all'" default="all">
     <php expression="md5(PHP_VERSION.uniqid('', TRUE));" returnProperty="randomID"/>
-    <php function="sys_get_temp_dir"    returnProperty="tmp.dir"/>
-    <property name="qa.coverage.force"  value="true"/>
-    <property name="qa.coverage.db"     value="${tmp.dir}/${phing.project.name}.${randomID}.db"/>
-    <property name="qa.coverage.tmp"    value="${tmp.dir}/${phing.project.name}.${randomID}.xml"/>
-    <property name="release.tmp"        value="${tmp.dir}/release-${phing.project.name}.${randomID}"/>
-    <property name="file.tmp"           value="${tmp.dir}/${phing.project.name}.${randomID}"/>
-    <property name="build-phar"         value="true"/>
-    <property name="pear.channel"       value="pear.erebot.net"/>
-    <property name="tagfiles"           value=""/>
+    <php function="sys_get_temp_dir"        returnProperty="tmp.dir"/>
+    <property name="qa.coverage.force"      value="true"/>
+    <property name="qa.coverage.db"         value="${tmp.dir}/${phing.project.name}.${randomID}.db"/>
+    <property name="qa.coverage.tmp"        value="${tmp.dir}/${phing.project.name}.${randomID}.xml"/>
+    <property name="release.tmp"            value="${tmp.dir}/release-${phing.project.name}.${randomID}"/>
+    <property name="file.tmp"               value="${tmp.dir}/${phing.project.name}.${randomID}"/>
+    <property name="build-phar"             value="true"/>
+    <property name="pear.channel"           value="pear.erebot.net"/>
+    <property name="tagfiles"               value=""/>
+    <propery name="subfile.phpcs"           value="buildenv/phing/phpcs.xml"/>
+    <propery name="subfile.pdepend"         value="buildenv/phing/pdepend.xml"/>
+    <propery name="subfile.phpmd"           value="buildenv/phing/phpmd.xml"/>
+    <propery name="subfile.phpcpd"          value="buildenv/phing/phpcpd.xml"/>
+    <propery name="subfile.coverage.pre"    value="buildenv/phing/pre_coverage.xml"/>
+    <propery name="subfile.phpunit"         value="buildenv/phing/phpunit.xml"/>
+    <propery name="subfile.coverage"        value="buildenv/phing/coverage.xml"/>
 
     <if>
         <istrue value="${qa.coverage.force}"/>
@@ -350,7 +357,7 @@
         </php>
         <if>
             <istrue value="${usable}"/>
-            <then><import file="buildenv/phing/phpcs.xml"/></then>
+            <then><import file="${subfile.phpcs}"/></then>
             <else>
                 <echo>
                     pear.php.net/PHP_CodeSniffer >= 1.2.2 must be installed
@@ -369,7 +376,7 @@
         </php>
         <if>
             <istrue value="${usable}"/>
-            <then><import file="buildenv/phing/pdepend.xml"/></then>
+            <then><import file="${subfile.pdepend}"/></then>
             <else>
                 <echo>
                     pear.pdepend.org/PHP_Depend must be installed
@@ -388,7 +395,7 @@
         </php>
         <if>
             <istrue value="${usable}"/>
-            <then><import file="buildenv/phing/phpmd.xml"/></then>
+            <then><import file="${subfile.phpmd}"/></then>
             <else>
                 <echo>
                     pear.phpmd.org/PHP_PMD must be installed
@@ -407,7 +414,7 @@
         </php>
         <if>
             <istrue value="${usable}"/>
-            <then><import file="buildenv/phing/phpcpd.xml"/></then>
+            <then><import file="${subfile.phpcpd}"/></then>
             <else>
                 <echo>
                     pear.phpunit.de/phpcpd must be installed
@@ -426,7 +433,7 @@
         </php>
         <if>
             <istrue value="${usable}"/>
-            <then><import file="buildenv/phing/pre_coverage.xml"/></then>
+            <then><import file="${subfile.coverage.pre}"/></then>
             <else>
                 <echo>
                     pear.phpunit.de/PHPUnit must be installed
@@ -447,7 +454,7 @@
         </php>
         <if>
             <istrue value="${usable}"/>
-            <then><import file="buildenv/phing/phpunit.xml"/></then>
+            <then><import file="${subfile.phpunit}"/></then>
             <else>
                 <echo>
                     pear.phpunit.de/PHPUnit must be installed
@@ -467,7 +474,7 @@
         </php>
         <if>
             <istrue value="${usable}"/>
-            <then><import file="buildenv/phing/coverage.xml"/></then>
+            <then><import file="${subfile.coverage}"/></then>
             <else>
                 <echo>
                     pear.phpunit.de/PHPUnit must be installed
