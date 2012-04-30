@@ -10,13 +10,13 @@
     <property name="build-phar"             value="true"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
     <property name="tagfiles"               value=""/>
-    <propery name="subfile.phpcs"           value="buildenv/phing/phpcs.xml"/>
-    <propery name="subfile.pdepend"         value="buildenv/phing/pdepend.xml"/>
-    <propery name="subfile.phpmd"           value="buildenv/phing/phpmd.xml"/>
-    <propery name="subfile.phpcpd"          value="buildenv/phing/phpcpd.xml"/>
-    <propery name="subfile.coverage.pre"    value="buildenv/phing/pre_coverage.xml"/>
-    <propery name="subfile.phpunit"         value="buildenv/phing/phpunit.xml"/>
-    <propery name="subfile.coverage"        value="buildenv/phing/coverage.xml"/>
+    <property name="subfile.phpcs"          value="buildenv/phing/phpcs.xml"/>
+    <property name="subfile.pdepend"        value="buildenv/phing/pdepend.xml"/>
+    <property name="subfile.phpmd"          value="buildenv/phing/phpmd.xml"/>
+    <property name="subfile.phpcpd"         value="buildenv/phing/phpcpd.xml"/>
+    <property name="subfile.coverage.pre"   value="buildenv/phing/pre_coverage.xml"/>
+    <property name="subfile.phpunit"        value="buildenv/phing/phpunit.xml"/>
+    <property name="subfile.coverage"       value="buildenv/phing/coverage.xml"/>
 
     <if>
         <istrue value="${qa.coverage.force}"/>
