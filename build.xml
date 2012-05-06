@@ -145,7 +145,7 @@
         <php function="putenv">
             <param value="LANG=C"/>
         </php>
-        <xgettext command="xgettext -o data/i18n/${phing.project.name}.pot --from-code utf-8 --foreign-user --add-location -E -i -w 80 -s -L PHP --strict --force-po --package-name ${phing.project.name} --package-version ${version} --msgid-bugs-address i18n@erebot.net --add-comments=I18N:">
+        <xgettext command="xgettext -o data/i18n/${phing.project.name}.pot --from-code utf-8 --foreign-user --add-location -E -w 80 -s -L PHP --strict --force-po --package-name ${phing.project.name} --package-version ${version} --msgid-bugs-address i18n@erebot.net --add-comments=I18N:">
             <fileset refid="sources"/>
         </xgettext>
         <if>
@@ -165,13 +165,13 @@
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="msgmerge --backup=off -U -N -e -i --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${phing.project.name}.pot" logoutput="true" dir="."/>
+        <exec command="msgmerge --backup=off -U -N -e --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${phing.project.name}.pot" logoutput="true" dir="."/>
     </target>
 
     <target name="identity_catalog"
         description="Automatically translate the catalog for the default locale">
         <property name="locale" value="en_US"/>
-        <exec command="msgen -e -i --strict -w 80 -F --add-location -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
+        <exec command="msgen -e --strict -w 80 -F --add-location -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="init_catalog"
@@ -221,7 +221,7 @@
         <exec
             command="pyrus.phar ${release.tmp} make ${phing.project.name} ${pear.channel} ."
             passthru="true"
-            checkreturn="true"
+            checkreturn="false"
         />
         <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u &quot;/pear:package/pear:stability/pear:release&quot; -v ${stability} package.xml > ${file.tmp}"
             escape="false" checkreturn="true" logoutput="true"/>
@@ -247,7 +247,7 @@
                 <exec
                     command="pyrus.phar ${release.tmp} package --tgz &lt; ${release.tmp}/sign"
                     passthru="true"
-                    checkreturn="true"
+                    checkreturn="false"
                 />
                 <if>
                     <istrue value="${build-phar}"/>
@@ -255,7 +255,7 @@
                         <exec
                             command="pyrus.phar ${release.tmp} package --phar &lt; ${release.tmp}/sign"
                             passthru="true"
-                            checkreturn="true"
+                            checkreturn="false"
                         />
                     </then>
                 </if>
@@ -264,7 +264,7 @@
                 <exec
                     command="pyrus.phar ${release.tmp} package --tgz"
                     passthru="true"
-                    checkreturn="true"
+                    checkreturn="false"
                 />
                 <if>
                     <istrue value="${build-phar}"/>
@@ -272,7 +272,7 @@
                         <exec
                             command="pyrus.phar ${release.tmp} package --phar"
                             passthru="true"
-                            checkreturn="true"
+                            checkreturn="false"
                         />
                     </then>
                 </if>
