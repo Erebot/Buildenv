@@ -165,13 +165,13 @@
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="msgmerge --backup=off -U -N -e --strict -w 80 -q --add-location data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${phing.project.name}.pot" logoutput="true" dir="."/>
+        <exec command="msgmerge --lang=${locale} --backup=off -U -N -e --strict -w 80 -q --add-location data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${phing.project.name}.pot" logoutput="true" dir="."/>
     </target>
 
     <target name="identity_catalog"
         description="Automatically translate the catalog for the default locale">
         <property name="locale" value="en_US"/>
-        <exec command="msgen -e --strict -w 80 --add-location -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
+        <exec command="msgen --lang=${locale} -e --strict -w 80 --add-location -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="init_catalog"
