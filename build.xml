@@ -165,7 +165,7 @@
     </target>
 
     <target name="update_1_catalog" hidden="true">
-        <exec command="msgmerge --backup=off -U -N -e --strict -w 80 -F -q --add-location data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${phing.project.name}.pot" logoutput="true" dir="."/>
+        <exec command="msgmerge --backup=off -U -N -e --strict -w 80 -q --add-location data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${phing.project.name}.pot" logoutput="true" dir="."/>
     </target>
 
     <target name="identity_catalog"
