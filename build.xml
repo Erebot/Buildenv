@@ -339,6 +339,8 @@
         description="Same as 'phing test'"/>
     <target name="coverage" depends="qa_coverage"
         description="Same as 'phing test'"/>
+    <target name="prepare_test" depends="all"
+        description="Tasks to do before running the test suite"/>
 
 
     <!-- Quality Assurance -->
