@@ -333,14 +333,16 @@
 
 
     <!-- Unit tests and code coverage -->
-    <target name="test" depends="qa_coverage"
+    <target name="test" depends="prepare_test,bare_test"
         description="Run tests and generate code coverage reports (same as 'phing qa_coverage')" />
-    <target name="tests" depends="qa_coverage"
+    <target name="tests" depends="prepare_test,bare_test"
         description="Same as 'phing test'"/>
-    <target name="coverage" depends="qa_coverage"
+    <target name="coverage" depends="prepare_test,bare_test"
         description="Same as 'phing test'"/>
     <target name="prepare_test" depends="all"
         description="Tasks to do before running the test suite"/>
+    <target name="bare_test" depends="qa_coverage"
+        description="Run the tests without any preparations"/>
 
 
     <!-- Quality Assurance -->
