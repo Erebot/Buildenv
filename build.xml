@@ -171,7 +171,7 @@
     <target name="identity_catalog"
         description="Automatically translate the catalog for the default locale">
         <property name="locale" value="en_US"/>
-        <exec command="msgen -e --strict -w 80 -F --add-location -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
+        <exec command="msgen -e --strict -w 80 --add-location -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
     </target>
 
     <target name="init_catalog"
