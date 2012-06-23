@@ -206,12 +206,14 @@
     <target name="release" depends="all"
         description="Build a PEAR package from the current code">
         <propertyprompt useExistingValue="true" promptText="Stability" propertyName="stability" defaultValue="stable"/>
+        <!-- Remove previous package*.xml files. -->
         <delete verbose="true">
             <fileset dir=".">
                 <include name="package.xml"/>
                 <include name="package_compatible.xml"/>
             </fileset>
         </delete>
+        <!-- Create new (updated) package*.xml files. -->
         <mkdir dir="${release.tmp}"/>
         <exec
             command="pyrus.phar ${release.tmp} channel-discover ${pear.channel} ."
@@ -226,6 +228,15 @@
         <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u &quot;/pear:package/pear:stability/pear:release&quot; -v ${stability} package.xml > ${file.tmp}"
             escape="false" checkreturn="true" logoutput="true"/>
         <move file="${file.tmp}" tofile="package.xml" haltonerror="true" overwrite="true"/>
+
+        <!-- Delete old files. -->
+        <delete verbose="true" file="${phing.project.name}-${version}.tgz" failonerror="false"/>
+        <if>
+            <istrue value="${build-phar}"/>
+            <then>
+                <delete verbose="true" file="${phing.project.name}-${version}.phar" failonerror="false"/>
+            </then>
+        </if>
 
         <if>
             <isset property="passfile"/>
@@ -257,6 +268,7 @@
                             passthru="true"
                             checkreturn="false"
                         />
+                        <chmod file="${phing.project.name}-${version}.phar" mode="0755"/>
                     </then>
                 </if>
             </then>
@@ -274,6 +286,7 @@
                             passthru="true"
                             checkreturn="false"
                         />
+                        <chmod file="${phing.project.name}-${version}.phar" mode="0755"/>
                     </then>
                 </if>
             </else>
