@@ -12,7 +12,6 @@
 
 require(
     dirname(__FILE__) .
-    DIRECTORY_SEPARATOR . 'buildenv' .
     DIRECTORY_SEPARATOR . 'dependency.php'
 );
 
