@@ -74,6 +74,10 @@ foreach (array($package, $compatible) as $obj) {
                     continue;
                 $objDep = $obj->dependencies[$pearType]->pearinstaller;
             }
+            else if (substr($dependency, 0, 13) == 'pecl.php.net/') {
+                $objDep = $obj->dependencies[$pearType]
+                              ->extension[substr($dependency, 13)];
+            }
             else
                 $objDep = $obj->dependencies[$pearType]->package[$dependency];
 
