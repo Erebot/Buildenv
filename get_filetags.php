@@ -5,7 +5,12 @@
 
 function usage($script)
 {
-    echo "Usage: $script current_component [component1,component2,...]\n";
+    fprintf(
+        STDERR,
+        "%s",
+        "Usage: $script current_component [component1,component2,...]" .
+        PHP_EOL
+    );
     exit(1);
 }
 
@@ -20,45 +25,36 @@ function main()
     $current = array_shift($args);
 
     if (!count($args))
-        echo "\n";
+        echo PHP_EOL;
 
     $components = explode(',', array_shift($args));
     $paths      = array();
-    $base       = dirname(dirname(dirname(dirname(__FILE__))));
-    if (!strncasecmp($current, 'Erebot_Module_', 14))
-        $base = dirname($base);
+    $base       = dirname(dirname(dirname(__FILE__)));
 
     foreach ($components as $component) {
         if ($current == '-')
             $parts = array('', 'tmp', 'tagfiles');
-        else if ($component == 'Erebot' || $component == 'Plop')
-            $parts = array(
-                $base,
-                ($component == 'Erebot' ? 'core' : 'logging'),
-                'trunk',
-            );
         else
             $parts = array(
                 $base,
-                'modules',
-                substr($component, 14),
-                'trunk',
+                $component,
             );
 
         $parts[]        = $component . '.tagfile.xml';
         $path           = implode(DIRECTORY_SEPARATOR, $parts);
         $paths[$path]   =
             ($current == '-')
-            ? '../' . $component
+            ? '../../' . $component . '/html'
             : dirname($path) .
                 DIRECTORY_SEPARATOR . 'docs' .
+                DIRECTORY_SEPARATOR . 'api' .
                 DIRECTORY_SEPARATOR . 'html';
     }
 
     foreach ($paths as $tagfile => $relative)
         echo "\"$tagfile=$relative\" ";
 
-    echo "\n";
+    echo PHP_EOL;
     exit(0);
 }
 
