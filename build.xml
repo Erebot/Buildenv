@@ -137,8 +137,8 @@
 
     <!-- Internationalization -->
     <target name="i18n"
-        depends="extract_messages,compile_catalog"
-        description="Updates the translation template and creates translation catalogs"/>
+        depends="extract_messages,update_catalog,compile_catalog"
+        description="Runs several commands to update the translation files"/>
 
     <target name="extract_messages"
         description="Extract messages in need of a translation from current code">
