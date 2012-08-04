@@ -31,7 +31,8 @@ ALIASES               += "i{1}=\htmlonly <em>\1</em> \endhtmlonly\latexonly\text
 ALIASES               += "b{1}=\htmlonly <strong>\1</strong> \endhtmlonly\latexonly\textbf{\1}\endlatexonly"
 ALIASES               += "FIXME=\xrefitem FIXME \"Known issues\" \"Known Issues\""
 ALIASES               += "HACK=\xrefitem HACK \"Dirty hacks\" \"Dirty Hacks\""
-ALIASES               += "format{1}=\par Format\n<tt>\1</tt>\n"
+ALIASES               += "format{1}=\xrefitem numeric \"Format\" \"IRC numerics\" \code \1 \endcode"
+ALIASES               += "format=\xrefitem numeric \"Format\" \"IRC numerics\" \code \endcode"
 ALIASES               += "SuppressWarnings="
 
 OPTIMIZE_OUTPUT_FOR_C  = NO
