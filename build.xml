@@ -8,7 +8,7 @@
     <property name="release.tmp"            value="${tmp.dir}/release-${phing.project.name}.${randomID}"/>
     <property name="file.tmp"               value="${tmp.dir}/${phing.project.name}.${randomID}"/>
     <property name="build-phar"             value="true"/>
-    <property name="pear.channel"           value="pear.erebot.net"/>
+    <property name="pear.channel"           value="pear.erebot.net:943"/>
     <property name="tagfiles"               value=""/>
     <property name="subfile.phpcs"          value="buildenv/phing/phpcs.xml"/>
     <property name="subfile.pdepend"        value="buildenv/phing/pdepend.xml"/>
