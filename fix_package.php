@@ -9,6 +9,14 @@
 
 function main()
 {
+    $args = $_SERVER['argv'];
+    $script = array_shift($args);
+    if (!count($args)) {
+        fprintf(STDERR, "Usage: %s <channel>\n", $script);
+        exit(1);
+    }
+    $channel = array_shift($args);
+
     $sxml = new SimpleXMLElement(
         'php://stdin',
         LIBXML_NONET | LIBXML_COMPACT,
@@ -50,6 +58,7 @@ function main()
                     array_slice($parts, 1, $len / 2) ==
                     array_slice($parts, 1 + $len / 2, -1)) {
                     array_splice($parts, 1, $len / 2);
+                    array_unshift($parts, $channel);
                     $node->attributes('')->as = implode('/', $parts);
                 }
             }

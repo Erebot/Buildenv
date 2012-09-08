@@ -231,7 +231,7 @@
             passthru="true"
             checkreturn="false"
         />
-        <exec command="php ./buildenv/fix_package.php &lt; package_compatible.xml &gt; ${file.tmp}" checkreturn="false"/>
+        <exec command="php ./buildenv/fix_package.php ${pear.channel} &lt; package_compatible.xml &gt; ${file.tmp}" checkreturn="false"/>
         <move file="${file.tmp}" tofile="package_compatible.xml" haltonerror="true" overwrite="true"/>
         <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u /pear:package/pear:stability/pear:release -v ${stability} package.xml > ${file.tmp}"
             escape="false" checkreturn="true" logoutput="true"/>
