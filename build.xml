@@ -8,7 +8,7 @@
     <property name="release.tmp"            value="${tmp.dir}/release-${phing.project.name}.${randomID}"/>
     <property name="file.tmp"               value="${tmp.dir}/${phing.project.name}.${randomID}"/>
     <property name="build-phar"             value="true"/>
-    <property name="pear.channel"           value="pear.erebot.net:943"/>
+    <property name="pear.channel"           value="pear.erebot.net"/>
     <property name="tagfiles"               value=""/>
     <property name="subfile.phpcs"          value="buildenv/phing/phpcs.xml"/>
     <property name="subfile.pdepend"        value="buildenv/phing/pdepend.xml"/>
@@ -231,9 +231,14 @@
             passthru="true"
             checkreturn="false"
         />
-        <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u &quot;/pear:package/pear:stability/pear:release&quot; -v ${stability} package.xml > ${file.tmp}"
+        <exec command="php ./buildenv/fix_package.php ${pear.channel} &lt; package_compatible.xml &gt; ${file.tmp}" checkreturn="false"/>
+        <move file="${file.tmp}" tofile="package_compatible.xml" haltonerror="true" overwrite="true"/>
+        <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u /pear:package/pear:stability/pear:release -v ${stability} package.xml > ${file.tmp}"
             escape="false" checkreturn="true" logoutput="true"/>
         <move file="${file.tmp}" tofile="package.xml" haltonerror="true" overwrite="true"/>
+        <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u /pear:package/pear:stability/pear:release -v ${stability} package_compatible.xml > ${file.tmp}"
+            escape="false" checkreturn="true" logoutput="true"/>
+        <move file="${file.tmp}" tofile="package_compatible.xml" haltonerror="true" overwrite="true"/>
 
         <!-- Delete old files. -->
         <delete verbose="true" file="${phing.project.name}-${version}.tgz" failonerror="false"/>
