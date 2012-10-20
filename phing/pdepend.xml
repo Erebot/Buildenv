@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv_pdepend">
-    <phpdepend withoutAnnotations="true" file=".">
+    <phpdepend withoutAnnotations="true">
         <fileset refid="sources"/>
         <analyzer type="coderank-mode" value="method"/>
-        <logger type="phpunit-xml" outfile="/dev/null"/>
+        <logger type="jdepend-chart" outfile="./jdepend-chart.svg"/>
+        <logger type="overview-pyramid" outfile="./overview-pyramid.svg"/>
     </phpdepend>
 </project>
