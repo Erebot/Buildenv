@@ -22,48 +22,84 @@ function main()
         LIBXML_NONET | LIBXML_COMPACT,
         TRUE
     );
+
+    $folders = array(
+        'doc'   => 'docs',
+        'test'  => 'tests',
+        'data'  => 'data',
+        'php'   => 'src',
+    );
+
     $ns = 'http://pear.php.net/dtd/package-2.1';
     $sxml->registerXPathNamespace('pkg', $ns);
-    foreach (array('doc', 'test', 'data') as $role) {
-        $xpath = $sxml->xpath('/pkg:package/pkg:contents[1]/pkg:dir[1]/pkg:file[@role="'.$role.'"]');
+    foreach ($folders as $role => $folder) {
+        $xpath = $sxml->xpath('/pkg:package/pkg:contents[1]/pkg:dir[1]/'.
+                              'pkg:file[@role="'.$role.'"]');
         if (is_array($xpath)) {
             foreach ($xpath as $node) {
                 $parts = explode('/', (string) $node->attributes('')->name);
-                $len = count($parts) - 4;
-                if ($len > 0 &&
-                    array_slice($parts, 3, $len / 2) ==
-                    array_slice($parts, 3 + $len / 2, -1)) {
-                    array_splice($parts, 3, $len / 2);
+                $len = count($parts);
+
+                if ($len) {
+                    // Replace role by folder.
+                    if ($parts[0] == $role) {
+                        $parts[0] = $folder;
+                    }
+                    // Remove channel & package name.
+                    if ($len > 3 && $parts[1] == $channel) {
+                        array_splice($parts, 1, 2);
+                    }
+                    // Remove path duplication.
+                    $len = (count($parts) - 2) / 2;
+                    if (array_slice($parts, 1, $len) ==
+                        array_slice($parts, 1 + $len, -1)) {
+                        array_splice($parts, 1, $len);
+                    }
                     $node->attributes('')->name = implode('/', $parts);
                 }
             }
         }
-        $xpath = $sxml->xpath('/pkg:package/pkg:phprelease[1]/pkg:filelist[1]/pkg:install[starts-with(@name, "'.$role.'/")]');
+        $xpath = $sxml->xpath('/pkg:package/pkg:phprelease[1]/pkg:filelist[1]'.
+                              '/pkg:install[starts-with(@name, "'.$role.'/")]');
         if (is_array($xpath)) {
             foreach ($xpath as $node) {
                 $parts = explode('/', (string) $node->attributes('')->name);
-                $len = count($parts) - 4;
-                if ($len > 0 &&
-                    array_slice($parts, 3, $len / 2) ==
-                    array_slice($parts, 3 + $len / 2, -1)) {
-                    array_splice($parts, 3, $len / 2);
+                $len = count($parts);
+
+                if ($len) {
+                    // Replace role by folder.
+                    if ($parts[0] == $role) {
+                        $parts[0] = $folder;
+                    }
+                    // Remove channel & package name.
+                    if ($len > 3 && $parts[1] == $channel) {
+                        array_splice($parts, 1, 2);
+                    }
+                    // Remove path duplication.
+                    $len = (count($parts) - 2) / 2;
+                    if (array_slice($parts, 1, $len) ==
+                        array_slice($parts, 1 + $len, -1)) {
+                        array_splice($parts, 1, $len);
+                    }
                     $node->attributes('')->name = implode('/', $parts);
                 }
-                else
-                    continue;
 
                 $parts = explode('/', (string) $node->attributes('')->as);
-                $len = count($parts) - 2;
-                if ($len > 0 &&
-                    array_slice($parts, 1, $len / 2) ==
-                    array_slice($parts, 1 + $len / 2, -1)) {
-                    array_splice($parts, 1, $len / 2);
-                    array_unshift($parts, $channel);
+                $len = count($parts);
+
+                if ($len) {
+                    // Remove path duplication.
+                    $len = (count($parts) - 2) / 2;
+                    if (array_slice($parts, 1, $len) ==
+                        array_slice($parts, 1 + $len, -1)) {
+                        array_splice($parts, 1, $len);
+                    }
                     $node->attributes('')->as = implode('/', $parts);
                 }
             }
         }
     }
+
     echo $sxml->asXML();
 }
 
