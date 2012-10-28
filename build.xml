@@ -227,22 +227,18 @@
             checkreturn="true"
         />
         <exec
-            command="pyrus.phar ${release.tmp} make ${phing.project.name} ${pear.channel} ."
+            command="pyrus.phar ${release.tmp} make -n ${phing.project.name} ${pear.channel} ."
             passthru="true"
             checkreturn="false"
         />
-
-        <!-- Overwrite package.xml with package_compatible.xml. -->
-        <move file="package_compatible.xml" tofile="package.xml" haltonerror="true" overwrite="true"/>
-
-        <!-- Fix paths in package.xml (see Pyrus/Pyrus#26). -->
-        <exec command="php ./buildenv/fix_package.php ${pear.channel} &lt; package.xml &gt; ${file.tmp}" checkreturn="false"/>
-        <move file="${file.tmp}" tofile="package.xml" haltonerror="true" overwrite="true"/>
 
         <!-- Update package stability. -->
         <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u /pear:package/pear:stability/pear:release -v ${stability} package.xml > ${file.tmp}"
             escape="false" checkreturn="true" logoutput="true"/>
         <move file="${file.tmp}" tofile="package.xml" haltonerror="true" overwrite="true"/>
+
+        <!-- Generate a pear-compatible package.xml (2.0). -->
+        <exec command="php ./buildenv/fix_package.php &lt; package.xml &gt; package_compatible.xml"/>
 
         <!-- Delete old files. -->
         <delete verbose="true" file="${phing.project.name}-${version}.tgz" failonerror="false"/>
