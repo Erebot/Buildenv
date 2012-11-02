@@ -93,9 +93,6 @@ foreach ($pearTypes as $pearType => $composerType) {
     }
 }
 
-// PEAR installer.
-$package->dependencies['required']->pearinstaller->min('1.9.2')->save();
-
 // license.
 if (isset($metadata['license'])) {
     $pkgLicenses = (array) $metadata['license'];
@@ -103,7 +100,7 @@ if (isset($metadata['license'])) {
         throw new Exception('Multiple licenses are not implemented yet');
     foreach ($pkgLicenses as $name) {
         $package->license['name'] = $name;
-        if (isset($licenses[$name])) {
+        if (in_array($name, $licenses)) {
             $package->license['uri'] = sprintf(
                 'http://www.spdx.org/licenses/%s#licenseText',
                 rawurlencode($name)
