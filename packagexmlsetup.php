@@ -54,7 +54,6 @@ function normalizePearVersion($package, $version)
 }
 
 $parser = new Erebot_Package_Dependency();
-
 // Requirements, suggestions and conflicts.
 foreach ($pearTypes as $pearType => $composerType) {
     if (!isset($metadata[$composerType]))
@@ -72,12 +71,13 @@ foreach ($pearTypes as $pearType => $composerType) {
         if ($dependency == 'php') {
             $objDep = $package->dependencies[$pearType]->php;
         }
-        else if (substr($dependency, 0, 13) == 'pecl.php.net/') {
+        else if (substr($dependency, 0, 4) == 'php-') {
             $objDep = $package->dependencies[$pearType]
-                              ->extension[substr($dependency, 13)];
+                              ->extension[substr($dependency, 4)];
         }
         else {
-            $objDep = $package->dependencies[$pearType]->package[$dependency];
+            $objDep = $package->dependencies[$pearType]
+                              ->package[$dependency];
         }
 
         // Apply the constraints.
