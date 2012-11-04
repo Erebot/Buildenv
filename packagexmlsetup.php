@@ -71,7 +71,7 @@ foreach ($pearTypes as $pearType => $composerType) {
         if ($dependency == 'php') {
             $objDep = $package->dependencies[$pearType]->php;
         }
-        else if (substr($dependency, 0, 4) == 'php-') {
+        else if (substr($dependency, 0, 4) == 'ext-') {
             $objDep = $package->dependencies[$pearType]
                               ->extension[substr($dependency, 4)];
         }
