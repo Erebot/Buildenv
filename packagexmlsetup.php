@@ -54,7 +54,6 @@ function normalizePearVersion($package, $version)
 }
 
 $parser = new Erebot_Package_Dependency();
-
 // Requirements, suggestions and conflicts.
 foreach ($pearTypes as $pearType => $composerType) {
     if (!isset($metadata[$composerType]))
@@ -72,12 +71,13 @@ foreach ($pearTypes as $pearType => $composerType) {
         if ($dependency == 'php') {
             $objDep = $package->dependencies[$pearType]->php;
         }
-        else if (substr($dependency, 0, 13) == 'pecl.php.net/') {
+        else if (substr($dependency, 0, 4) == 'php-') {
             $objDep = $package->dependencies[$pearType]
-                              ->extension[substr($dependency, 13)];
+                              ->extension[substr($dependency, 4)];
         }
         else {
-            $objDep = $package->dependencies[$pearType]->package[$dependency];
+            $objDep = $package->dependencies[$pearType]
+                              ->package[$dependency];
         }
 
         // Apply the constraints.
@@ -93,9 +93,6 @@ foreach ($pearTypes as $pearType => $composerType) {
     }
 }
 
-// PEAR installer.
-$package->dependencies['required']->pearinstaller->min('1.9.2')->save();
-
 // license.
 if (isset($metadata['license'])) {
     $pkgLicenses = (array) $metadata['license'];
@@ -103,7 +100,7 @@ if (isset($metadata['license'])) {
         throw new Exception('Multiple licenses are not implemented yet');
     foreach ($pkgLicenses as $name) {
         $package->license['name'] = $name;
-        if (isset($licenses[$name])) {
+        if (in_array($name, $licenses)) {
             $package->license['uri'] = sprintf(
                 'http://www.spdx.org/licenses/%s#licenseText',
                 rawurlencode($name)

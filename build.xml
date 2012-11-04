@@ -211,7 +211,6 @@
     <!-- Release process -->
     <target name="release" depends="all"
         description="Build a PEAR package from the current code">
-        <propertyprompt useExistingValue="true" promptText="Stability" propertyName="stability" defaultValue="stable"/>
         <!-- Remove previous package*.xml files. -->
         <delete verbose="true">
             <fileset dir=".">
@@ -231,11 +230,6 @@
             passthru="true"
             checkreturn="false"
         />
-
-        <!-- Update package stability. -->
-        <exec command="xmlstarlet ed -N pear=http://pear.php.net/dtd/package-2.1 -P -S -u /pear:package/pear:stability/pear:release -v ${stability} package.xml > ${file.tmp}"
-            escape="false" checkreturn="true" logoutput="true"/>
-        <move file="${file.tmp}" tofile="package.xml" haltonerror="true" overwrite="true"/>
 
         <!-- Generate a pear-compatible package.xml (2.0). -->
         <exec command="php ./buildenv/fix_package.php &lt; package.xml &gt; package_compatible.xml"/>
