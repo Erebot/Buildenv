@@ -436,6 +436,7 @@
 
     <target name="qa_duplicates"
         description="Check QA using phpcpd (PHP Copy/Paste Detector)">
+        <php expression="@include_once('SebastianBergmann/PHPCPD/TextUI/Command.php');"/>
         <php expression="@include_once('PHPCPD/TextUI/Command.php');"/>
         <php function="class_exists" returnProperty="usable">
             <param value="PHPCPD_TextUI_Command"/>
