@@ -492,6 +492,8 @@
         description="Run code coverage analysis based on unit tests (see 'phing qa_test')">
         <php expression="@include_once('PHPUnit/Autoload.php');"/>
         <php expression="@include_once('PHPUnit/Runner/Version.php');"/>
+        <php expression="@include_once('src/${phing.project.name}/Autoloader.php');"/>
+        <php expression="if (class_exists('${phing.project.name}_Autoloader')) ${phing.project.name}_Autoloader::register();"/>
         <php function="class_exists" returnProperty="usable">
             <param value="PHPUnit_Runner_Version"/>
         </php>
