@@ -8,18 +8,34 @@ if (!$options['phar']) {
     $package->dependencies['required']->pearinstaller->min('1.9.2')->save();
 }
 
-// Adds the "LICENSE" file to the package's documentation if it exists.
-// This code tries its best not to pollute the outer scope while being robust.
+// Adds some files to the package if they exist:
+// "LICENSE" -> package's doc/
+// "composer.json" -> package's data/
+// This code tries its best not to pollute the outer scope
+// while still being robust.
 if (isset($package, $extrafiles)) {
     call_user_func(
         function () use ($package, &$extrafiles) {
             $included = get_included_files();
-            $license = dirname($included[count($included) - 2]) .
-                        DIRECTORY_SEPARATOR . 'LICENSE';
-            if (file_exists($license)) {
-                $target = 'doc/' . $package->channel . '/' .
-                            $package->name . '/LICENSE';
-                $extrafiles[$target] = $license;
+            $rootDir = dirname($included[count($included) - 2]);
+
+            $mapping = array(
+                'LICENSE' => 'doc/@PKG_SPECIFIC@/LICENSE',
+                'composer.json' => 'data/@PKG_SPECIFIC@/composer.json',
+            );
+
+            foreach ($mapping as $source => $target) {
+                $source = $rootDir . DIRECTORY_SEPARATOR . $source;
+                if (!file_exists($source)) {
+                    continue;
+                }
+
+                $target = str_replace(
+                    '@PKG_SPECIFIC@',
+                    $package->channel . '/' . $package->name,
+                    $target
+                );
+                $extrafiles[$target] = $source;
             }
         }
     );
