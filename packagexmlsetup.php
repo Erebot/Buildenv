@@ -82,6 +82,9 @@ foreach ($pearTypes as $pearType => $composerType) {
             else if (!strncasecmp('pear-', $pkgChannel, 5)) {
                 $pkgChannel = substr($pkgChannel, 5);
             }
+            if ($pkgChannel == 'pear.erebot.net') {
+                $pkgName = str_replace('-', '_', $pkgName);
+            }
             $objDep = $package->dependencies[$pearType]
                               ->package[$pkgChannel . '/' . $pkgName];
         }
