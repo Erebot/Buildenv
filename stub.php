@@ -50,6 +50,7 @@ $metadata = json_decode(
     TRUE
 );
 $metadata['version'] = '@PACKAGE_VERSION@';
+$metadata['extra']['PEAR']['name'] = '@PACKAGE_NAME@';
 $metadata['extra']['phar']['path'] =
     "phar://" . __FILE__ .
     DIRECTORY_SEPARATOR . "@PACKAGE_NAME@-@PACKAGE_VERSION@" .
