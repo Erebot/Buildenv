@@ -22,7 +22,6 @@ $licenses = include(
 $metadata = json_decode(
     file_get_contents(
         dirname(dirname(__FILE__)) .
-        DIRECTORY_SEPARATOR . 'data' .
         DIRECTORY_SEPARATOR . 'composer.json'
     ),
     TRUE
