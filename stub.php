@@ -38,26 +38,22 @@ try {
 }
 
 // Return metadata about this package.
-$packageName = '@PACKAGE_NAME@';
-$packageVersion = '@PACKAGE_VERSION@';
-$metadata = array(
-    'pear.erebot.net/@PACKAGE_NAME@' => array(
-        'version' => '@PACKAGE_VERSION@',
-        'path' =>
-            "phar://" . __FILE__ .
-            DIRECTORY_SEPARATOR . "@PACKAGE_NAME@-@PACKAGE_VERSION@" .
-            DIRECTORY_SEPARATOR . "php",
-    )
+$metadata = json_decode(
+    file_get_contents(
+        "phar://" . __FILE__ .
+        DIRECTORY_SEPARATOR . "@PACKAGE_NAME@-@PACKAGE_VERSION@" .
+        DIRECTORY_SEPARATOR . "data" .
+        DIRECTORY_SEPARATOR . "pear.erebot.net" .
+        DIRECTORY_SEPARATOR . "@PACKAGE_NAME@" .
+        DIRECTORY_SEPARATOR . "composer.json"
+    ),
+    TRUE
 );
-
-require(
+$metadata['version'] = '@PACKAGE_VERSION@';
+$metadata['extra']['phar']['path'] =
     "phar://" . __FILE__ .
     DIRECTORY_SEPARATOR . "@PACKAGE_NAME@-@PACKAGE_VERSION@" .
-    DIRECTORY_SEPARATOR . "data" .
-    DIRECTORY_SEPARATOR . "pear.erebot.net" .
-    DIRECTORY_SEPARATOR . "@PACKAGE_NAME@" .
-    DIRECTORY_SEPARATOR . "package.php"
-);
+    DIRECTORY_SEPARATOR . "php";
 return $metadata;
 
 __HALT_COMPILER();

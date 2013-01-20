@@ -76,8 +76,15 @@ foreach ($pearTypes as $pearType => $composerType) {
                               ->extension[substr($dependency, 4)];
         }
         else {
+            list($pkgChannel, $pkgName) = explode('/', $dependency, 2);
+            if ($pkgChannel == 'erebot') {
+                $pkgChannel = 'pear.erebot.net';
+            }
+            else if (!strncasecmp('pear-', $pkgChannel, 5)) {
+                $pkgChannel = substr($pkgChannel, 5);
+            }
             $objDep = $package->dependencies[$pearType]
-                              ->package[$dependency];
+                              ->package[$pkgChannel . '/' . $pkgName];
         }
 
         // Apply the constraints.
