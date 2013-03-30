@@ -32,6 +32,7 @@ extensions = [
     'sphinx.ext.pngmath',
     'sphinx.ext.ifconfig',
     'sphinx.ext.extlinks',
+    'sphinxcontrib.doxylinks',
 ]
 
 # Display items marked with the 'todo' directive.
@@ -243,5 +244,14 @@ extlinks = {
     'php': ('http://php.net/%s', ''),
     'pear': ('http://pear.php.net/%s', 'pear.php.net/'),
     'pecl': ('http://pecl.php.net/%s', 'pecl.php.net/'),
+}
+
+doxylinks = {
+    'api': (
+        'https://ci.erebot.net/doc/api/%s/html/' %
+            os.environ.get('SPHINX_PROJECT'),
+        'https://ci.erebot.net/tagfiles/%s.tagfile.xml' %
+            os.environ.get('SPHINX_PROJECT'),
+    ),
 }
 
