@@ -1,0 +1,29 @@
+{
+    "name": "erebot/buildenv",
+    "description": "Build environment for the Erebot project",
+    "keywords": ["Erebot"],
+    "homepage": "https://github.com/Erebot/Erebot_Buildenv",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "François Poirotte",
+            "email": "clicky@erebot.net",
+            "role": "lead"
+        }
+    ],
+    "support": {
+        "email": "erebot@erebot.net",
+        "issues": "https://github.com/Erebot/Erebot_Buildenv/issues",
+        "wiki": "http://erebot.github.com/Erebot/",
+        "irc": "irc://irc.iiens.net/Erebot",
+        "source": "https://github.com/Erebot/Erebot_Buildenv"
+    },
+    "require": {
+        "php": ">=5.2.2"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
