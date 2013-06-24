@@ -5,8 +5,6 @@
     <property name="qa.coverage.force"      value="true"/>
     <property name="qa.coverage.db"         value="${tmp.dir}/${phing.project.name}.${randomID}.db"/>
     <property name="qa.coverage.tmp"        value="${tmp.dir}/${phing.project.name}.${randomID}.xml"/>
-    <property name="release.tmp"            value="${tmp.dir}/release-${phing.project.name}.${randomID}"/>
-    <property name="file.tmp"               value="${tmp.dir}/${phing.project.name}.${randomID}"/>
     <property name="build-phar"             value="true"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
     <property name="tagfiles"               value=""/>
@@ -18,6 +16,7 @@
     <property name="subfile.phpunit"        value="buildenv/phing/phpunit.xml"/>
     <property name="subfile.coverage"       value="buildenv/phing/coverage.xml"/>
     <property name="skip.update_catalog"    value="true"/>
+    <property name="author"                 value='François "Clicky" Poirotte &lt;clicky@erebot.net&gt;'/>
 
     <if>
         <istrue value="${qa.coverage.force}"/>
@@ -210,93 +209,38 @@
 
     <!-- Release process -->
     <target name="release" depends="all"
-        description="Build a PEAR package from the current code">
-        <!-- Remove previous package*.xml files. -->
-        <delete verbose="true">
-            <fileset dir=".">
-                <include name="package.xml"/>
-                <include name="package_compatible.xml"/>
-            </fileset>
-        </delete>
-        <!-- Create new (or updated) package*.xml files. -->
-        <mkdir dir="${release.tmp}"/>
-        <exec
-            command="pyrus.phar ${release.tmp} channel-discover ${pear.channel} ."
-            passthru="true"
-            checkreturn="true"
-        />
-        <exec
-            command="pyrus.phar ${release.tmp} make -n ${phing.project.name} ${pear.channel} ."
-            passthru="true"
-            checkreturn="false"
-        />
-
-        <!-- Generate a pear-compatible package.xml (2.0). -->
-        <exec command="php ./buildenv/fix_package.php &lt; package.xml &gt; package_compatible.xml"/>
-
-        <!-- Delete old files. -->
-        <delete verbose="true" file="${phing.project.name}-${version}.tgz" failonerror="false"/>
+        description="Build a PHAR package from the current code">
         <if>
-            <istrue value="${build-phar}"/>
+            <and>
+                <isset property="opensslkey">
+                <isset property="opensslpassfile">
+            </and>
             <then>
-                <delete verbose="true" file="${phing.project.name}-${version}.phar" failonerror="false"/>
-            </then>
-        </if>
-
-        <if>
-            <isset property="passfile"/>
-            <then>
-                <!--
-                    Create input for pyrus.phar:
-                    *   Answer "yes" when asked whether
-                        we want to sign the release.
-                    *   Enter the passphrase when prompted.
-
-                    Added fun: we cannot write "yes" directly because
-                    phing automatically replaces it with the boolean
-                    value TRUE (written as 1 in the file).
-                    We must also add the line feed by hand.
-                -->
-                <echo file="${release.tmp}/sign" msg="ye"/>
-                <append destFile="${release.tmp}/sign" text="s&#xA;"/>
-                <append destFile="${release.tmp}/sign" file="${passfile}"/>
-                <exec
-                    command="pyrus.phar ${release.tmp} package --tgz &lt; ${release.tmp}/sign"
-                    passthru="true"
-                    checkreturn="false"
-                />
-                <if>
-                    <istrue value="${build-phar}"/>
-                    <then>
-                        <exec
-                            command="pyrus.phar ${release.tmp} package --phar &lt; ${release.tmp}/sign"
-                            passthru="true"
-                            checkreturn="false"
-                        />
-                        <chmod file="${phing.project.name}-${version}.phar" mode="0755"/>
-                    </then>
-                </if>
+                <property override="true" signature="openssl"/>
+                <loadfile file="${opensslpassfile}" property="keypassword"/>
             </then>
             <else>
-                <exec
-                    command="pyrus.phar ${release.tmp} package --tgz"
-                    passthru="true"
-                    checkreturn="false"
-                />
-                <if>
-                    <istrue value="${build-phar}"/>
-                    <then>
-                        <exec
-                            command="pyrus.phar ${release.tmp} package --phar"
-                            passthru="true"
-                            checkreturn="false"
-                        />
-                        <chmod file="${phing.project.name}-${version}.phar" mode="0755"/>
-                    </then>
-                </if>
+                <property override="true" signature="sha1"/>
             </else>
         </if>
-        <delete dir="${release.tmp}"/>
+        <pharpackage
+            destfile="./${phing.project.name}-${version}.phar"
+            basedir="./"
+            stub="stub.php"
+            alias="${phing.project.name}"
+            signature="${signature}"
+            key="${opensslkey}"
+            keypassword="${keypassword}"
+        >
+            <fileset refid="phar"/>
+            <metadata>
+                <element name="name" value="${phing.project.name}"/>
+                <element name="version" value="${version}"/>
+                <element name="authors">
+                    <element name="${author}"/>
+                </element>
+            </metadata>
+        </pharpackage>
     </target>
 
     <target name="set_version">
@@ -382,7 +326,7 @@
             <then><import file="${subfile.phpcs}"/></then>
             <else>
                 <echo>
-                    pear.php.net/PHP_CodeSniffer >= 1.2.2 must be installed
+                    The "squizlabs/php_codesniffer" package (&gt;=1.2.2) must be installed
                     for the "qa_codesniffer" target to be available.
                 </echo>
                 <fail message="See above"/>
@@ -401,7 +345,7 @@
             <then><import file="${subfile.pdepend}"/></then>
             <else>
                 <echo>
-                    pear.pdepend.org/PHP_Depend must be installed
+                    The "pdepend/pdepend" package must be installed
                     for the "qa_depend" target to be available.
                 </echo>
                 <fail message="See above"/>
@@ -420,7 +364,7 @@
             <then><import file="${subfile.phpmd}"/></then>
             <else>
                 <echo>
-                    pear.phpmd.org/PHP_PMD must be installed
+                    The "phpmd/phpmd" package must be installed
                     for the "qa_mess" target to be available.
                 </echo>
                 <fail message="See above"/>
@@ -440,7 +384,7 @@
             <then><import file="${subfile.phpcpd}"/></then>
             <else>
                 <echo>
-                    pear.phpunit.de/phpcpd must be installed
+                    The "sebastian/phpcpd" package must be installed
                     for the "qa_duplicates" target to be available.
                 </echo>
                 <fail message="See above"/>
@@ -459,7 +403,7 @@
             <then><import file="${subfile.coverage.pre}"/></then>
             <else>
                 <echo>
-                    pear.phpunit.de/PHPUnit must be installed
+                    The "phpunit/phpunit" package must be installed
                     for the "qa_pre_coverage" target to be available.
                 </echo>
                 <fail message="See above"/>
@@ -480,7 +424,7 @@
             <then><import file="${subfile.phpunit}"/></then>
             <else>
                 <echo>
-                    pear.phpunit.de/PHPUnit must be installed
+                    The "phpunit/phpunit" package must be installed
                     for the "qa_test" target to be available.
                 </echo>
                 <fail message="See above"/>
@@ -502,7 +446,7 @@
             <then><import file="${subfile.coverage}"/></then>
             <else>
                 <echo>
-                    pear.phpunit.de/PHPUnit must be installed
+                    The "phpunit/phpunit" package must be installed
                     for the "qa_coverage" target to be available.
                 </echo>
                 <fail message="See above"/>
