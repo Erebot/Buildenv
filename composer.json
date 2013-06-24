@@ -19,7 +19,15 @@
         "source": "https://github.com/Erebot/Erebot_Buildenv"
     },
     "require": {
-        "php": ">=5.2.2"
+        "php": ">=5.2.2",
+        "phing/phing": ">=2.4.3"
+    },
+    "suggest": {
+        "pdepend/pdepend": "Computes metrics on code quality",
+        "squizlabs/php_codesniffer": "Detects violations of a set of predefined rules",
+        "phpmd/phpmd": "Detects overly complicated code patterns (mess detector)",
+        "sebastian/phpcpd": "Detects (ab)use of repeated code (copy-paste detector)",
+        "phpunit/phpunit": "Unit tests for PHP code"
     },
     "extra": {
         "branch-alias": {
