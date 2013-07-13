@@ -124,9 +124,9 @@
     ]]></adhoc-task>
 
     <!-- Automatically detect existing locales. -->
-    <exec command="php ./buildenv/get_locales.php" checkreturn="true" outputProperty="locales"/>
-    <!-- Automatically detect the version of the current RELEASE. -->
-    <exec command="php ./buildenv/get_version.php -v RELEASE" checkreturn="true" outputProperty="version"/>
+    <exec command="php vendor/erebot/buildenv/get_locales.php" checkreturn="true" outputProperty="locales"/>
+    <!-- Automatically detect the current version. -->
+    <exec command="php vendor/erebot/buildenv/get_version.php" checkreturn="true" outputProperty="version"/>
 
     <target name="all" depends="i18n"
         description="Main target -- Same as 'phing i18n'"/>
@@ -212,8 +212,8 @@
         description="Build a PHAR package from the current code">
         <if>
             <and>
-                <isset property="opensslkey">
-                <isset property="opensslpassfile">
+                <isset property="opensslkey"/>
+                <isset property="opensslpassfile"/>
             </and>
             <then>
                 <property override="true" signature="openssl"/>
@@ -242,16 +242,6 @@
             </metadata>
         </pharpackage>
     </target>
-
-    <target name="set_version">
-        <propertyprompt propertyName="version" promptText="New version" useExistingValue="true"/>
-        <phingcall target="protected_set_version">
-            <property name="version" value="${version}"/>
-        </phingcall>
-    </target>
-
-    <!-- Protected targets, meant to facilitate extensions. -->
-    <target name="protected_set_version"></target>
 
     <!-- Documentation -->
     <target name="doc" depends="doc_html"
