@@ -5,7 +5,7 @@
     <coverage-report outfile="${qa.coverage.tmp}">
         <report
             todir="docs/coverage"
-            styledir="${project.basedir}/buildenv/coverage"
+            styledir="${project.basedir}/vendor/erebot/buildenv/coverage"
         />
     </coverage-report>
     <coverage-threshold

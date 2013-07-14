@@ -8,13 +8,13 @@
     <property name="build-phar"             value="true"/>
     <property name="pear.channel"           value="pear.erebot.net"/>
     <property name="tagfiles"               value=""/>
-    <property name="subfile.phpcs"          value="buildenv/phing/phpcs.xml"/>
-    <property name="subfile.pdepend"        value="buildenv/phing/pdepend.xml"/>
-    <property name="subfile.phpmd"          value="buildenv/phing/phpmd.xml"/>
-    <property name="subfile.phpcpd"         value="buildenv/phing/phpcpd.xml"/>
-    <property name="subfile.coverage.pre"   value="buildenv/phing/pre_coverage.xml"/>
-    <property name="subfile.phpunit"        value="buildenv/phing/phpunit.xml"/>
-    <property name="subfile.coverage"       value="buildenv/phing/coverage.xml"/>
+    <property name="subfile.phpcs"          value="vendor/erebot/buildenv/phing/phpcs.xml"/>
+    <property name="subfile.pdepend"        value="vendor/erebot/buildenv/phing/pdepend.xml"/>
+    <property name="subfile.phpmd"          value="vendor/erebot/buildenv/phing/phpmd.xml"/>
+    <property name="subfile.phpcpd"         value="vendor/erebot/buildenv/phing/phpcpd.xml"/>
+    <property name="subfile.coverage.pre"   value="vendor/erebot/buildenv/phing/pre_coverage.xml"/>
+    <property name="subfile.phpunit"        value="vendor/erebot/buildenv/phing/phpunit.xml"/>
+    <property name="subfile.coverage"       value="vendor/erebot/buildenv/phing/coverage.xml"/>
     <property name="skip.update_catalog"    value="true"/>
     <property name="author"                 value='François "Clicky" Poirotte &lt;clicky@erebot.net&gt;'/>
 
@@ -127,6 +127,9 @@
     <exec command="php vendor/erebot/buildenv/get_locales.php" checkreturn="true" outputProperty="locales"/>
     <!-- Automatically detect the current version. -->
     <exec command="php vendor/erebot/buildenv/get_version.php" checkreturn="true" outputProperty="version"/>
+
+    <!-- Include Composer autoloader. -->
+    <php expression="require_once('vendor/autoload.php');"/>
 
     <target name="all" depends="i18n"
         description="Main target -- Same as 'phing i18n'"/>
@@ -267,7 +270,7 @@
 
         <!-- Determine path to tag files. -->
         <property name="tagfiles.reference" value="${phing.project.name}"/>
-        <exec command="php ./buildenv/get_filetags.php ${tagfiles.reference} ${tagfiles}"
+        <exec command="php vendor/erebot/buildenv/get_filetags.php ${tagfiles.reference} ${tagfiles}"
             checkreturn="true" outputProperty="tagfiles"/>
         <php function="escapeshellarg" returnProperty="tagfiles">
             <param value="${tagfiles}"/>
@@ -279,7 +282,7 @@
 
     <target name="doc_enduser" description="Generate end-user documentation in HTML format">
         <property name="doc_release" value=""/>
-        <exec command="SPHINX_VERSION=${version} SPHINX_RELEASE=${version}${doc_release} SPHINX_PROJECT=${phing.project.name} sphinx-build -c buildenv/sphinx/ -b html -D html_use_opensearch=http://erebot.github.com/${phing.project.name} -d docs/enduser/doctrees docs/src docs/enduser/html"
+        <exec command="SPHINX_VERSION=${version} SPHINX_RELEASE=${version}${doc_release} SPHINX_PROJECT=${phing.project.name} sphinx-build -c vendor/erebot/buildenv/sphinx/ -b html -D html_use_opensearch=http://erebot.github.com/${phing.project.name} -d docs/enduser/doctrees docs/src docs/enduser/html"
             passthru="true" checkreturn="true" logoutput="true"/>
     </target>
 
@@ -307,140 +310,71 @@
     </target>
 
     <target name="qa_codesniffer" description="Check QA using PHP_CodeSniffer">
-        <php expression="@include_once('PHP/CodeSniffer/CLI.php');"/>
-        <php function="class_exists" returnProperty="usable">
-            <param value="PHP_CodeSniffer_CLI"/>
-        </php>
-        <if>
-            <istrue value="${usable}"/>
-            <then><import file="${subfile.phpcs}"/></then>
-            <else>
-                <echo>
-                    The "squizlabs/php_codesniffer" package (&gt;=1.2.2) must be installed
-                    for the "qa_codesniffer" target to be available.
-                </echo>
-                <fail message="See above"/>
-            </else>
-        </if>
+        <available followSymlinks="true" file="vendor/bin/phpcs" property="usable"/>
+        <fail unless="usable">
+            The "squizlabs/php_codesniffer" package (&gt;=1.2.2) must be installed
+            for the "qa_codesniffer" target to be available.
+        </fail>
+        <import file="${subfile.phpcs}"/>
     </target>
 
     <target name="qa_depend"
         description="Check QA using PHP depend">
-        <php expression="@include_once('PHP/Depend/TextUI/Runner.php');"/>
-        <php function="class_exists" returnProperty="usable">
-            <param value="PHP_Depend_TextUI_Runner"/>
-        </php>
-        <if>
-            <istrue value="${usable}"/>
-            <then><import file="${subfile.pdepend}"/></then>
-            <else>
-                <echo>
-                    The "pdepend/pdepend" package must be installed
-                    for the "qa_depend" target to be available.
-                </echo>
-                <fail message="See above"/>
-            </else>
-        </if>
+        <available followSymlinks="true" file="vendor/bin/pdepend" property="usable"/>
+        <fail unless="usable">
+            The "pdepend/pdepend" package must be installed
+            for the "qa_depend" target to be available.
+        </fail>
+        <import file="${subfile.pdepend}"/>
     </target>
 
     <target name="qa_mess"
         description="Check QA using phpmd (PHP Mess Detector)">
-        <php expression="@include_once('PHP/PMD.php');"/>
-        <php function="class_exists" returnProperty="usable">
-            <param value="PHP_PMD"/>
-        </php>
-        <if>
-            <istrue value="${usable}"/>
-            <then><import file="${subfile.phpmd}"/></then>
-            <else>
-                <echo>
-                    The "phpmd/phpmd" package must be installed
-                    for the "qa_mess" target to be available.
-                </echo>
-                <fail message="See above"/>
-            </else>
-        </if>
+        <available followSymlinks="true" file="vendor/bin/phpmd" property="usable"/>
+        <fail unless="usable">
+            The "phpmd/phpmd" package must be installed
+            for the "qa_mess" target to be available.
+        </fail>
+        <import file="${subfile.phpmd}"/>
     </target>
 
     <target name="qa_duplicates"
         description="Check QA using phpcpd (PHP Copy/Paste Detector)">
-        <php expression="@include_once('SebastianBergmann/PHPCPD/TextUI/Command.php');"/>
-        <php expression="@include_once('PHPCPD/TextUI/Command.php');"/>
-        <php function="class_exists" returnProperty="usable">
-            <param value="PHPCPD_TextUI_Command"/>
-        </php>
-        <if>
-            <istrue value="${usable}"/>
-            <then><import file="${subfile.phpcpd}"/></then>
-            <else>
-                <echo>
-                    The "sebastian/phpcpd" package must be installed
-                    for the "qa_duplicates" target to be available.
-                </echo>
-                <fail message="See above"/>
-            </else>
-        </if>
+        <available followSymlinks="true" file="vendor/bin/phpcpd" property="usable"/>
+        <fail unless="usable">
+            The "sebastian/phpcpd" package must be installed
+            for the "qa_duplicates" target to be available.
+        </fail>
+        <import file="${subfile.phpcpd}"/>
     </target>
 
     <target name="qa_pre_coverage" hidden="true">
-        <php expression="@include_once('PHPUnit/Autoload.php');"/>
-        <php expression="@include_once('PHPUnit/Runner/Version.php');"/>
-        <php function="class_exists" returnProperty="usable">
-            <param value="PHPUnit_Runner_Version"/>
-        </php>
-        <if>
-            <istrue value="${usable}"/>
-            <then><import file="${subfile.coverage.pre}"/></then>
-            <else>
-                <echo>
-                    The "phpunit/phpunit" package must be installed
-                    for the "qa_pre_coverage" target to be available.
-                </echo>
-                <fail message="See above"/>
-            </else>
-        </if>
+        <available followSymlinks="true" file="vendor/bin/phpunit" property="usable"/>
+        <fail unless="usable">
+            The "phpunit/phpunit" package must be installed
+            for the "qa_pre_coverage" target to be available.
+        </fail>
+        <import file="${subfile.coverage.pre}"/>
     </target>
 
     <target name="qa_test" depends="qa_pre_coverage"
         description="Run (unit) tests using PHPUnit">
         <php expression="define('TESTENV_DIR', dirname('${phing.file}').DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'testenv');"/>
-        <php expression="@include_once('PHPUnit/Autoload.php');"/>
-        <php expression="@include_once('PHPUnit/Runner/Version.php');"/>
-        <php function="class_exists" returnProperty="usable">
-            <param value="PHPUnit_Runner_Version"/>
-        </php>
-        <if>
-            <istrue value="${usable}"/>
-            <then><import file="${subfile.phpunit}"/></then>
-            <else>
-                <echo>
-                    The "phpunit/phpunit" package must be installed
-                    for the "qa_test" target to be available.
-                </echo>
-                <fail message="See above"/>
-            </else>
-        </if>
+        <available followSymlinks="true" file="vendor/bin/phpunit" property="usable"/>
+        <fail unless="usable">
+            The "phpunit/phpunit" package must be installed
+            for the "qa_test" target to be available.
+        </fail>
+        <import file="${subfile.phpunit}"/>
     </target>
 
     <target name="qa_coverage" depends="qa_test"
         description="Run code coverage analysis based on unit tests (see 'phing qa_test')">
-        <php expression="@include_once('PHPUnit/Autoload.php');"/>
-        <php expression="@include_once('PHPUnit/Runner/Version.php');"/>
-        <php expression="@include_once('src/${phing.project.name}/Autoloader.php');"/>
-        <php expression="if (class_exists('${phing.project.name}_Autoloader')) ${phing.project.name}_Autoloader::register();"/>
-        <php function="class_exists" returnProperty="usable">
-            <param value="PHPUnit_Runner_Version"/>
-        </php>
-        <if>
-            <istrue value="${usable}"/>
-            <then><import file="${subfile.coverage}"/></then>
-            <else>
-                <echo>
-                    The "phpunit/phpunit" package must be installed
-                    for the "qa_coverage" target to be available.
-                </echo>
-                <fail message="See above"/>
-            </else>
-        </if>
+        <available followSymlinks="true" file="vendor/bin/phpunit" property="usable"/>
+        <fail unless="usable">
+            The "phpunit/phpunit" package must be installed
+            for the "qa_coverage" target to be available.
+        </fail>
+        <import file="${subfile.coverage}"/>
     </target>
 </project>

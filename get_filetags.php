@@ -29,7 +29,7 @@ function main()
 
     $components = explode(',', array_shift($args));
     $paths      = array();
-    $base       = dirname(dirname(dirname(__FILE__)));
+    $base       = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
 
     foreach ($components as $component) {
         if ($current == '-')
