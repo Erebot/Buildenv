@@ -16,14 +16,17 @@ function main()
     putenv('GIT_DIR=' . $dir . DIRECTORY_SEPARATOR . '.git');
     $NUL = strncasecmp(PHP_OS, 'Win', 3) ? '/dev/null' : 'NUL';
 
-    exec('git describe --tags 2>' . $NUL, $output, $exitcode);
+    ob_start();
+    $output = system('git describe --tags 2>' . $NUL, $exitcode);
+    ob_end_clean();
     if ($exitcode != 0) {
-        unset($output);
-        exec('git describe --all 2>' . $NUL, $output, $exitcode);
-        $version = 'dev-' . substr(strstr(trim($output[0]), '/'), 1);
+        ob_start();
+        $output = system('git describe --all 2>' . $NUL, $exitcode);
+        ob_end_clean();
+        $version = 'dev-' . substr(strstr(trim($output), '/'), 1);
     }
     else {
-        $version = trim($output[0]);
+        $version = trim($output);
     }
 
     echo $version . PHP_EOL;
