@@ -219,11 +219,11 @@
                 <isset property="opensslpassfile"/>
             </and>
             <then>
-                <property override="true" signature="openssl"/>
+                <property override="true" name="signature" value="openssl"/>
                 <loadfile file="${opensslpassfile}" property="keypassword"/>
             </then>
             <else>
-                <property override="true" signature="sha1"/>
+                <property override="true" name="signature" value="sha1"/>
             </else>
         </if>
         <pharpackage
