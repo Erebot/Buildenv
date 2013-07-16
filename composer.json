@@ -20,6 +20,7 @@
     },
     "require": {
         "php": ">=5.2.2",
+        "ext-xsl": "*",
         "phing/phing": ">=2.4.3"
     },
     "suggest": {
