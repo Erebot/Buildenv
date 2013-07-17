@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /*
     This file is part of Erebot.
@@ -17,13 +18,13 @@
 */
 
 if (version_compare(phpversion(), '5.3.1', '<')) {
-    if (substr(phpversion(), 0, 5) != '5.3.1') {
+    if (substr(phpversion(), 0, 5) !== '5.3.1') {
         // this small hack is because of running RCs of 5.3.1
-        echo "@PACKAGE_NAME@ requires PHP 5.3.1 or newer." . PHP_EOL;
+        echo basename(__FILE__) . " requires PHP 5.3.1 or newer." . PHP_EOL;
         exit(1);
     }
 }
-foreach (array('phar', 'spl', 'pcre', 'simplexml') as $ext) {
+foreach (array('phar', 'reflection', 'json', 'pcre') as $ext) {
     if (!extension_loaded($ext)) {
         echo "Extension $ext is required." . PHP_EOL;
         exit(1);
@@ -31,30 +32,118 @@ foreach (array('phar', 'spl', 'pcre', 'simplexml') as $ext) {
 }
 try {
     Phar::mapPhar();
+    if (realpath($_SERVER['SCRIPT_FILENAME']) !== realpath(__FILE__)) {
+        return json_decode(
+            file_get_contents(
+                "phar://" . __FILE__ . DIRECTORY_SEPARATOR . "composer.json"
+            ),
+            TRUE
+        );
+    }
 } catch (Exception $e) {
-    echo "Cannot process @PACKAGE_NAME@ phar:" . PHP_EOL;
+    echo "Cannot process " . basename(__FILE__) . ":" . PHP_EOL;
     echo $e->getMessage() . PHP_EOL;
     exit(1);
 }
 
-// Return metadata about this package.
-$metadata = json_decode(
-    file_get_contents(
-        "phar://" . __FILE__ .
-        DIRECTORY_SEPARATOR . "@PACKAGE_NAME@-@PACKAGE_VERSION@" .
-        DIRECTORY_SEPARATOR . "data" .
-        DIRECTORY_SEPARATOR . "pear.erebot.net" .
-        DIRECTORY_SEPARATOR . "@PACKAGE_NAME@" .
-        DIRECTORY_SEPARATOR . "composer.json"
-    ),
-    TRUE
-);
-$metadata['version'] = '@PACKAGE_VERSION@';
-$metadata['extra']['PEAR']['name'] = '@PACKAGE_NAME@';
-$metadata['extra']['phar']['path'] =
-    "phar://" . __FILE__ .
-    DIRECTORY_SEPARATOR . "@PACKAGE_NAME@-@PACKAGE_VERSION@" .
-    DIRECTORY_SEPARATOR . "php";
-return $metadata;
+if (realpath($_SERVER['SCRIPT_FILENAME']) == realpath(__FILE__)) {
+    class Erebot_Phar_App
+    {
+        private $_args;
+
+        public function __construct($args)
+        {
+            if (count($args)) {
+                array_shift($args);
+            }
+            $this->_args = $args;
+        }
+
+        public function run()
+        {
+            if (!count($this->_args)) {
+                return $this->usage();
+            }
+
+            $command = $this->_args[0];
+            if (method_exists(__CLASS__, 'run_' . $command)) {
+                return call_user_func(array(__CLASS__, 'run_' . $command));
+            }
+            return $this->usage();
+        }
+
+        public function usage()
+        {
+            echo "Usage: " . basename(__FILE__) . " [command]" . PHP_EOL;
+            echo PHP_EOL;
+            echo "Available commands:" . PHP_EOL;
+            $refl = new ReflectionClass(__CLASS__);
+            $commands = array();
+            $maxlen = 0;
+            foreach ($refl->getMethods() as $method) {
+                $name = $method->getName();
+                if (!strncmp($name, 'run_', 4)) {
+                    $name = substr($name, 4);
+                    if ($name === FALSE) {
+                        continue;
+                    }
+
+                    $doc = $method->getDocComment();
+                    if ($doc !== FALSE) {
+                        // Remove /** and */.
+                        $doc = substr($doc, 3, -2);
+                    }
+                    if ($doc === FALSE) {
+                        $doc = "No documentation available.";
+                    }
+                    else {
+                        // Remove '*' at the beginning of each line.
+                        $doc = preg_replace('/^\\s+\\*/m', ' ', $doc);
+                        // Replace successive whitespaces by a single single.
+                        $doc = preg_replace('/\\s+/', ' ', $doc);
+                    }
+
+                    $commands[$name] = $doc;
+                    if (strlen($name) > $maxlen) {
+                        $maxlen = strlen($name);
+                    }
+                }
+            }
+
+            $maxlen += 4;
+            foreach ($commands as $name => $doc) {
+                $start = str_pad("  " . $name, $maxlen);
+                $lines = explode("\n", wordwrap($doc, 78 - $maxlen));
+                foreach ($lines as $line) {
+                    echo $start . $line . PHP_EOL;
+                    $start = str_repeat(' ', $maxlen);
+                }
+            }
+        }
+
+        /**
+         * Displays information about this module's version.
+         */
+        public function run_version()
+        {
+            $phar = new Phar(__FILE__);
+            $md = $phar->getMetadata();
+            echo $md['realname'] . ' version ' . $md['version'] . PHP_EOL;
+        }
+
+        /**
+         * Displays this module's metadata (composer.json).
+         */
+        public function run_metadata()
+        {
+            echo file_get_contents(
+                "phar://" . __FILE__ . DIRECTORY_SEPARATOR . "composer.json"
+            );
+        }
+    }
+
+    $app = new Erebot_Phar_App($_SERVER['argv']);
+    $app->run();
+}
 
 __HALT_COMPILER();

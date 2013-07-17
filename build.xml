@@ -5,8 +5,7 @@
     <property name="qa.coverage.force"      value="true"/>
     <property name="qa.coverage.db"         value="${tmp.dir}/${phing.project.name}.${randomID}.db"/>
     <property name="qa.coverage.tmp"        value="${tmp.dir}/${phing.project.name}.${randomID}.xml"/>
-    <property name="build-phar"             value="true"/>
-    <property name="pear.channel"           value="pear.erebot.net"/>
+    <property name="phar.stub"              value="vendor/erebot/buildenv/stub.php"/>
     <property name="tagfiles"               value=""/>
     <property name="subfile.phpcs"          value="vendor/erebot/buildenv/phing/phpcs.xml"/>
     <property name="subfile.pdepend"        value="vendor/erebot/buildenv/phing/pdepend.xml"/>
@@ -16,7 +15,6 @@
     <property name="subfile.phpunit"        value="vendor/erebot/buildenv/phing/phpunit.xml"/>
     <property name="subfile.coverage"       value="vendor/erebot/buildenv/phing/coverage.xml"/>
     <property name="skip.update_catalog"    value="true"/>
-    <property name="author"                 value='François "Clicky" Poirotte &lt;clicky@erebot.net&gt;'/>
 
     <if>
         <istrue value="${qa.coverage.force}"/>
@@ -226,24 +224,35 @@
                 <property override="true" name="signature" value="sha1"/>
             </else>
         </if>
+
         <pharpackage
             destfile="./${phing.project.name}-${version}.phar"
             basedir="./"
-            stub="stub.php"
+            stub="${phar.stub}"
             alias="${phing.project.name}"
             signature="${signature}"
             key="${opensslkey}"
             keypassword="${keypassword}"
         >
-            <fileset refid="phar"/>
+            <fileset dir=".">
+                <include name="composer.json"/>
+                <include name="composer.lock"/>
+                <include name="LICENSE"/>
+                <include name="LICENSE.*"/>
+                <include name="LICENCE"/>
+                <include name="LICENCE.*"/>
+                <include name="README"/>
+                <include name="README.*"/>
+                <include name="data/**"/>
+                <include name="src/**"/>
+            </fileset>
+            <fileset refid="phar.files"/>
             <metadata>
-                <element name="name" value="${phing.project.name}"/>
+                <element name="realname" value="${phing.project.name}"/>
                 <element name="version" value="${version}"/>
-                <element name="authors">
-                    <element name="${author}"/>
-                </element>
             </metadata>
         </pharpackage>
+        <chmod file="./${phing.project.name}-${version}.phar" mode="0755"/>
     </target>
 
     <!-- Documentation -->
