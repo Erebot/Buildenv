@@ -36,11 +36,10 @@
     :copyright: Copyright 2013 by Francois Poirotte.
     :license: BSD, see LICENSE for details.
 """
-
+import lxml.etree as ET
 import os
 import time
 import urllib2
-import libxml2
 from docutils import nodes, utils
 from sphinx.util.nodes import split_explicit_title
 
@@ -100,8 +99,7 @@ def fetch_tagfile(app, tagfile):
 def lookup_url(app, tagfile, symbol):
     env = app.builder.env
     cache = env.doxylinks_cache
-    doc = libxml2.parseDoc(cache[tagfile][0])
-    ctxt = doc.xpathNewContext()
+    doc = ET.fromstring(cache[tagfile][0])
     cls, _sep, member = symbol.partition('::')
     query = (
         "/tagfile/"
@@ -116,23 +114,20 @@ def lookup_url(app, tagfile, symbol):
                 "/name[text()='%(member)s']"
                 "/.."
             ) % {'class': cls, 'member': member}
-            res = ctxt.xpathEval(query + "/anchorfile/text()")
-            filename = str(res[0].content)
-            res = ctxt.xpathEval(query + "/anchor/text()")
-            anchor = str(res[0].content)
-            res = ctxt.xpathEval(query + "/@kind")
-            kind = str(res[0].content)
+            res = doc.xpath(query + "/anchorfile/text()")
+            filename = str(res[0].text)
+            res = doc.xpathEval(query + "/anchor/text()")
+            anchor = str(res[0].text)
+            res = doc.xpathEval(query + "/@kind")
+            kind = str(res[0].text)
         else:
-            res = ctxt.xpathEval(query + "/filename/text()")
-            filename = str(res[0].content)
+            res = doc.xpath(query + "/filename/text()")
+            filename = str(res[0].text)
             anchor = None
-            res = ctxt.xpathEval(query + "/@kind")
-            kind = str(res[0].content)
+            res = doc.xpath(query + "/@kind")
+            kind = str(res[0].text)
     except IndexError:
         raise KeyError('No documentation found for "%s"' % symbol)
-    finally:
-        doc.freeDoc()
-        ctxt.xpathFreeContext()
     if not filename.endswith('.html'):
         filename += '.html'
     return (kind, filename, anchor)
