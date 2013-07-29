@@ -56,7 +56,7 @@ master_doc = 'index'
 #project = u'Erebot'
 if 'SPHINX_PROJECT' in os.environ:
     project = os.environ['SPHINX_PROJECT']
-rst_prolog += \
+rst_prolog = \
     """
     .. |project_version| replace::
             :samp:`%(base_url)s/%(project)s-{version}.phar`
