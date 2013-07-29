@@ -252,9 +252,9 @@ extlinks = {
 
 doxylinks = {
     'api': (
-        'https://ci.erebot.net/doc/api/%s/html/' %
+        'http://ci.erebot.net/doc/api/%s/html/' %
             os.environ.get('SPHINX_PROJECT'),
-        'https://ci.erebot.net/tagfiles/%s.tagfile.xml' %
+        'http://ci.erebot.net/tagfiles/%s.tagfile.xml' %
             os.environ.get('SPHINX_PROJECT'),
     ),
 }
