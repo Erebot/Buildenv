@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
-from sphinx import environment as env
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.body import ParsedLiteral
 from docutils import nodes
 
+from sphinx import environment as env
 from sphinx.writers import html
+from sphinx.highlighting import lexers
 
-# Monkey-patch html.HTMLTranslator.visit_literal_block so that
-# a node with the "highlight" attribute is always highlighted.
-old_visit = html.HTMLTranslator.visit_literal_block
-def new_visit(self, node):
-    if node.get('highlight'):
-        node.rawsource = node.astext()
-    return old_visit(self, node)
-html.HTMLTranslator.visit_literal_block = new_visit
+from pygments.lexers.web import PhpLexer
+
 
 # Add "parsed-code" directive that combines both the features
 # of "parsed-literal" (support for inline markup) and "sourcecode"
@@ -36,12 +31,22 @@ class ParsedCodeBlock(ParsedLiteral):
         res[0]['linenos'] = 'linenos' in self.options
         res[0]['highlight'] = True
         return res
-directives.register_directive('parsed-code', ParsedCodeBlock)
 
-# Add "project" to the default substitutions.
-env.default_substitutions = set(['version', 'release', 'today', 'project'])
+def setup(app):
+    # Monkey-patch html.HTMLTranslator.visit_literal_block so that
+    # a node with the "highlight" attribute is always highlighted.
+    old_visit = html.HTMLTranslator.visit_literal_block
+    def new_visit(self, node):
+        if node.get('highlight'):
+            node.rawsource = node.astext()
+        return old_visit(self, node)
+    html.HTMLTranslator.visit_literal_block = new_visit
 
-# Additionnal lexer for inline PHP code blocks.
-from sphinx.highlighting import lexers
-from pygments.lexers.web import PhpLexer
-lexers['inline-php'] = PhpLexer(startinline=True)
+    directives.register_directive('parsed-code', ParsedCodeBlock)
+
+    # Add "project" to the default substitutions.
+    env.default_substitutions = set(['version', 'release', 'today', 'project'])
+
+    # Additionnal lexer for inline PHP code blocks.
+    lexers['inline-php'] = PhpLexer(startinline=True)
+
