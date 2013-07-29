@@ -52,21 +52,19 @@ source_suffix = '.rst'
 # The master toctree document.
 master_doc = 'index'
 
-rst_prolog = ""
-
 # General information about the project.
 #project = u'Erebot'
 if 'SPHINX_PROJECT' in os.environ:
     project = os.environ['SPHINX_PROJECT']
-    rst_prolog += \
-        """
-        .. |project_version| replace::
-                :samp:`%(base_url)s/%(project)s-{version}.phar`
-        .. |project_latest| replace:: %(base_url)s/%(project)s-latest.phar
-        """ % {
-            'project': project,
-            'base_url': 'https://pear.erebot.net/get',
-        }
+rst_prolog += \
+    """
+    .. |project_version| replace::
+            :samp:`%(base_url)s/%(project)s-{version}.phar`
+    .. |project_latest| replace:: %(base_url)s/%(project)s-latest.phar
+    """ % {
+        'project': project,
+        'base_url': 'https://pear.erebot.net/get',
+    }
 
 copyright = u'2011-%d, Erebot' % datetime.now().year
 
