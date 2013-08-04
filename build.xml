@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv" description="Same as 'phing all'" default="all">
-    <php expression="md5(PHP_VERSION.uniqid('', TRUE));" returnProperty="randomID"/>
-    <php function="sys_get_temp_dir"        returnProperty="tmp.dir"/>
+    <import file="vendor/erebot/buildenv/phing/tasks.xml"/>
+    <php expression="md5(PHP_VERSION.uniqid('', TRUE));" returnProperty="randomID" level="debug"/>
+    <php function="sys_get_temp_dir"        returnProperty="tmp.dir" level="debug"/>
     <property name="qa.coverage.force"      value="true"/>
     <property name="qa.coverage.db"         value="${tmp.dir}/${phing.project.name}.${randomID}.db"/>
     <property name="qa.coverage.tmp"        value="${tmp.dir}/${phing.project.name}.${randomID}.xml"/>
@@ -35,99 +36,13 @@
         <format property="buildtime" pattern="%a, %d %b %Y, %H:%M"/>
     </tstamp>
 
-    <adhoc-task name="xgettext"><![CDATA[
-    class XgettextTask extends Task
-    {
-        protected $command = 'xgettext';
-        protected $filesets = array();
-
-        public function setCommand($command)    { $this->command = $command;    }
-        public function getCommand()            { return $this->command;        }
-
-        public function createFileset()
-        {
-            $num = array_push($this->filesets, new FileSet());
-            return $this->filesets[$num-1];
-        }
-
-        public function main()
-        {
-            $filesToParse = array();
-            foreach ($this->filesets as $fs) {
-                $files = $fs->getDirectoryScanner($this->project)->getIncludedFiles();
-                foreach($files as $filename) {
-                     $f = new PhingFile($fs->getDir($this->project), $filename);
-                     $filesToParse[] = $f->getPath();
-                }
-            }
-
-            $command = $this->command . " " . join(" ", $filesToParse);
-            $this->log("Executing command: " . $command);
-            exec($command, $output, $return);
-
-            if ($return != 0)
-                throw new BuildException("Could not execute xgettext: " . implode(" ", $output));
-
-            foreach ($output as $line) {
-                $lowerLine = strtolower($line);
-
-                if (strpos($lowerLine, 'warning') !== FALSE) {
-                    $this->log($line, Project::MSG_WARN);
-                    continue;
-                }
-
-                if (strpos($lowerLine, 'notice') !== FALSE) {
-                    $this->log($line, Project::MSG_INFO);
-                    continue;
-                }
-
-                $this->log($line, Project::MSG_VERBOSE);
-            }
-        }
-    }
-    ]]></adhoc-task>
-
-    <adhoc-task name="i18nStats"><![CDATA[
-    class UntranslatedTask extends Task
-    {
-        protected $output = '';
-        protected $file = '';
-
-        public function setOutput($output)  { $this->output = $output;  }
-        public function getOutput()         { return $this->output;     }
-
-        public function setFile($file)  { $this->file = $file;  }
-        public function getFile()       { return $this->file;   }
-
-        function main()
-        {
-            $output = explode("\n", str_replace("\r\n", "\n", $this->output));
-            foreach ($output as $line) {
-                if (strpos($line, "untranslated") !== FALSE)
-                    $this->log($this->file . ":0: Warning: ".$line, Project::MSG_WARN);
-                else if (strpos($line, "translated") !== FALSE)
-                    $this->log($this->file . ":0: Information: ".$line, Project::MSG_INFO);
-                else if (strpos($line, $this->file . ":") === 0) {
-                    $fields = explode(":", $line);
-                    $file = array_shift($fields);
-                    $linr = array_shift($fields);
-                    $msg  = trim(implode(":", $fields));
-                    $this->log($file.":".$linr.": Warning: ".$msg, Project::MSG_ERR);
-                }
-                else
-                    $this->log($line, Project::MSG_ERR);
-            }
-        }
-    }
-    ]]></adhoc-task>
-
     <!-- Automatically detect existing locales. -->
     <exec command="php vendor/erebot/buildenv/get_locales.php" checkreturn="true" outputProperty="locales"/>
     <!-- Automatically detect the current version. -->
     <exec command="php vendor/erebot/buildenv/get_version.php" checkreturn="true" outputProperty="version"/>
 
     <!-- Include Composer autoloader. -->
-    <php expression="require_once('vendor/autoload.php');"/>
+    <php expression="require_once('vendor/autoload.php');" level="debug"/>
 
     <target name="all" depends="i18n"
         description="Main target -- Same as 'phing i18n'"/>

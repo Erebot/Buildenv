@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<project name="Erebot_buildenv_tasks_xgettext" description="">
+    <adhoc-task name="xgettext"><![CDATA[
+    class XgettextTask extends Task
+    {
+        protected $command = 'xgettext';
+        protected $filesets = array();
+
+        public function setCommand($command)    { $this->command = $command;    }
+        public function getCommand()            { return $this->command;        }
+
+        public function createFileset()
+        {
+            $num = array_push($this->filesets, new FileSet());
+            return $this->filesets[$num-1];
+        }
+
+        public function main()
+        {
+            $filesToParse = array();
+            foreach ($this->filesets as $fs) {
+                $files = $fs->getDirectoryScanner($this->project)->getIncludedFiles();
+                foreach($files as $filename) {
+                     $f = new PhingFile($fs->getDir($this->project), $filename);
+                     $filesToParse[] = $f->getPath();
+                }
+            }
+
+            $command = $this->command . " " . join(" ", $filesToParse);
+            $this->log("Executing command: " . $command);
+            exec($command, $output, $return);
+
+            if ($return != 0)
+                throw new BuildException("Could not execute xgettext: " . implode(" ", $output));
+
+            foreach ($output as $line) {
+                $lowerLine = strtolower($line);
+
+                if (strpos($lowerLine, 'warning') !== FALSE) {
+                    $this->log($line, Project::MSG_WARN);
+                    continue;
+                }
+
+                if (strpos($lowerLine, 'notice') !== FALSE) {
+                    $this->log($line, Project::MSG_INFO);
+                    continue;
+                }
+
+                $this->log($line, Project::MSG_VERBOSE);
+            }
+        }
+    }
+    ]]></adhoc-task>
+</project>
