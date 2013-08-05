@@ -33,18 +33,22 @@ foreach (array('phar', 'reflection', 'json', 'pcre') as $ext) {
 try {
     Phar::mapPhar();
     if (realpath($_SERVER['SCRIPT_FILENAME']) !== realpath(__FILE__)) {
+        $phar = new Phar(__FILE__);
+        $md = $phar->getMetadata();
         $metadata = json_decode(
             file_get_contents(
                 "phar://" . __FILE__ . DIRECTORY_SEPARATOR . "composer.lock"
             ),
             TRUE
         );
-        $metadata['packages'][] = json_decode(
+        $module = json_decode(
             file_get_contents(
                 "phar://" . __FILE__ . DIRECTORY_SEPARATOR . "composer.json"
             ),
             TRUE
         );
+        $module['version'] = $md['version'];
+        $metadata['packages'][] = $module;
         return $metadata;
     }
 } catch (Exception $e) {
