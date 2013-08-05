@@ -33,12 +33,19 @@ foreach (array('phar', 'reflection', 'json', 'pcre') as $ext) {
 try {
     Phar::mapPhar();
     if (realpath($_SERVER['SCRIPT_FILENAME']) !== realpath(__FILE__)) {
-        return json_decode(
+        $metadata = json_decode(
             file_get_contents(
                 "phar://" . __FILE__ . DIRECTORY_SEPARATOR . "composer.lock"
             ),
             TRUE
         );
+        $metadata[] = json_decode(
+            file_get_contents(
+                "phar://" . __FILE__ . DIRECTORY_SEPARATOR . "composer.json"
+            ),
+            TRUE
+        );
+        return $metadata;
     }
 } catch (Exception $e) {
     echo "Cannot process " . basename(__FILE__) . ":" . PHP_EOL;
