@@ -39,7 +39,7 @@ try {
             ),
             TRUE
         );
-        $metadata[] = json_decode(
+        $metadata['packages'][] = json_decode(
             file_get_contents(
                 "phar://" . __FILE__ . DIRECTORY_SEPARATOR . "composer.json"
             ),
