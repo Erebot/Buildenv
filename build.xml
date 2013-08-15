@@ -168,7 +168,6 @@
                 <include name="LICENCE.*"/>
                 <include name="README"/>
                 <include name="README.*"/>
-                <include name="data/**"/>
                 <include name="src/**"/>
             </fileset>
             <fileset refid="phar.files"/>
