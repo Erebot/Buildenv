@@ -130,6 +130,7 @@
             <and>
                 <isset property="opensslkey"/>
                 <isset property="opensslpassfile"/>
+                <available extension="openssl"/>
             </and>
             <then>
                 <property override="true" name="signature" value="openssl"/>
@@ -140,6 +141,14 @@
             </else>
         </if>
 
+        <condition property="compression" value="bzip2">
+            <available extension="bz2"/>
+        </condition>
+        <condition property="compression" value="gzip">
+            <available extension="zlib"/>
+        </condition>
+        <property name="compression" value="none"/>
+
         <pharpackage
             destfile="./${phing.project.name}-${version}.phar"
             basedir="./"
@@ -148,6 +157,7 @@
             signature="${signature}"
             key="${opensslkey}"
             keypassword="${keypassword}"
+            compression="${compression}"
         >
             <fileset dir=".">
                 <include name="composer.json"/>
