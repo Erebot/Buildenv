@@ -134,7 +134,9 @@
             </and>
             <then>
                 <property override="true" name="signature" value="openssl"/>
-                <loadfile file="${opensslpassfile}" property="keypassword"/>
+                <loadfile file="${opensslpassfile}" property="keypassword">
+                    <filterchain><striplinebreaks/></filterchain>
+                </loadfile>
             </then>
             <else>
                 <property override="true" name="signature" value="sha1"/>
