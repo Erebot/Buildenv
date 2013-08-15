@@ -21,6 +21,7 @@
     "require": {
         "php": ">=5.2.2",
         "ext-xsl": "*",
+        "ext-phar": "*",
         "phing/phing": ">=2.4.3"
     },
     "suggest": {
