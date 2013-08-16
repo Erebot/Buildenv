@@ -60,10 +60,10 @@ rst_prolog = \
     """
     .. |project_version| replace::
             :samp:`%(base_url)s/%(project)s-{version}.phar`
-    .. |project_latest| replace:: %(base_url)s/%(project)s-latest.phar
+    .. |project_latest| replace:: %(base_url)s/%(project)s-dev-master.phar
     """ % {
         'project': project,
-        'base_url': 'https://pear.erebot.net/get',
+        'base_url': 'https://packages.erebot.net/get',
     }
 
 copyright = u'2011-%d, Erebot' % datetime.now().year
