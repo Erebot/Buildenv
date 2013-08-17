@@ -61,9 +61,14 @@ rst_prolog = \
     .. |project_version| replace::
             :samp:`%(base_url)s/%(project)s-{version}.phar`
     .. |project_latest| replace:: %(base_url)s/%(project)s-dev-master.phar
+    .. |project_latest_pubkey| replace:: %(base_url)s/%(project)s-dev-master.phar.pubkey
+    .. |composer_name| replace:: %(composer_name)s
     """ % {
         'project': project,
         'base_url': 'https://packages.erebot.net/get',
+        'composer_name': project.startswith('Erebot_Module_') and
+                         ('erebot/%s-module' % project[14:].lower()) or
+                         ('erebot/%s' % project.lower())
     }
 
 copyright = u'2011-%d, Erebot' % datetime.now().year
