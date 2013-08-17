@@ -143,11 +143,12 @@
             </else>
         </if>
 
-        <condition property="compression" value="bzip2">
-            <available extension="bz2"/>
-        </condition>
+        <!-- condition overrides previous property affectations. -->
         <condition property="compression" value="gzip">
             <available extension="zlib"/>
+        </condition>
+        <condition property="compression" value="bzip2">
+            <available extension="bz2"/>
         </condition>
         <property name="compression" value="none"/>
 
