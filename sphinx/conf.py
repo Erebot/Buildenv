@@ -56,6 +56,7 @@ master_doc = 'index'
 #project = u'Erebot'
 if 'SPHINX_PROJECT' in os.environ:
     project = os.environ['SPHINX_PROJECT']
+
 rst_prolog = \
     """
     .. |project_version| replace::
@@ -251,6 +252,7 @@ extlinks = {
     'pear': ('http://pear.php.net/%s', 'pear.php.net/'),
     'pecl': ('http://pecl.php.net/%s', 'pecl.php.net/'),
     'doc': ('http://erebot.github.io/%s', 'http://erebot.github.io/'),
+    'erebot:module': ('http://erebot.github.io/Erebot_Module_%s', ''),
 }
 
 doxylinks = {
