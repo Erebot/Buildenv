@@ -2,6 +2,7 @@
 <project name="Erebot_buildenv_phpcs">
     <phpcodesniffer
         standard="Zend"
+        format="full"
         showWarnings="true"
         showSniffs="true"
         tabWidth="4"
