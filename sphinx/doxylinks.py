@@ -20,7 +20,7 @@
     Now you can use e.g. :exmpl:`foo` in your documents.  This will create a
     link to a page hosted at ``http://example.com/`` and containing the
     documentation about the symbol named ``foo``.
-    The link caption will be he symbol's name, unless an explicit caption
+    The link caption will be the symbol's name, unless an explicit caption
     is given, e.g. :exmpl:`Foo <foo>`.
 
     The full path to the symbol is retrieved from the Doxygen tagfile located
@@ -136,7 +136,11 @@ def make_link_role(app, tagfile, base_url):
     def role(typ, rawtext, text, lineno, inliner, options={}, content=[]):
         text = utils.unescape(text)
         has_explicit_title, symbol, title = split_explicit_title(text)
-        kind, filename, anchor = lookup_url(app, tagfile, symbol)
+        try:
+            kind, filename, anchor = lookup_url(app, tagfile, symbol)
+        except KeyError, e:
+            inliner.reporter.warning(unicode(e.args[0]), line=lineno)
+            return [nodes.Text(title)], []
         full_url = base_url + filename
         if anchor:
             full_url += '#' + anchor
