@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c512f2b183fffce825ef4f35fe81ff31",
+    "hash": "326050dad0704293799c7d47fc297974",
     "packages": [
         {
             "name": "phing/phing",
-            "version": "2.6.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phingofficial/phing.git",
-                "reference": "3f7d71bf561bafea39087250f777b349438cc32e"
+                "reference": "1113b781fd931a63ea87fe0f2ee6be33e126a011"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phingofficial/phing/zipball/3f7d71bf561bafea39087250f777b349438cc32e",
-                "reference": "3f7d71bf561bafea39087250f777b349438cc32e",
+                "url": "https://api.github.com/repos/phingofficial/phing/zipball/1113b781fd931a63ea87fe0f2ee6be33e126a011",
+                "reference": "1113b781fd931a63ea87fe0f2ee6be33e126a011",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
                 "task",
                 "tool"
             ],
-            "time": "2013-08-26 21:13:03"
+            "time": "2013-12-12 13:48:30"
         }
     ],
     "packages-dev": [
@@ -64,7 +64,7 @@
     "aliases": [
 
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [
 
     ],
