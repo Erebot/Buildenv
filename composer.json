@@ -22,12 +22,7 @@
         "php": ">=5.2.2",
         "ext-xsl": "*",
         "ext-phar": "*",
-        "phing/phing": ">=2.4.3",
-        "pdepend/pdepend": "*",
-        "squizlabs/php_codesniffer": ">=1.2.2",
-        "phpmd/phpmd": "*",
-        "sebastian/phpcpd": "*",
-        "phpunit/phpunit": "*"
+        "phing/phing": ">=2.4.3"
     },
     "extra": {
         "branch-alias": {
