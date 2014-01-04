@@ -2,6 +2,7 @@
 <project name="Erebot_buildenv_coverage">
     <mkdir dir="docs"/>
     <mkdir dir="docs/coverage"/>
+    <mkdir dir="build"/>
     <coverage-report outfile="${qa.coverage.tmp}">
         <report
             todir="docs/coverage"
@@ -15,6 +16,4 @@
         perMethod="${qa.coverage.min.method}"
         verbose="true"
         />
-    <delete file="${qa.coverage.db}" quiet="true"/>
-    <delete file="${qa.coverage.tmp}" quiet="true"/>
 </project>

@@ -1,38 +1,24 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv" description="Same as 'phing all'" default="all">
     <import file="vendor/erebot/buildenv/phing/tasks.xml"/>
-    <php expression="md5(PHP_VERSION.uniqid('', TRUE));" returnProperty="randomID" level="debug"/>
-    <php function="sys_get_temp_dir"        returnProperty="tmp.dir" level="debug"/>
-    <property name="qa.coverage.force"      value="true"/>
-    <property name="qa.coverage.db"         value="${tmp.dir}/${phing.project.name}.${randomID}.db"/>
-    <property name="qa.coverage.tmp"        value="${tmp.dir}/${phing.project.name}.${randomID}.xml"/>
-    <property name="phar.stub"              value="vendor/erebot/buildenv/stub.php"/>
-    <property name="tagfiles"               value=""/>
-    <property name="subfile.phpcs"          value="vendor/erebot/buildenv/phing/phpcs.xml"/>
-    <property name="subfile.pdepend"        value="vendor/erebot/buildenv/phing/pdepend.xml"/>
-    <property name="subfile.phpmd"          value="vendor/erebot/buildenv/phing/phpmd.xml"/>
-    <property name="subfile.phpcpd"         value="vendor/erebot/buildenv/phing/phpcpd.xml"/>
-    <property name="subfile.coverage.pre"   value="vendor/erebot/buildenv/phing/pre_coverage.xml"/>
-    <property name="subfile.phpunit"        value="vendor/erebot/buildenv/phing/phpunit.xml"/>
-    <property name="subfile.coverage"       value="vendor/erebot/buildenv/phing/coverage.xml"/>
-    <property name="skip.update_catalog"    value="true"/>
-
-    <if>
-        <istrue value="${qa.coverage.force}"/>
-        <then>
-            <property name="qa.coverage.min.project" value="75"/>
-            <property name="qa.coverage.min.class"   value="75"/>
-            <property name="qa.coverage.min.method"  value="50"/>
-        </then>
-        <else>
-            <property name="qa.coverage.min.project" value="0"/>
-            <property name="qa.coverage.min.class"   value="0"/>
-            <property name="qa.coverage.min.method"  value="0"/>
-        </else>
-    </if>
+    <property name="tagfiles"                   value=""/>
+    <property name="phar.stub"                  value="vendor/erebot/buildenv/stub.php"/>
+    <property name="skip.update_catalog"        value="true"/>
+    <property name="subfile.phpcs"              value="vendor/erebot/buildenv/phing/phpcs.xml"/>
+    <property name="subfile.pdepend"            value="vendor/erebot/buildenv/phing/pdepend.xml"/>
+    <property name="subfile.phpmd"              value="vendor/erebot/buildenv/phing/phpmd.xml"/>
+    <property name="subfile.phpcpd"             value="vendor/erebot/buildenv/phing/phpcpd.xml"/>
+    <property name="subfile.coverage.pre"       value="vendor/erebot/buildenv/phing/pre_coverage.xml"/>
+    <property name="subfile.phpunit"            value="vendor/erebot/buildenv/phing/phpunit.xml"/>
+    <property name="subfile.coverage"           value="vendor/erebot/buildenv/phing/coverage.xml"/>
+    <property name="qa.coverage.db"             value="build/${phing.project.name}.db"/>
+    <property name="qa.coverage.tmp"            value="build/${phing.project.name}.xml"/>
+    <property name="qa.coverage.min.project"    value="0"/>
+    <property name="qa.coverage.min.class"      value="0"/>
+    <property name="qa.coverage.min.method"     value="0"/>
 
     <tstamp>
-        <!-- Format is, e.g. Sat, 03 Oct 2009, 16:31 -->
+        <!-- Format is, e.g. "Sat, 03 Oct 2009, 16:31" -->
         <format property="buildtime" pattern="%a, %d %b %Y, %H:%M"/>
     </tstamp>
 
@@ -152,8 +138,9 @@
         </condition>
         <property name="compression" value="none"/>
 
+        <mkdir dir="build"/>
         <pharpackage
-            destfile="./${phing.project.name}-${version}.phar"
+            destfile="build/${phing.project.name}-${version}.phar"
             basedir="./"
             stub="${phar.stub}"
             alias="${phing.project.name}"
