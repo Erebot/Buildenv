@@ -166,7 +166,7 @@
                 <element name="version" value="${version}"/>
             </metadata>
         </pharpackage>
-        <chmod file="./${phing.project.name}-${version}.phar" mode="0755"/>
+        <chmod file="build/${phing.project.name}-${version}.phar" mode="0755"/>
     </target>
 
     <!-- Documentation -->
