@@ -22,6 +22,7 @@
         "php": ">=5.2.2",
         "ext-xsl": "*",
         "ext-phar": "*",
+        "ext-json": "*",
         "phing/phing": ">=2.4.3"
     },
     "extra": {
