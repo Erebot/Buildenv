@@ -29,7 +29,7 @@
     <!-- Detect and normalize the current version. -->
     <exec command="php vendor/erebot/buildenv/get_version.php -N" checkreturn="true" outputProperty="normalizedVersion"/>
     <!-- Detect the HEAD's SHA1 -->
-    <exec command="git rev-parse HEAD 2> /dev/null" checkreturn="true" outputProperty="commit">
+    <exec command="git rev-parse HEAD 2> /dev/null" checkreturn="true" outputProperty="commit"/>
     <!-- Detect composer name -->
     <exec command="php vendor/erebot/buildenv/get_version.php -C" checkreturn="true" outputProperty="composerName"/>
 
