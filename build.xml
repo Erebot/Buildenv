@@ -22,12 +22,16 @@
         <format property="buildtime" pattern="%a, %d %b %Y, %H:%M"/>
     </tstamp>
 
-    <!-- Automatically detect existing locales. -->
+    <!-- Detect existing locales. -->
     <exec command="php vendor/erebot/buildenv/get_locales.php" checkreturn="true" outputProperty="locales"/>
-    <!-- Automatically detect the current version. -->
+    <!-- Detect the current version. -->
     <exec command="php vendor/erebot/buildenv/get_version.php" checkreturn="true" outputProperty="version"/>
-    <!-- Automatically detect and normalize the current version. -->
+    <!-- Detect and normalize the current version. -->
     <exec command="php vendor/erebot/buildenv/get_version.php -N" checkreturn="true" outputProperty="normalizedVersion"/>
+    <!-- Detect the HEAD's SHA1 -->
+    <exec command="git rev-parse HEAD 2> /dev/null" checkreturn="true" outputProperty="commit">
+    <!-- Detect composer name -->
+    <exec command="php vendor/erebot/buildenv/get_version.php -C" checkreturn="true" outputProperty="composerName"/>
 
     <!-- Include Composer autoloader. -->
     <php expression="require_once('vendor/autoload.php');" level="debug"/>
@@ -164,8 +168,10 @@
             </fileset>
             <fileset refid="phar.files"/>
             <metadata>
-                <element name="realname" value="${phing.project.name}"/>
-                <element name="version" value="${version}"/>
+                <element name="realname"    value="${phing.project.name}"/>
+                <element name="version"     value="${version}"/>
+                <element name="commit"      value="${commit}"/>
+                <element name="name"        value="${composerName}"/>
             </metadata>
         </pharpackage>
         <chmod file="build/${phing.project.name}-${version}.phar" mode="0755"/>

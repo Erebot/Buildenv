@@ -1,41 +1,44 @@
 #!/usr/bin/env php
 <?php
 /**
- * This program displays the current version.
+ * This program displays various information
+ * about the current component.
  */
 
 function usage($prog)
 {
-    echo "" . PHP_EOL;
+    echo "Usage: $prog [options] [path]" . PHP_EOL;
+    echo "Options:" . PHP_EOL;
+    echo "-C, --composer" . PHP_EOL;
+    echo "    Displays the component's name in Composer" . PHP_EOL;
+    echo "-N, --normalize" . PHP_EOL;
+    echo "    Displays the normalized version instead of the raw one." . PHP_EOL;
 }
 
-function main()
+function get_composer($dir)
 {
-    $args       = $_SERVER['argv'];
-    $script     = array_shift($args);
-    $dir        = getcwd();
-    $normalize  = FALSE;
-    $rem_args   = array();
-
-    for ($i = 0, $m = count($args); $i < $m; $i++) {
-        $arg = $args[$i];
-
-        if ($arg == '-N' || $arg == '--normalize')
-            $normalize = TRUE;
-        else if (!strncmp($arg, '-', 1)) {
-            usage($script);
-            exit(1);
-        }
-        else {
-            $rem_args[] = $arg;
-        }
+    $composer = @file_get_contents(
+        $dir .
+        DIRECTORY_SEPARATOR . 'composer.json'
+    );
+    if ($composer === FALSE) {
+        fprintf(STDERR, "Could not find 'composer.json'.%s", PHP_EOL);
+        exit(1);
     }
 
-    if (count($rem_args)) {
-        $dir = $rem_args[0];
+    $composer = @json_decode(
+        $composer,
+        TRUE
+    );
+    if ($composer === NULL) {
+        fprintf(STDERR, "Could not parse 'composer.json'.%s", PHP_EOL);
+        exit(1);
     }
+    return $composer;
+}
 
-    putenv('GIT_DIR=' . $dir . DIRECTORY_SEPARATOR . '.git');
+function version($dir, $normalize)
+{
     $NUL = strncasecmp(PHP_OS, 'Win', 3) ? '/dev/null' : 'NUL';
 
     exec('git describe --tags --exact-match 2>' . $NUL, $output, $exitcode);
@@ -45,24 +48,7 @@ function main()
         $version = 'dev-' . trim($output[0]);
         unset($output);
 
-        $composer = @file_get_contents(
-            dirname(dirname(dirname(dirname(__FILE__)))) .
-            DIRECTORY_SEPARATOR . 'composer.json'
-        );
-        if ($composer === FALSE) {
-            fprintf(STDERR, "Could not find 'composer.json'.%s", PHP_EOL);
-            exit(1);
-        }
-
-        $composer = @json_decode(
-            $composer,
-            TRUE
-        );
-        if ($composer === NULL) {
-            fprintf(STDERR, "Could not parse 'composer.json'.%s", PHP_EOL);
-            exit(1);
-        }
-
+        $composer = get_composer($dir);
         if (isset($composer['extra']['branch-alias'][$version])) {
             $version = $composer['extra']['branch-alias'][$version];
             unset($composer);
@@ -116,6 +102,55 @@ function main()
 
     echo $version . PHP_EOL;
     exit($exitcode);
+}
+
+function composer($dir)
+{
+    $composer = get_composer($dir);
+    echo $composer['name'] . PHP_EOL;
+    exit(0);
+}
+
+function main()
+{
+    $args       = $_SERVER['argv'];
+    $script     = array_shift($args);
+    $normalize  = FALSE;
+    $composer   = FALSE;
+    $rem_args   = array();
+
+    for ($i = 0, $m = count($args); $i < $m; $i++) {
+        $arg = $args[$i];
+
+        if ($arg == '-N' || $arg == '--normalize')
+            $normalize = TRUE;
+        else if ($arg == '-C' || $arg == '--composer')
+            $composer = TRUE;
+        else if (!strncmp($arg, '-', 1)) {
+            usage($script);
+            exit(1);
+        }
+        else {
+            $rem_args[] = $arg;
+        }
+    }
+
+    $dir = getcwd();
+    if (count($rem_args)) {
+        $dir = $rem_args[0];
+        putenv('GIT_DIR=' . $dir . DIRECTORY_SEPARATOR . '.git');
+    }
+    $NUL = strncasecmp(PHP_OS, 'Win', 3) ? '/dev/null' : 'NUL';
+    exec('git rev-parse --show-toplevel 2>' . $NUL, $output, $exitcode);
+    if ($exitcode != 0) {
+        fprintf(STDERR, "Could not determine path to .git folder.%s", PHP_EOL);
+        exit(1);
+    }
+    $dir = trim($output[0]);
+
+    if ($composer)
+        composer($dir);
+    version($dir, $normalize);
 }
 
 main();
