@@ -57,7 +57,7 @@ try {
     exit(1);
 }
 
-if (realpath($_SERVER['SCRIPT_FILENAME']) == realpath(__FILE__)) {
+if (realpath($_SERVER['SCRIPT_FILENAME']) === realpath(__FILE__)) {
     class Erebot_Phar_App
     {
         private $_args;
@@ -133,13 +133,23 @@ if (realpath($_SERVER['SCRIPT_FILENAME']) == realpath(__FILE__)) {
         }
 
         /**
-         * Displays information about this module's version.
+         * Displays this module's original name.
+         */
+        public function run_name()
+        {
+            $phar = new Phar(__FILE__);
+            $md = $phar->getMetadata();
+            echo $md['realname'] . PHP_EOL;
+        }
+
+        /**
+         * Displays this module's version.
          */
         public function run_version()
         {
             $phar = new Phar(__FILE__);
             $md = $phar->getMetadata();
-            echo $md['realname'] . ' version ' . $md['version'] . PHP_EOL;
+            echo $md['version'] . PHP_EOL;
         }
 
         /**
