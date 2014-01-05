@@ -135,11 +135,32 @@ if (realpath($_SERVER['SCRIPT_FILENAME']) === realpath(__FILE__)) {
         /**
          * Displays this module's original name.
          */
-        public function run_name()
+        public function run_realname()
         {
             $phar = new Phar(__FILE__);
             $md = $phar->getMetadata();
             echo $md['realname'] . PHP_EOL;
+        }
+
+        /**
+         * Displays this module's name in Composer.
+         */
+        public function run_name()
+        {
+            $phar = new Phar(__FILE__);
+            $md = $phar->getMetadata();
+            echo $md['name'] . PHP_EOL;
+        }
+
+        /**
+         * Displays the SHA1 reference of the commit
+         * this release is based upon.
+         */
+        public function run_commit()
+        {
+            $phar = new Phar(__FILE__);
+            $md = $phar->getMetadata();
+            echo $md['commit'] . PHP_EOL;
         }
 
         /**
