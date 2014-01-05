@@ -7,7 +7,7 @@
 
 function usage($prog)
 {
-    echo "Usage: $prog [options] [path]" . PHP_EOL;
+    echo "Usage: $prog [options] [path/to/git/repository/]" . PHP_EOL;
     echo "Options:" . PHP_EOL;
     echo "-C, --composer" . PHP_EOL;
     echo "    Displays the component's name in Composer" . PHP_EOL;
@@ -39,11 +39,27 @@ function get_composer($dir)
 
 function version($dir, $normalize)
 {
-    $NUL = strncasecmp(PHP_OS, 'Win', 3) ? '/dev/null' : 'NUL';
+    $NUL        = strncasecmp(PHP_OS, 'Win', 3) ? '/dev/null' : 'NUL';
+    $fallback   = FALSE;
 
-    exec('git describe --tags --exact-match 2>' . $NUL, $output, $exitcode);
+    exec('git describe --tags --exact-match --dirty 2>' . $NUL, $output, $exitcode);
     if ($exitcode != 0) {
         unset($output);
+        $fallback = TRUE;
+    }
+    else {
+        // A tag matched the HEAD exactly...
+        $version = trim($output[0]);
+
+        // ...unless the current tree is actually dirty.
+        if (substr($version, -6) === '-dirty') {
+            $fallback = TRUE;
+        }
+    }
+
+    // No matching tag or dirty working tree.
+    // Fallback to using the current branch's name.
+    if ($fallback) {
         exec('git symbolic-ref --short HEAD 2>' . $NUL, $output, $exitcode);
         $version = 'dev-' . trim($output[0]);
         unset($output);
@@ -56,16 +72,19 @@ function version($dir, $normalize)
                 $version = str_replace('x', '9999999', $version);
             }
         }
-    }
-    else {
-        $version = trim($output[0]);
+        // For unaliased branches, use a dummy version.
+        else {
+            $version = '0.0.0-dev';
+        }
     }
 
-    // We always do this part of the normalization for consistency.
+    // We do this small normalization step
+    // regardless of the $normalize flag.
     if (!strncmp($version, 'v', 1)) {
         $version = (string) substr($version, 1);
     }
 
+    // Actual normalization.
     if ($normalize) {
         if (!preg_match(
             '/^(?J)(\\d+)\\.(\\d+)\\.(\\d+)(?:-(?:(?<mod>(?:alpha|beta|RC|patch))(\\d+)?|(?<mod>dev)))?$/',
@@ -140,6 +159,8 @@ function main()
         $dir = $rem_args[0];
         putenv('GIT_DIR=' . $dir . DIRECTORY_SEPARATOR . '.git');
     }
+
+    // Retrieve the path to the repository's toplevel directory.
     $NUL = strncasecmp(PHP_OS, 'Win', 3) ? '/dev/null' : 'NUL';
     exec('git rev-parse --show-toplevel 2>' . $NUL, $output, $exitcode);
     if ($exitcode != 0) {

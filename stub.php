@@ -127,7 +127,7 @@ if (realpath($_SERVER['SCRIPT_FILENAME']) === realpath(__FILE__)) {
                 $lines = explode("\n", wordwrap($doc, 78 - $maxlen));
                 foreach ($lines as $line) {
                     echo $start . $line . PHP_EOL;
-                    $start = str_repeat(' ', $maxlen);
+                    $start = str_repeat(' ', $maxlen + 1);
                 }
             }
         }
