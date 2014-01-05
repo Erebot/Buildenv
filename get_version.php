@@ -44,7 +44,6 @@ function version($dir, $normalize)
 
     exec('git describe --tags --exact-match --dirty 2>' . $NUL, $output, $exitcode);
     if ($exitcode != 0) {
-        unset($output);
         $fallback = TRUE;
     }
     else {
@@ -60,6 +59,7 @@ function version($dir, $normalize)
     // No matching tag or dirty working tree.
     // Fallback to using the current branch's name.
     if ($fallback) {
+        unset($output);
         exec('git symbolic-ref --short HEAD 2>' . $NUL, $output, $exitcode);
         $version = 'dev-' . trim($output[0]);
         unset($output);
