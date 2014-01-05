@@ -80,7 +80,8 @@ if (realpath($_SERVER['SCRIPT_FILENAME']) === realpath(__FILE__)) {
             if (method_exists(__CLASS__, 'run_' . $command)) {
                 return call_user_func(array(__CLASS__, 'run_' . $command));
             }
-            return $this->usage();
+            $this->usage();
+            exit(1);
         }
 
         public function usage()
