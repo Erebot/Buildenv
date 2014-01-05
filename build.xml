@@ -26,6 +26,8 @@
     <exec command="php vendor/erebot/buildenv/get_locales.php" checkreturn="true" outputProperty="locales"/>
     <!-- Automatically detect the current version. -->
     <exec command="php vendor/erebot/buildenv/get_version.php" checkreturn="true" outputProperty="version"/>
+    <!-- Automatically detect and normalize the current version. -->
+    <exec command="php vendor/erebot/buildenv/get_version.php -N" checkreturn="true" outputProperty="normalizedVersion"/>
 
     <!-- Include Composer autoloader. -->
     <php expression="require_once('vendor/autoload.php');" level="debug"/>
