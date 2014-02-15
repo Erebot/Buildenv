@@ -108,12 +108,13 @@ function version($dir, $normalize)
         if (isset($parts['mod'])) {
             $stability = $stabilityMap[$parts['mod']];
         }
-        $stability *= 1000000;
+        $stability *= 1000;
         if (isset($parts[5])) {
             // We cap the number after the stability suffix
             // to avoid overflowing into another stability
-            // for very larger numbers (eg. 1.0.0-RC1000000).
-            $stability += min(999999, (int) $parts[5]);
+            // for very larger numbers (eg. 1.0.0-RC1000).
+            // Also, values >65535 cause an overflow on Windows.
+            $stability += min(999, (int) $parts[5]);
         }
 
         $version = "${parts[1]}.${parts[2]}.${parts[3]}.$stability";

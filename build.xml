@@ -184,20 +184,9 @@
     <target name="doc_html" description="Generate documentation in HTML format" depends="doc_api,doc_enduser"/>
 
     <target name="doc_api" description="Generate API documentation in HTML format">
-        <!-- Get the brief description from the README. -->
-        <if>
-            <os family="windows"/>
-            <then>
-                <exec command="./buildenv/compat/win/head.bat README"
-                    outputProperty="short_description"/>
-            </then>
-            <else>
-                <exec command="head -1 README" outputProperty="short_description"/>
-            </else>
-        </if>
-        <php function="escapeshellarg" returnProperty="short_description">
-            <param value="${short_description}"/>
-        </php>
+        <!-- Get the brief description from composer.json. -->
+        <exec command="php vendor/erebot/buildenv/get_composer.php description"
+            outputProperty="short_description" checkreturn="true"/>
 
         <!-- Determine path to tag files. -->
         <property name="tagfiles.reference" value="${phing.project.name}"/>
@@ -207,7 +196,7 @@
             <param value="${tagfiles}"/>
         </php>
 
-        <exec command="COMPONENT_NAME=${phing.project.name} COMPONENT_VERSION=${version} COMPONENT_BRIEF=${short_description} COMPONENT_TAGFILES=${tagfiles} doxygen"
+        <exec command="COMPONENT_NAME=${phing.project.name} COMPONENT_VERSION=${version} COMPONENT_BRIEF=&#34;${short_description}&#34; COMPONENT_TAGFILES=${tagfiles} doxygen"
             dir="." passthru="true" checkreturn="true" logoutput="true"/>
     </target>
 
