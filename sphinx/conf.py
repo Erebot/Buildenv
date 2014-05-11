@@ -41,7 +41,7 @@ extensions = [
 todo_include_todos = False
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = []
+templates_path = ['../../../../docs/templates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
