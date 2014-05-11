@@ -41,7 +41,7 @@ extensions = [
 todo_include_todos = False
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['../../../../docs/templates']
+templates_path = ['templates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -205,6 +205,13 @@ html_show_sourcelink = False
 
 # Output file base name for HTML help builder.
 #htmlhelp_basename = 'Erebotdoc'
+
+try:
+    piwik_file = open('../../../../docs/src/piwik_site', 'r')
+    html_context = {'piwik_site': piwik_file.read().strip()}
+    piwik_file.close()
+except IOError:
+    html_context = {'piwik_site': 4}
 
 
 # -- Options for LaTeX output --------------------------------------------------
