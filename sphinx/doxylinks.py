@@ -96,6 +96,12 @@ def fetch_tagfile(app, tagfile):
                  '%s: %s' % (tagfile, err.__class__, err))
         return
 
+def getText(res):
+    try:
+        return str(res[0].text)
+    except AttributeError:
+        return str(res)
+
 def lookup_url(app, tagfile, symbol):
     env = app.builder.env
     cache = env.doxylinks_cache
@@ -115,17 +121,17 @@ def lookup_url(app, tagfile, symbol):
                 "/.."
             ) % {'class': cls, 'member': member}
             res = doc.xpath(query + "/anchorfile/text()")
-            filename = str(res[0].text)
+            filename = getText(res)
             res = doc.xpathEval(query + "/anchor/text()")
-            anchor = str(res[0].text)
+            anchor = getText(res)
             res = doc.xpathEval(query + "/@kind")
-            kind = str(res[0].text)
+            kind = getText(res)
         else:
             res = doc.xpath(query + "/filename/text()")
-            filename = str(res[0].text)
+            filename = getText(res)
             anchor = None
             res = doc.xpath(query + "/@kind")
-            kind = str(res[0].text)
+            kind = getText(res)
     except IndexError:
         raise KeyError('No documentation found for "%s"' % symbol)
     if not filename.endswith('.html'):
