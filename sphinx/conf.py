@@ -41,7 +41,9 @@ extensions = [
 todo_include_todos = False
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['templates']
+templates_path = []
+
+template_bridge = "loader.TemplateLoader"
 
 # The suffix of source filenames.
 source_suffix = '.rst'
