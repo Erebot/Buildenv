@@ -118,41 +118,33 @@
     <!-- Release process -->
     <target name="release" depends="all"
         description="Build a PHAR package from the current code">
+        <property override="true" name="gzip.phpExt" value="zlib"/>
+        <property override="true" name="gzip.fileExt" value="phar.gz"/>
+
+        <property override="true" name="bzip2.phpExt" value="bz2"/>
+        <property override="true" name="bzip2.fileExt" value="phar.bz2"/>
+
+        <property override="true" name="none.phpExt" value="Core"/>
+        <property override="true" name="none.fileExt" value="phar"/>
+
+        <foreach list="gzip,bzip2,none" param="compression" target="release_1_phar"/>
+    </target>
+
+    <target name="release_1_phar" hidden="true">
         <if>
-            <and>
-                <isset property="opensslkey"/>
-                <isset property="opensslpassfile"/>
-                <available extension="openssl"/>
-            </and>
+            <not><available extension="${${compression}.phpExt}"/></not>
             <then>
-                <property override="true" name="signature" value="openssl"/>
-                <loadfile file="${opensslpassfile}" property="keypassword">
-                    <filterchain><striplinebreaks/></filterchain>
-                </loadfile>
+                <fail>The "${${compression}.phpExt}" extension is required when prepping a release.</fail>
             </then>
-            <else>
-                <property override="true" name="signature" value="sha1"/>
-            </else>
         </if>
-
-        <!-- condition overrides previous property affectations. -->
-        <condition property="compression" value="gzip">
-            <available extension="zlib"/>
-        </condition>
-        <condition property="compression" value="bzip2">
-            <available extension="bz2"/>
-        </condition>
-        <property name="compression" value="none"/>
-
         <mkdir dir="build"/>
+
         <pharpackage
-            destfile="build/${phing.project.name}-${version}.phar"
+            destfile="build/${phing.project.name}-${version}.${${compression}.fileExt}"
             basedir="./"
             stub="${phar.stub}"
             alias="${phing.project.name}"
-            signature="${signature}"
-            key="${opensslkey}"
-            keypassword="${keypassword}"
+            signature="sha512"
             compression="${compression}"
         >
             <fileset dir=".">
@@ -174,7 +166,7 @@
                 <element name="name"        value="${composerName}"/>
             </metadata>
         </pharpackage>
-        <chmod file="build/${phing.project.name}-${version}.phar" mode="0755"/>
+        <chmod file="build/${phing.project.name}-${version}.${${compression}.fileExt}" mode="0755"/>
     </target>
 
     <!-- Documentation -->
