@@ -167,6 +167,12 @@
             </metadata>
         </pharpackage>
         <chmod file="build/${phing.project.name}-${version}.${${compression}.fileExt}" mode="0755"/>
+        <if>
+            <isset property="sign"/>
+            <then>
+                <exec command="gpg -b --armor build/${phing.project.name}-${version}.${${compression}.fileExt}"/>
+            </then>
+        </if>
     </target>
 
     <!-- Documentation -->
