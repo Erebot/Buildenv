@@ -62,7 +62,7 @@ if 'SPHINX_PROJECT' in os.environ:
 
 rst_prolog = \
     """
-       |project| replace:: %(project)s
+    .. |project| replace:: %(project)s
     .. |project_version| replace::
             :samp:`%(base_url)s/%(project)s-{version}.phar`
     .. |project_latest| replace:: %(base_url)s/%(project)s-dev-master.phar
