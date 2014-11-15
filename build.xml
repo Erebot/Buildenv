@@ -233,6 +233,9 @@
         <!-- Get the brief description from composer.json. -->
         <exec command="php vendor/erebot/buildenv/get_composer.php description"
             outputProperty="short_description" checkreturn="true"/>
+        <php function="escapeshellarg" returnProperty="short_description">
+            <param value="${short_description}"/>
+        </php>
 
         <!-- Determine path to tag files. -->
         <property name="tagfiles.reference" value="${phing.project.name}"/>
