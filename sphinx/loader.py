@@ -10,20 +10,22 @@ class TemplateLoader(BuiltinTemplateLoader):
         if template == 'page.html':
             res = res.replace(
                 '</body>',
-                """<!-- Piwik -->
+                """
+<!-- Piwik -->
 <script type="text/javascript">
   var _paq = _paq || [];
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.erebot.net/";
+    var u="//stats.erebot.net/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', %(id)d]);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
-    g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
-<noscript><p><img src="http://stats.erebot.net/piwik.php?idsite=%(id)s" style="border:0;" alt="" /></p></noscript>
-<!-- End Piwik Code --></body>""" % {'id': self.piwik_site})
+<noscript><p><img src="//stats.erebot.net/piwik.php?idsite=%(id)d" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+</body>""" % {'id': self.piwik_site})
         return res
 
