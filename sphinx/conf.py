@@ -220,7 +220,7 @@ try:
             'docs', 'src', 'piwik_site',
         ),
         'r')
-    html_context = {'piwik_site': piwik_file.read().strip()}
+    html_context = {'piwik_site': int(piwik_file.read().strip())}
     piwik_file.close()
 except IOError:
     html_context = {'piwik_site': 0}
