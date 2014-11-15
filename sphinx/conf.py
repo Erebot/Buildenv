@@ -29,14 +29,14 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 if locals().get('extensions') is None:
     extensions = []
-extensions.append(
+extensions.extend([
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.pngmath',
     'sphinx.ext.ifconfig',
     'sphinx.ext.extlinks',
     'patches',
-)
+])
 
 # Display items marked with the 'todo' directive.
 todo_include_todos = False
