@@ -211,11 +211,19 @@ html_show_sourcelink = False
 #htmlhelp_basename = 'Erebotdoc'
 
 try:
-    piwik_file = open('../../../../docs/src/piwik_site', 'r')
+    piwik_file = open(
+        os.path.join(
+            os.path.dirname(
+                os.path.abspath(inspect.getfile(inspect.currentframe()))
+            ),
+            '..', '..', '..', '..',
+            'docs', 'src', 'piwik_site',
+        ),
+        'r')
     html_context = {'piwik_site': piwik_file.read().strip()}
     piwik_file.close()
 except IOError:
-    html_context = {'piwik_site': 4}
+    html_context = {'piwik_site': 0}
 
 
 # -- Options for LaTeX output --------------------------------------------------
