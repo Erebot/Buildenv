@@ -94,7 +94,7 @@
 
     <target name="doc_enduser_update_1_locale_catalog" hidden="true">
         <echo>Updating "docs/i18n/${locale}/LC_MESSAGES/${catalog}" based on "${abscatalog}"...</echo>
-        <exec command="msgmerge --lang=${locale} --backup=off -U -N -e --strict -w 80 -q docs/i18n/${locale}/LC_MESSAGES/${catalog} ${abscatalog}" logoutput="true" dir="."/>
+        <exec command="msgmerge --lang=${locale} --backup=off -U -N -e --strict -w 80 --no-location -q docs/i18n/${locale}/LC_MESSAGES/${catalog} ${abscatalog}" logoutput="true" dir="."/>
     </target>
 
     <target name="doc_enduser_identity_catalogs"
@@ -110,7 +110,7 @@
 
     <target name="doc_enduser_identity_1_catalog" hidden="true">
         <echo>Translating to "docs/i18n/${locale}/LC_MESSAGES/${catalog}" based on "${abscatalog}"</echo>
-        <exec command="msgen --lang=${locale} -e --strict -w 80 --add-location -o docs/i18n/${locale}/LC_MESSAGES/${catalog} ${abscatalog}" logoutput="true" dir="."/>
+        <exec command="msgen --lang=${locale} -e --strict -w 80 -o docs/i18n/${locale}/LC_MESSAGES/${catalog} ${abscatalog}" logoutput="true" dir="."/>
     </target>
 
     <target name="doc_enduser_init_catalogs"
