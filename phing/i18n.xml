@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<project name="Erebot_buildenv_i18n">
+    <property name="skip.update_catalog"        value="true"/>
+
+    <fileset dir="./data/i18n/" id="locales">
+        <include name="./*/"/>
+    </fileset>
+
+
+    <!-- Internationalization -->
+    <target name="i18n"
+        depends="extract_messages,update_catalog,compile_catalog"
+        description="Runs several commands to update the translation files"/>
+
+    <target name="extract_messages"
+        description="Extract messages in need of a translation from current code">
+        <php function="putenv">
+            <param value="LANG=C"/>
+        </php>
+        <xgettext command="xgettext -o data/i18n/${phing.project.name}.pot --from-code utf-8 --foreign-user --add-location -E -w 80 -s -L PHP --strict --force-po --package-name ${phing.project.name} --package-version ${version} --msgid-bugs-address i18n@erebot.net --add-comments=I18N:">
+            <fileset refid="sources"/>
+        </xgettext>
+        <if>
+            <isset property="env.LANG"/>
+            <then>
+                <php function="putenv">
+                    <param value="LANG=${env.LANG}"/>
+                </php>
+            </then>
+        </if>
+    </target>
+
+    <target name="update_catalog"
+        description="Update the translation files based on current code">
+        <if>
+            <isfalse value="${skip.update_catalog}"/>
+            <then>
+                <foreach param="locale" target="update_1_catalog">
+                    <fileset refid="locales"/>
+                </foreach>
+                <phing phingFile="build.xml" target="identity_catalog" haltonfailure="true"/>
+            </then>
+        </if>
+    </target>
+
+    <target name="update_1_catalog" hidden="true">
+        <exec command="msgmerge --lang=${locale} --backup=off -U -N -e --strict -w 80 -q --add-location data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${phing.project.name}.pot" logoutput="true" dir="."/>
+    </target>
+
+    <target name="identity_catalog"
+        description="Automatically translate the catalog for the default locale">
+        <property name="locale" value="en_US"/>
+        <exec command="msgen --lang=${locale} -e --strict -w 80 --add-location -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
+    </target>
+
+    <target name="init_catalog"
+        description="Add a new language to translation files">
+        <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
+        <mkdir dir="data/i18n/${locale}/LC_MESSAGES"/>
+        <exec command="msginit --no-translator -w 80 -l ${locale} -i data/i18n/${phing.project.name}.pot -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" logoutput="true" dir="."/>
+    </target>
+
+    <target name="compile_catalog"
+        description="Compile the translation files">
+        <php function="putenv">
+            <param value="LANG=C"/>
+        </php>
+        <foreach param="locale" target="compile_1_catalog">
+            <fileset refid="locales"/>
+        </foreach>
+        <if>
+            <isset property="env.LANG"/>
+            <then>
+                <php function="putenv">
+                    <param value="LANG=${env.LANG}"/>
+                </php>
+            </then>
+        </if>
+    </target>
+
+    <target name="compile_1_catalog" hidden="true">
+        <exec command="msgfmt --statistics -c -f -o data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.mo data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po" dir="." outputProperty="stats"/>
+        <i18nStats output="${stats}" file="data/i18n/${locale}/LC_MESSAGES/${phing.project.name}.po"/>
+    </target>
+</project>

@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<project name="Erebot_buildenv_doc">
+    <!--
+        Depends on the following external properties:
+        -   version
+        -   doc_release
+    -->
+
+    <tstamp>
+        <format property="doc_enduser.year" pattern="%Y"/>
+    </tstamp>
+
+    <property name="tagfiles" value=""/>
+    <property name="doc_enduser.copyright" value="2011-${doc_enduser.year}, Erebot"/>
+
+    <fileset dir="./docs/i18n/" id="enduserDocLocales">
+        <include name="?*"/>
+    </fileset>
+
+
+    <!-- Documentation -->
+    <target name="doc" depends="doc_html"
+        description="Generate documentation"/>
+
+    <target name="doc_html" description="Generate documentation in HTML format" depends="doc_api,doc_enduser"/>
+
+    <target name="doc_api" description="Generate API documentation in HTML format">
+        <!-- Get the brief description from composer.json. -->
+        <exec command="php ${phing.dir.erebot_buildenv}/get_composer.php description"
+            outputProperty="short_description" checkreturn="true"/>
+        <php function="escapeshellarg" returnProperty="short_description">
+            <param value="${short_description}"/>
+        </php>
+
+        <!-- Determine path to tag files. -->
+        <property name="tagfiles.reference" value="${phing.project.name}"/>
+        <exec command="php ${phing.dir.erebot_buildenv}/get_filetags.php ${tagfiles.reference} ${tagfiles}"
+            checkreturn="true" outputProperty="tagfiles"/>
+        <php function="escapeshellarg" returnProperty="tagfiles">
+            <param value="${tagfiles}"/>
+        </php>
+
+        <exec command="COMPONENT_NAME=${phing.project.name} COMPONENT_VERSION=${version} COMPONENT_BRIEF=&#34;${short_description}&#34; COMPONENT_TAGFILES=${tagfiles} doxygen"
+            dir="." passthru="true" checkreturn="true" logoutput="true"/>
+    </target>
+
+    <target name="doc_enduser" description="Generate end-user documentation in HTML format"
+        depends="doc_enduser_compile_catalogs">
+        <foreach param="locale" target="doc_enduser_generate_1_locale">
+            <fileset refid="enduserDocLocales"/>
+        </foreach>
+    </target>
+
+    <target name="doc_enduser_generate_1_locale" hidden="true">
+        <echo>Generating end-user documentation for "${locale}" locale...</echo>
+        <property name="doc_release" value=""/>
+        <exec command="SPHINX_VERSION=${version} SPHINX_RELEASE=${version}${doc_release} SPHINX_PROJECT=${phing.project.name} sphinx-build -c vendor/erebot/buildenv/sphinx/ -b html -D html_use_opensearch=http://erebot.github.io/${phing.project.name} -D copyright='${doc_enduser.copyright}' -D language=${locale} -d docs/enduser/doctrees docs/src docs/enduser/html/${locale}"
+            passthru="true" checkreturn="true" logoutput="true"/>
+    </target>
+
+    <target name="doc_enduser_extract_messages"
+        description="Extract messages in need of a translation from end-user documentation">
+        <property name="doc_release" value=""/>
+        <php function="putenv">
+            <param value="LANG=C"/>
+        </php>
+        <exec command="SPHINX_VERSION=${version} SPHINX_RELEASE=${version}${doc_release} SPHINX_PROJECT=${phing.project.name} sphinx-build -c vendor/erebot/buildenv/sphinx/ -b gettext docs/src docs/pot"
+            passthru="true" checkreturn="true" logoutput="true"/>
+        <if>
+            <isset property="env.LANG"/>
+            <then>
+                <php function="putenv">
+                    <param value="LANG=${env.LANG}"/>
+                </php>
+            </then>
+        </if>
+    </target>
+
+    <target name="doc_enduser_update_catalogs" hidden="true" depends="doc_enduser_extract_messages">
+        <foreach param="catalog" absparam="abscatalog" target="doc_enduser_update_1_catalog">
+            <mapper type="glob" from="*.pot" to="*.po"/>
+            <fileset dir="./docs/pot/">
+                <include name="*.pot"/>
+            </fileset>
+        </foreach>
+        <phing phingFile="build.xml" target="doc_enduser_identity_catalogs" haltonfailure="true"/>
+    </target>
+
+    <target name="doc_enduser_update_1_catalog" hidden="true">
+        <foreach param="locale" target="doc_enduser_update_1_locale_catalog">
+            <fileset refid="enduserDocLocales"/>
+        </foreach>
+    </target>
+
+    <target name="doc_enduser_update_1_locale_catalog" hidden="true">
+        <echo>Updating "docs/i18n/${locale}/LC_MESSAGES/${catalog}" based on "${abscatalog}"...</echo>
+        <exec command="msgmerge --lang=${locale} --backup=off -U -N -e --strict -w 80 -q docs/i18n/${locale}/LC_MESSAGES/${catalog} ${abscatalog}" logoutput="true" dir="."/>
+    </target>
+
+    <target name="doc_enduser_identity_catalogs"
+        description="Automatically translate the end-user documentation catalogs for the default locale">
+        <property name="locale" value="en"/>
+        <foreach param="catalog" absparam="abscatalog" target="doc_enduser_identity_1_catalog">
+            <mapper type="glob" from="*.pot" to="*.po"/>
+            <fileset dir="./docs/pot/">
+                <include name="*.pot"/>
+            </fileset>
+        </foreach>
+    </target>
+
+    <target name="doc_enduser_identity_1_catalog" hidden="true">
+        <echo>Translating to "docs/i18n/${locale}/LC_MESSAGES/${catalog}" based on "${abscatalog}"</echo>
+        <exec command="msgen --lang=${locale} -e --strict -w 80 --add-location -o docs/i18n/${locale}/LC_MESSAGES/${catalog} ${abscatalog}" logoutput="true" dir="."/>
+    </target>
+
+    <target name="doc_enduser_init_catalogs"
+        description="Add a new language to end-user documentation translation files">
+        <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
+        <mkdir dir="docs/i18n/${locale}/LC_MESSAGES"/>
+        <foreach param="catalog" absparam="abscatalog" target="doc_enduser_init_1_catalog">
+            <mapper type="glob" from="*.pot" to="*.po"/>
+            <fileset dir="./docs/pot/">
+                <include name="*.pot"/>
+            </fileset>
+        </foreach>
+    </target>
+
+    <target name="doc_enduser_init_1_catalog" hidden="true">
+        <echo>Creating "docs/i18n/${locale}/LC_MESSAGES/${catalog}"...</echo>
+        <exec command="msginit --no-translator -w 80 -l ${locale} -i ${abscatalog} -o docs/i18n/${locale}/LC_MESSAGES/${catalog}" logoutput="true" dir="."/>
+    </target>
+
+    <target name="doc_enduser_compile_catalogs"
+        description="Compile the translation files">
+        <php function="putenv">
+            <param value="LANG=C"/>
+        </php>
+        <foreach param="catalog" absparam="abscatalog" target="doc_enduser_compile_1_catalog">
+            <mapper type="glob" from="*.pot" to="*"/>
+            <fileset dir="./docs/pot/">
+                <include name="*.pot"/>
+            </fileset>
+        </foreach>
+        <if>
+            <isset property="env.LANG"/>
+            <then>
+                <php function="putenv">
+                    <param value="LANG=${env.LANG}"/>
+                </php>
+            </then>
+        </if>
+    </target>
+
+    <target name="doc_enduser_compile_1_catalog" hidden="true">
+        <foreach param="locale" target="doc_enduser_compile_1_locale_catalog">
+            <fileset refid="enduserDocLocales"/>
+        </foreach>
+    </target>
+
+    <target name="doc_enduser_compile_1_locale_catalog" hidden="true">
+        <echo>Compiling "docs/i18n/${locale}/LC_MESSAGES/${catalog}.po" to "docs/i18n/${locale}/LC_MESSAGES/${catalog}.mo"</echo>
+        <exec command="msgfmt --statistics -c -f -o docs/i18n/${locale}/LC_MESSAGES/${catalog}.mo docs/i18n/${locale}/LC_MESSAGES/${catalog}.po"
+            dir="." outputProperty="stats"/>
+        <i18nStats output="${stats}" file="docs/i18n/${locale}/LC_MESSAGES/${catalog}.po"/>
+    </target>
+
+    <target name="doc_enduser_locales" description="Display available locales">
+        <foreach param="locale" target="doc_enduser_1_locale">
+            <fileset refid="enduserDocLocales"/>
+        </foreach>
+    </target>
+
+    <target name="doc_enduser_1_locale" hidden="true">
+        <echo>Available locale for end-user documentation: ${locale}</echo>
+    </target>
+</project>

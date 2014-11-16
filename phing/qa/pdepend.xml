@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Erebot_buildenv_pdepend">
+<project name="Erebot_buildenv_qa_pdepend">
     <phpdepend withoutAnnotations="true">
         <fileset refid="sources"/>
         <analyzer type="coderank-mode" value="method"/>

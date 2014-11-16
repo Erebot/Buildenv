@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv_tasks">
-    <import file="vendor/erebot/buildenv/phing/tasks/xgettext.xml"/>
-    <import file="vendor/erebot/buildenv/phing/tasks/i18nStats.xml"/>
+    <import file="${phing.dir.erebot_buildenv_tasks}/tasks/xgettext.xml"/>
+    <import file="${phing.dir.erebot_buildenv_tasks}/tasks/i18nStats.xml"/>
 </project>

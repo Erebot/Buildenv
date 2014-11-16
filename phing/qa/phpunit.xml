@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Erebot_buildenv_phpunit">
+<project name="Erebot_buildenv_qa_phpunit">
     <phpunit codecoverage="true" bootstrap="vendor/erebot/testenv/bootstrap.php">
         <formatter type="plain" usefile="false"/>
         <batchtest><fileset refid="tests"/></batchtest>

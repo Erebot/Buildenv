@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<project name="Erebot_buildenv_release">
+    <property name="phar.stub" value="${phing.dir.erebot_buildenv}/stub.php"/>
+
+    <!-- Release process -->
+    <target name="release" depends="all"
+        description="Build a PHAR package from the current code">
+        <property override="true" name="gzip.phpExt" value="zlib"/>
+        <property override="true" name="gzip.fileExt" value="phar.gz"/>
+
+        <property override="true" name="bzip2.phpExt" value="bz2"/>
+        <property override="true" name="bzip2.fileExt" value="phar.bz2"/>
+
+        <property override="true" name="none.phpExt" value="Core"/>
+        <property override="true" name="none.fileExt" value="phar"/>
+
+        <php expression="version_compare(PHP_VERSION, '5.4.0', '>=')" returnProperty="phpOK"/>
+        <if>
+            <isfalse value="${phpOK}"/>
+            <then>
+                <fail>PHP 5.4.0 or later is required to prep a release.</fail>
+            </then>
+        </if>
+
+        <delete dir="build/phar" includeemptydirs="true" failonerror="true" />
+        <mkdir dir="build/phar"/>
+
+        <copy todir="build/phar">
+            <fileset dir=".">
+                <include name="composer.json"/>
+                <include name="composer.lock"/>
+                <include name="LICENSE"/>
+                <include name="LICENSE.*"/>
+                <include name="LICENCE"/>
+                <include name="LICENCE.*"/>
+                <include name="README"/>
+                <include name="README.*"/>
+            </fileset>
+        </copy>
+
+        <if>
+            <referenceexists ref="phar.files"/>
+            <then>
+                <copy todir="build/phar">
+                    <fileset refid="phar.files"/>
+                </copy>
+            </then>
+        </if>
+
+        <copy todir="build/phar">
+            <filterchain>
+                <filterreader classname="Minify"
+                    classpath="${phing.dir.erebot_buildenv}/phing/"/>
+            </filterchain>
+
+            <fileset dir=".">
+                <include name="src/**"/>
+            </fileset>
+        </copy>
+
+        <if>
+            <referenceexists ref="phar.php_files"/>
+            <then>
+                <copy todir="build/phar">
+                    <filterchain>
+                        <filterreader classname="Minify"
+                            classpath="${phing.dir.erebot_buildenv}/phing/"/>
+                    </filterchain>
+
+                    <fileset refid="phar.php_files"/>
+                </copy>
+            </then>
+        </if>
+
+        <foreach list="gzip,bzip2,none" param="compression" target="release_1_phar"/>
+        <delete dir="build/phar" includeemptydirs="true" failonerror="true" />
+    </target>
+
+    <target name="release_1_phar" hidden="true">
+        <if>
+            <not><available extension="${${compression}.phpExt}"/></not>
+            <then>
+                <fail>The "${${compression}.phpExt}" extension is required when prepping a release.</fail>
+            </then>
+        </if>
+
+        <pharpackage
+            destfile="./build/${phing.project.name}-${version}.${${compression}.fileExt}"
+            basedir="./build/phar"
+            stub="${phar.stub}"
+            alias="${phing.project.name}"
+            signature="sha512"
+            compression="${compression}"
+        >
+            <fileset dir="./build/phar"/>
+            <metadata>
+                <element name="realname"    value="${phing.project.name}"/>
+                <element name="version"     value="${version}"/>
+                <element name="commit"      value="${commit}"/>
+                <element name="name"        value="${composerName}"/>
+            </metadata>
+        </pharpackage>
+        <chmod file="build/${phing.project.name}-${version}.${${compression}.fileExt}" mode="0755"/>
+
+        <if>
+            <isset property="sign"/>
+            <then>
+                <exec command="gpg -b --armor build/${phing.project.name}-${version}.${${compression}.fileExt}"/>
+            </then>
+        </if>
+    </target>
+</project>

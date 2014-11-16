@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Erebot_buildenv_pre_coverage">
+<project name="Erebot_buildenv_qa_pre_coverage">
     <mkdir dir="build"/>
     <coverage-setup database="${qa.coverage.db}">
         <fileset refid="sources"/>

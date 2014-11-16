@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Erebot_buildenv_coverage">
+<project name="Erebot_buildenv_qa_coverage">
     <mkdir dir="docs"/>
     <mkdir dir="docs/coverage"/>
     <mkdir dir="build"/>

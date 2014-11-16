@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Erebot_buildenv_phpmd">
+<project name="Erebot_buildenv_qa_phpmd">
     <phpcpd>
         <fileset refid="sources"/>
         <formatter type="default" outfile="/dev/null"/>
