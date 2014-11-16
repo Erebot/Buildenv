@@ -98,7 +98,7 @@ language = "en"
 
 gettext_compact = False
 
-locale_dirs = ["./locales"]
+locale_dirs = ["../i18n"]
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
