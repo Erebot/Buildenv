@@ -54,7 +54,7 @@
     <target name="doc_enduser_generate_1_locale" hidden="true">
         <echo>Generating end-user documentation for "${locale}" locale...</echo>
         <property name="doc_release" value=""/>
-        <exec command="SPHINX_VERSION=${version} SPHINX_RELEASE=${version}${doc_release} SPHINX_PROJECT=${phing.project.name} sphinx-build -c vendor/erebot/buildenv/sphinx/ -b html -D html_use_opensearch=http://erebot.github.io/${phing.project.name} -D copyright='${doc_enduser.copyright}' -D language=${locale} -d docs/enduser/doctrees docs/src docs/enduser/html/${locale}"
+        <exec command="SPHINX_VERSION=${version} SPHINX_RELEASE=${version}${doc_release} SPHINX_PROJECT=${phing.project.name} sphinx-build -c vendor/erebot/buildenv/sphinx/ -t devel -b html -D html_use_opensearch=http://erebot.github.io/${phing.project.name} -D copyright='${doc_enduser.copyright}' -D language=${locale} -d docs/enduser/doctrees docs/src docs/enduser/html/${locale}"
             passthru="true" checkreturn="true" logoutput="true"/>
     </target>
 
@@ -64,7 +64,7 @@
         <php function="putenv">
             <param value="LANG=C"/>
         </php>
-        <exec command="SPHINX_VERSION=${version} SPHINX_RELEASE=${version}${doc_release} SPHINX_PROJECT=${phing.project.name} sphinx-build -c vendor/erebot/buildenv/sphinx/ -b gettext docs/src docs/pot"
+        <exec command="SPHINX_VERSION=${version} SPHINX_RELEASE=${version}${doc_release} SPHINX_PROJECT=${phing.project.name} sphinx-build -c vendor/erebot/buildenv/sphinx/ -t devel -b gettext docs/src docs/pot"
             passthru="true" checkreturn="true" logoutput="true"/>
         <if>
             <isset property="env.LANG"/>
