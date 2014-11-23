@@ -60,9 +60,18 @@ function version($dir, $normalize)
     // Fallback to using the current branch's name.
     if ($fallback) {
         unset($output);
-        exec('git symbolic-ref --short HEAD 2>' . $NUL, $output, $exitcode);
-        $version = 'dev-' . trim($output[0]);
+        exec('git branch --list 2>' . $NUL, $output, $exitcode);
+        $version = null;
+        foreach ($output as $line) {
+            if (!strncmp($line, '*', 1)) {
+                $version = trim(substr($line, 2));
+                break;
+            }
+        }
         unset($output);
+        if ($version) {
+            $version = 'dev-' . $version;
+        }
 
         $composer = get_composer($dir);
         if (isset($composer['extra']['branch-alias'][$version])) {
