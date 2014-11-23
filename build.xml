@@ -9,16 +9,16 @@
 
 
     <!-- Detect the current version. -->
-    <exec command="php ${phing.dir.erebot_buildenv}/get_version.php" checkreturn="true" outputProperty="version"/>
+    <exec command="php ${phing.dir.erebot_buildenv}/get_version.php" checkreturn="true" outputProperty="version" logoutput="true"/>
 
     <!-- Detect and normalize the current version. -->
-    <exec command="php ${phing.dir.erebot_buildenv}/get_version.php -N" checkreturn="true" outputProperty="normalizedVersion"/>
+    <exec command="php ${phing.dir.erebot_buildenv}/get_version.php -N" checkreturn="true" outputProperty="normalizedVersion" logoutput="true"/>
 
     <!-- Detect the HEAD's SHA1 -->
-    <exec command="git rev-parse HEAD 2> /dev/null" checkreturn="true" outputProperty="commit"/>
+    <exec command="git rev-parse HEAD 2> /dev/null" checkreturn="true" outputProperty="commit" logoutput="true"/>
 
     <!-- Detect composer name -->
-    <exec command="php ${phing.dir.erebot_buildenv}/get_version.php -C" checkreturn="true" outputProperty="composerName"/>
+    <exec command="php ${phing.dir.erebot_buildenv}/get_version.php -C" checkreturn="true" outputProperty="composerName" logoutput="true"/>
 
     <!-- Include Composer autoloader. -->
     <php expression="require_once('vendor/autoload.php');" level="debug"/>
