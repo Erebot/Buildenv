@@ -22,7 +22,7 @@
         "ext-xsl": "*",
         "ext-phar": "*",
         "ext-json": "*",
-        "phing/phing": ">=2.4.3"
+        "phing/phing": ">=2.9.0"
     },
     "require-dev": {
         "ext-zlib": "*",
