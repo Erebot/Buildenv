@@ -41,7 +41,7 @@
     <import file="${subfile.pdepend}"/>
     <import file="${subfile.phpmd}"/>
     <import file="${subfile.phpcpd}"/>
-    <import file="${subfile.pre_coverage}"/>
+    <import file="${subfile.coverage.pre}"/>
     <import file="${subfile.phpunit}"/>
     <import file="${subfile.coverage}"/>
 </project>
