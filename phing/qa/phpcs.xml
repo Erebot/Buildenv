@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv_qa_phpcs">
-    <phpcodesniffer
-        standard="PSR2"
-        format="full"
-        showWarnings="true"
-        showSniffs="true"
-        tabWidth="4"
-        verbosity="1"
-        >
-        <fileset refid="sources"/>
-    </phpcodesniffer>
+    <target name="qa_codesniffer" description="Check QA using PHP_CodeSniffer">
+        <phpcodesniffer
+            standard="PSR2"
+            format="full"
+            showWarnings="true"
+            showSniffs="true"
+            tabWidth="4"
+            verbosity="1"
+            >
+            <fileset refid="sources"/>
+        </phpcodesniffer>
+    </target>
 </project>

@@ -1,7 +1,13 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv_qa_pre_coverage">
-    <mkdir dir="build"/>
-    <coverage-setup database="${qa.coverage.db}">
-        <fileset refid="sources"/>
-    </coverage-setup>
+    <target name="qa_pre_coverage" hidden="true">
+        <mkdir dir="build"/>
+        <mkdir dir="docs"/>
+        <mkdir dir="docs/coverage"/>
+        <php expression="define('TESTENV_DIR', dirname('${phing.file}').DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'testenv');"/>
+
+        <coverage-setup database="${qa.coverage.db}">
+            <fileset refid="sources"/>
+        </coverage-setup>
+    </target>
 </project>

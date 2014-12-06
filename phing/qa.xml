@@ -37,86 +37,11 @@
         <phplint><fileset refid="sources"/></phplint>
     </target>
 
-    <target name="qa_codesniffer" description="Check QA using PHP_CodeSniffer">
-        <php function="chdir"><param value="vendor/bin"/></php>
-        <available followSymlinks="true" file="vendor/bin/phpcs" property="usable"/>
-        <php function="chdir"><param value="../.."/></php>
-        <fail unless="usable">
-            The "squizlabs/php_codesniffer" package (&gt;=1.2.2) must be installed
-            for the "qa_codesniffer" target to be available.
-        </fail>
-        <import file="${subfile.phpcs}"/>
-    </target>
-
-    <target name="qa_depend"
-        description="Check QA using PHP depend">
-        <php function="chdir"><param value="vendor/bin"/></php>
-        <available followSymlinks="true" file="vendor/bin/pdepend" property="usable"/>
-        <php function="chdir"><param value="../.."/></php>
-        <fail unless="usable">
-            The "pdepend/pdepend" package must be installed
-            for the "qa_depend" target to be available.
-        </fail>
-        <import file="${subfile.pdepend}"/>
-    </target>
-
-    <target name="qa_mess"
-        description="Check QA using phpmd (PHP Mess Detector)">
-        <php function="chdir"><param value="vendor/bin"/></php>
-        <available followSymlinks="true" file="vendor/bin/phpmd" property="usable"/>
-        <php function="chdir"><param value="../.."/></php>
-        <fail unless="usable">
-            The "phpmd/phpmd" package must be installed
-            for the "qa_mess" target to be available.
-        </fail>
-        <import file="${subfile.phpmd}"/>
-    </target>
-
-    <target name="qa_duplicates"
-        description="Check QA using phpcpd (PHP Copy/Paste Detector)">
-        <php function="chdir"><param value="vendor/bin"/></php>
-        <available followSymlinks="true" file="vendor/bin/phpcpd" property="usable"/>
-        <php function="chdir"><param value="../.."/></php>
-        <fail unless="usable">
-            The "sebastian/phpcpd" package must be installed
-            for the "qa_duplicates" target to be available.
-        </fail>
-        <import file="${subfile.phpcpd}"/>
-    </target>
-
-    <target name="qa_pre_coverage" hidden="true">
-        <php function="chdir"><param value="vendor/bin"/></php>
-        <available followSymlinks="true" file="vendor/bin/phpunit" property="usable"/>
-        <php function="chdir"><param value="../.."/></php>
-        <fail unless="usable">
-            The "phpunit/phpunit" package must be installed
-            for the "qa_pre_coverage" target to be available.
-        </fail>
-        <import file="${subfile.coverage.pre}"/>
-    </target>
-
-    <target name="qa_test" depends="qa_pre_coverage"
-        description="Run (unit) tests using PHPUnit">
-        <php expression="define('TESTENV_DIR', dirname('${phing.file}').DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'testenv');"/>
-        <php function="chdir"><param value="vendor/bin"/></php>
-        <available followSymlinks="true" file="vendor/bin/phpunit" property="usable"/>
-        <php function="chdir"><param value="../.."/></php>
-        <fail unless="usable">
-            The "phpunit/phpunit" package must be installed
-            for the "qa_test" target to be available.
-        </fail>
-        <import file="${subfile.phpunit}"/>
-    </target>
-
-    <target name="qa_coverage" depends="qa_test"
-        description="Run code coverage analysis based on unit tests (see 'phing qa_test')">
-        <php function="chdir"><param value="vendor/bin"/></php>
-        <available followSymlinks="true" file="vendor/bin/phpunit" property="usable"/>
-        <php function="chdir"><param value="../.."/></php>
-        <fail unless="usable">
-            The "phpunit/phpunit" package must be installed
-            for the "qa_coverage" target to be available.
-        </fail>
-        <import file="${subfile.coverage}"/>
-    </target>
+    <import file="${subfile.phpcs}"/>
+    <import file="${subfile.pdepend}"/>
+    <import file="${subfile.phpmd}"/>
+    <import file="${subfile.phpcpd}"/>
+    <import file="${subfile.pre_coverage}"/>
+    <import file="${subfile.phpunit}"/>
+    <import file="${subfile.coverage}"/>
 </project>

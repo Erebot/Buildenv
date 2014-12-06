@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv_qa_pdepend">
-    <phpdepend withoutAnnotations="true">
-        <fileset refid="sources"/>
-        <analyzer type="coderank-mode" value="method"/>
-        <logger type="jdepend-chart" outfile="./jdepend-chart.svg"/>
-        <logger type="overview-pyramid" outfile="./overview-pyramid.svg"/>
-    </phpdepend>
+    <target name="qa_depend"
+        description="Check QA using PHP depend">
+        <phpdepend withoutAnnotations="true">
+            <fileset refid="sources"/>
+            <analyzer type="coderank-mode" value="method"/>
+            <logger type="jdepend-chart" outfile="./jdepend-chart.svg"/>
+            <logger type="overview-pyramid" outfile="./overview-pyramid.svg"/>
+        </phpdepend>
+    </target>
 </project>

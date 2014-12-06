@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv_qa_phpmd">
-    <phpcpd>
-        <fileset refid="sources"/>
-        <formatter type="default" outfile="/dev/null"/>
-    </phpcpd>
+    <target name="qa_duplicates"
+        description="Check QA using phpcpd (PHP Copy/Paste Detector)">
+        <phpcpd>
+            <fileset refid="sources"/>
+            <formatter type="default" outfile="/dev/null"/>
+        </phpcpd>
+    </target>
 </project>
-

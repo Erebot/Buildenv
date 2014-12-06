@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <project name="Erebot_buildenv_qa_phpmd">
-    <phpmd><fileset refid="sources"/></phpmd>
+    <target name="qa_mess"
+        description="Check QA using phpmd (PHP Mess Detector)">
+        <phpmd><fileset refid="sources"/></phpmd>
+    </target>
 </project>
 
