@@ -22,7 +22,12 @@
             </then>
         </if>
 
-        <delete dir="build/phar" includeemptydirs="true" failonerror="true" />
+        <if>
+            <available file="build/phar" type="dir"/>
+            <then>
+                <delete dir="build/phar" includeemptydirs="true" failonerror="true" />
+            </then>
+        </if>
         <mkdir dir="build/phar"/>
 
         <copy todir="build/phar">
