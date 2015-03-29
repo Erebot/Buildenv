@@ -81,6 +81,7 @@
             <mapper type="glob" from="*.pot" to="*.po"/>
             <fileset dir="./docs/pot/">
                 <include name="*.pot"/>
+                <include name="**/*.pot"/>
             </fileset>
         </foreach>
         <phing phingFile="build.xml" target="doc_enduser_identity_catalogs" haltonfailure="true"/>
@@ -104,6 +105,7 @@
             <mapper type="glob" from="*.pot" to="*.po"/>
             <fileset dir="./docs/pot/">
                 <include name="*.pot"/>
+                <include name="**/*.pot"/>
             </fileset>
         </foreach>
     </target>
@@ -115,18 +117,22 @@
 
     <target name="doc_enduser_init_catalogs"
         description="Add a new language to end-user documentation translation files">
-        <propertyprompt propertyName="locale" promptText="Name of the locale" useExistingValue="true"/>
+        <propertyprompt propertyName="locale" defaultValue="en"
+            promptText="Name of the locale" useExistingValue="true"/>
         <mkdir dir="docs/i18n/${locale}/LC_MESSAGES"/>
         <foreach param="catalog" absparam="abscatalog" target="doc_enduser_init_1_catalog">
             <mapper type="glob" from="*.pot" to="*.po"/>
             <fileset dir="./docs/pot/">
                 <include name="*.pot"/>
+                <include name="**/*.pot"/>
             </fileset>
         </foreach>
     </target>
 
     <target name="doc_enduser_init_1_catalog" hidden="true">
-        <echo>Creating "docs/i18n/${locale}/LC_MESSAGES/${catalog}"...</echo>
+        <echo>Creating catalog "docs/i18n/${locale}/LC_MESSAGES/${catalog}"...</echo>
+        <dirname property="doc_enduser.dirname" file="docs/i18n/${locale}/LC_MESSAGES/${catalog}"/>
+        <mkdir dir="${doc_enduser.dirname}"/>
         <exec command="msginit --no-translator -w 80 -l ${locale} -i ${abscatalog} -o docs/i18n/${locale}/LC_MESSAGES/${catalog}" logoutput="true" dir="."/>
     </target>
 
@@ -135,10 +141,14 @@
         <php function="putenv">
             <param value="LANG=C"/>
         </php>
+        <foreach param="locale" target="doc_enduser_compile_catalogs_copy_generic">
+            <fileset refid="enduserDocLocales"/>
+        </foreach>
         <foreach param="catalog" absparam="abscatalog" target="doc_enduser_compile_1_catalog">
             <mapper type="glob" from="*.pot" to="*"/>
             <fileset dir="./docs/pot/">
                 <include name="*.pot"/>
+                <include name="**/*.pot"/>
             </fileset>
         </foreach>
         <if>
@@ -149,6 +159,15 @@
                 </php>
             </then>
         </if>
+    </target>
+
+    <target name="doc_enduser_compile_catalogs_copy_generic" hidden="true">
+        <copy todir="./docs/i18n/${locale}/LC_MESSAGES/generic/" overwrite="true">
+            <fileset dir="./docs/src/generic/i18n/${locale}/LC_MESSAGES/">
+                <include name="*.po"/>
+                <include name="**/*.po"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="doc_enduser_compile_1_catalog" hidden="true">
