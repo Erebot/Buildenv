@@ -2,7 +2,7 @@
     "name": "erebot/buildenv",
     "description": "Build environment for the Erebot project",
     "keywords": ["Erebot"],
-    "homepage": "https://github.com/Erebot/Erebot_Buildenv",
+    "homepage": "https://github.com/Erebot/Buildenv",
     "license": "GPL-3.0+",
     "authors": [
         {
@@ -13,9 +13,9 @@
     ],
     "support": {
         "email": "erebot@erebot.net",
-        "issues": "https://github.com/Erebot/Erebot_Buildenv/issues",
+        "issues": "https://github.com/Erebot/Buildenv/issues",
         "irc": "irc://irc.iiens.net/Erebot",
-        "source": "https://github.com/Erebot/Erebot_Buildenv"
+        "source": "https://github.com/Erebot/Buildenv"
     },
     "require": {
         "php": ">=5.2.2",
