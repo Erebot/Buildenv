@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "phing/phing",
-            "version": "2.15.0",
+            "version": "2.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phingofficial/phing.git",
-                "reference": "bbfcaee391123220fc54e9c6feffeeea3c8775b7"
+                "reference": "0999ab4e94e609dc00998e3d1b88df843054db7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phingofficial/phing/zipball/bbfcaee391123220fc54e9c6feffeeea3c8775b7",
-                "reference": "bbfcaee391123220fc54e9c6feffeeea3c8775b7",
+                "url": "https://api.github.com/repos/phingofficial/phing/zipball/0999ab4e94e609dc00998e3d1b88df843054db7c",
+                "reference": "0999ab4e94e609dc00998e3d1b88df843054db7c",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +98,7 @@
                 "task",
                 "tool"
             ],
-            "time": "2016-09-14 19:38:14"
+            "time": "2016-10-13 09:01:45"
         }
     ],
     "packages-dev": [],
