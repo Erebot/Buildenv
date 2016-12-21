@@ -268,23 +268,25 @@ extlinks = {
     'pear': ('http://pear.php.net/%s', 'pear.php.net/'),
     'pecl': ('http://pecl.php.net/%s', 'pecl.php.net/'),
     'erebot:module': (
-        'https://erebot.readthedocs.org/projects/erebot-module-%%s/%s/latest/' %
+        'https://erebot.readthedocs.org/projects/%%s/%s/latest/' %
         (language, ), ''),
 }
 
-if not 'rtd_slug' in locals():
-    rtd_slug = project.replace('_', '-').lower()
-    if rtd_slug.startswith('module-'):
-        rtd_slug = 'erebot-' + rtd_slug
+subproject = ''
+rtd_slug = project.replace('_', '-').lower()
+if rtd_slug.startswith('module-'):
+    subproject = 'projects/%s/' % rtd_slug[7:]
+    rtd_slug = 'erebot-' + rtd_slug
 
 doxylinks = {
     'api': (
-        (project.startswith('Module_') and
-         'https://erebot.readthedocs.org/projects/%s/%s/%s/' or
-         'https://%s.readthedocs.org/%s/%s/'
-         ) % (rtd_slug, language, version),
-        'https://%s.readthedocs.org/%s/%s/apidoc/%s.tagfile.xml' %
-            (rtd_slug, language, version, project),
+        'https://docs.erebot.net/%s%s/%s/' % (subproject, language, version)
+        'https://%s.readthedocs.org/%s/%s/apidoc/%s.tagfile.xml' % (
+            rtd_slug,
+            language,
+            version,
+            project.replace('Module_', 'Erebot_Module_')
+        ),
     )
 }
 
