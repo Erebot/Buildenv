@@ -32,7 +32,7 @@ if locals().get('extensions') is None:
 extensions.extend([
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
-    'sphinx.ext.pngmath',
+    'sphinx.ext.imgmath',
     'sphinx.ext.ifconfig',
     'sphinx.ext.extlinks',
     'patches',
