@@ -235,8 +235,8 @@ ALIASES                = "TODO=\todo" \
                          "b{1}=\htmlonly <strong>\1</strong> \endhtmlonly\latexonly\textbf{\1}\endlatexonly" \
                          "FIXME=\xrefitem FIXME \"Known issues\" \"Known Issues\"" \
                          "HACK=\xrefitem HACK \"Dirty hacks\" \"Dirty Hacks\"" \
-                         "format{1}=\xrefitem numeric \"Format\" \"IRC numerics\" \code \1 \endcode" \
-                         "format=\xrefitem numeric \"Format\" \"IRC numerics\" \code \endcode" \
+                         "format{1}=\code \1 \endcode" \
+                         "format=\code \endcode" \
                          "SuppressWarnings="
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
