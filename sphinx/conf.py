@@ -280,7 +280,7 @@ if rtd_slug.startswith('module-'):
 
 doxylinks = {
     'api': (
-        'https://docs.erebot.net/%s%s/%s/' % (subproject, language, version)
+        'https://docs.erebot.net/%s%s/%s/' % (subproject, language, version),
         'https://%s.readthedocs.org/%s/%s/apidoc/%s.tagfile.xml' % (
             rtd_slug,
             language,
