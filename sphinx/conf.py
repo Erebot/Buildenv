@@ -36,6 +36,7 @@ extensions.extend([
     'sphinx.ext.ifconfig',
     'sphinx.ext.extlinks',
     'patches',
+    'doxylinks',
 ])
 
 # Display items marked with the 'todo' directive.
