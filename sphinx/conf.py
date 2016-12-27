@@ -268,6 +268,7 @@ extlinks = {
     'php': ('http://php.net/%s', ''),
     'pear': ('http://pear.php.net/%s', 'pear.php.net/'),
     'pecl': ('http://pecl.php.net/%s', 'pecl.php.net/'),
+    'psr': ('http://www.php-fig.org/psr/psr-%s/', 'PSR-'),
     'erebot:module': (
         'https://erebot.readthedocs.org/projects/%%s/%s/latest/' %
         (language, ), ''),
@@ -280,14 +281,45 @@ if rtd_slug.startswith('module-'):
     rtd_slug = 'erebot-' + rtd_slug
 
 doxylinks = {
-    'api': (
-        'https://docs.erebot.net/%s%s/%s/' % (subproject, language, version),
-        'https://%s.readthedocs.org/%s/%s/apidoc/%s.tagfile.xml' % (
-            rtd_slug,
-            language,
-            version,
-            project.replace('Module_', 'Erebot_Module_')
-        ),
+    'api:erebot': (
+        'http://docs.erebot.net/%(language)s/%(version)s/apidoc/' % {
+            'language': language,
+            'version': version,
+        },
+        'http://docs.erebot.net/%(language)s/%(version)s/apidoc/Erebot.tagfile.xml' % {
+            'language': language,
+            'version': version,
+        },
     )
 }
+
+for module in (
+    'Admin', 'AutoConnect', 'AutoIdent', 'AutoJoin', 'AZ',
+    'Countdown', 'CtcpResponder',
+    'GoF',
+    'Helper',
+    'IrcConnector', 'IrcTracker',
+    'LagChecker',
+    'Math', 'MiniSed',
+    'PhpFilter', 'PingReply',
+    'RateLimiter', 'Roulette',
+    'ServerCapabilities',
+    'TriggerRegistry', 'TV',
+    'Uno',
+    'WatchList', 'WebGetter', 'Wordlists',
+    ):
+    subproject = module.lower()
+    doxylinks['api:%s' % subproject] = (
+        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/%(version)s/apidoc/' % {
+            'subproject': subproject,
+            'language': language,
+            'version': version,
+        },
+        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/%(version)s/apidoc/Erebot_Module_%(module)s.tagfile.xml' % {
+            'module': module,
+            'subproject': subproject,
+            'language': language,
+            'version': version,
+        },
+    )
 
