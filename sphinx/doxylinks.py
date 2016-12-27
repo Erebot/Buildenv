@@ -96,42 +96,25 @@ def fetch_tagfile(app, tagfile):
                  '%s: %s' % (tagfile, err.__class__, err))
         return
 
-def getText(res):
-    try:
-        return str(res[0].text)
-    except AttributeError:
-        return str(res)
-
 def lookup_url(app, tagfile, symbol):
     env = app.builder.env
     cache = env.doxylinks_cache
     doc = ET.fromstring(cache[tagfile][0])
     cls, _sep, member = symbol.partition('::')
-    query = (
-        "/tagfile/"
-        "compound[@kind='interface' or @kind='class' or @kind='page']"
-        "/name[text()='%(class)s']"
-        "/.."
-    ) % {'class': cls}
+    query = "/tagfile/compound/name[text()='%(class)s']/.." % \
+            {'class': cls.strip('\\').replace('\\', '::')}
     try:
         if member:
-            query += (
-                "/member[@kind='function' or @kind='variable']"
-                "/name[text()='%(member)s']"
-                "/.."
-            ) % {'class': cls, 'member': member}
-            res = doc.xpath(query + "/anchorfile/text()")
-            filename = getText(res)
-            res = doc.xpathEval(query + "/anchor/text()")
-            anchor = getText(res)
-            res = doc.xpathEval(query + "/@kind")
-            kind = getText(res)
+            query = "/member/name[text()='%(member)s']/.." % {'member': member}
+            elem = doc.xpath(query)
+            filename = elem[0].find('anchorfile').text
+            anchor = elem[0].find('anchor').text
+            kind = elem[0].get("kind")
         else:
-            res = doc.xpath(query + "/filename/text()")
-            filename = getText(res)
+            elem = doc.xpath(query)
+            filename = elem[0].find('filename').text
             anchor = None
-            res = doc.xpath(query + "/@kind")
-            kind = getText(res)
+            kind = elem[0].get("kind")
     except IndexError:
         raise KeyError('No documentation found for "%s"' % symbol)
     if not filename.endswith('.html'):
