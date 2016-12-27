@@ -269,9 +269,6 @@ extlinks = {
     'pear': ('http://pear.php.net/%s', 'pear.php.net/'),
     'pecl': ('http://pecl.php.net/%s', 'pecl.php.net/'),
     'psr': ('http://www.php-fig.org/psr/psr-%s/', 'PSR-'),
-    'erebot:module': (
-        'https://erebot.readthedocs.org/projects/%%s/%s/latest/' %
-        (language, ), ''),
 }
 
 subproject = ''
@@ -282,13 +279,11 @@ if rtd_slug.startswith('module-'):
 
 doxylinks = {
     'api:erebot': (
-        'http://docs.erebot.net/%(language)s/%(version)s/apidoc/' % {
+        'http://docs.erebot.net/%(language)s/latest/apidoc/' % {
             'language': language,
-            'version': version,
         },
-        'http://docs.erebot.net/%(language)s/%(version)s/apidoc/Erebot.tagfile.xml' % {
+        'http://docs.erebot.net/%(language)s/latest/apidoc/Erebot.tagfile.xml' % {
             'language': language,
-            'version': version,
         },
     )
 }
@@ -310,16 +305,14 @@ for module in (
     ):
     subproject = module.lower()
     doxylinks['api:%s' % subproject] = (
-        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/%(version)s/apidoc/' % {
+        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/latest/apidoc/' % {
             'subproject': subproject,
             'language': language,
-            'version': version,
         },
-        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/%(version)s/apidoc/Erebot_Module_%(module)s.tagfile.xml' % {
+        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/latest/apidoc/Erebot_Module_%(module)s.tagfile.xml' % {
             'module': module,
             'subproject': subproject,
             'language': language,
-            'version': version,
         },
     )
 
