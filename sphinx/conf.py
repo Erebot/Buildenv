@@ -39,6 +39,9 @@ extensions.extend([
     'doxylinks',
 ])
 
+# Suppress benign warnings about non-local images.
+suppress_warnings = ['image.nonlocal_uri']
+
 # Display items marked with the 'todo' directive.
 todo_include_todos = False
 
@@ -270,12 +273,6 @@ extlinks = {
     'pecl': ('http://pecl.php.net/%s', 'pecl.php.net/'),
     'psr': ('http://www.php-fig.org/psr/psr-%s/', 'PSR-'),
 }
-
-subproject = ''
-rtd_slug = project.replace('_', '-').lower()
-if rtd_slug.startswith('module-'):
-    subproject = 'projects/%s/' % rtd_slug[7:]
-    rtd_slug = 'erebot-' + rtd_slug
 
 doxylinks = {
     'api:erebot': (
