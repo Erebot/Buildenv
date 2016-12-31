@@ -98,6 +98,7 @@ else:
     language = "en"
 
 gettext_compact = False
+gettext_additional_targets = ['literal-block']
 
 locale_dirs = ["../i18n"]
 
@@ -306,7 +307,7 @@ for module in (
             'subproject': subproject,
             'language': language,
         },
-        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/latest/apidoc/Erebot_Module_%(module)s.tagfile.xml' % {
+        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/latest/apidoc/Module_%(module)s.tagfile.xml' % {
             'module': module,
             'subproject': subproject,
             'language': language,
