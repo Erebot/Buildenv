@@ -78,8 +78,6 @@ rst_prolog = \
                          ('erebot/%s' % project.lower())
     }
 
-copyright = u'2011-%d, Erebot' % datetime.now().year
-
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
