@@ -162,12 +162,17 @@
     </target>
 
     <target name="doc_enduser_compile_catalogs_copy_generic" hidden="true">
-        <copy todir="./docs/i18n/${locale}/LC_MESSAGES/generic/" overwrite="true">
-            <fileset dir="./docs/src/generic/i18n/${locale}/LC_MESSAGES/">
-                <include name="*.po"/>
-                <include name="**/*.po"/>
-            </fileset>
-        </copy>
+        <if>
+            <available file="/docs/i18n/${locale}/LC_MESSAGES/generic/"/>
+            <then>
+                <copy todir="./docs/i18n/${locale}/LC_MESSAGES/generic/" overwrite="true">
+                    <fileset dir="./docs/src/generic/i18n/${locale}/LC_MESSAGES/">
+                        <include name="*.po"/>
+                        <include name="**/*.po"/>
+                    </fileset>
+                </copy>
+            </then>
+        </if>
     </target>
 
     <target name="doc_enduser_compile_1_catalog" hidden="true">
