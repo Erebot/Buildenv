@@ -286,16 +286,16 @@ doxylinks = {
         'http://docs.erebot.net/%(language)s/latest/apidoc/Erebot.tagfile.xml' % {
             'language': language,
         },
-    )
+    ),
 
     'api:plop': (
-        'http://http://plop.readthedocs.io/%(language)s/latest/apidoc/' % {
+        'http://plop.readthedocs.io/%(language)s/latest/apidoc/' % {
             'language': language,
         },
-        'http://http://plop.readthedocs.io/%(language)s/latest/apidoc/Plop.tagfile.xml' % {
+        'http://plop.readthedocs.io/%(language)s/latest/apidoc/Plop.tagfile.xml' % {
             'language': language,
         },
-    )
+    ),
 }
 
 for module in (
