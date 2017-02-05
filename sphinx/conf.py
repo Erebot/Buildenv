@@ -36,8 +36,13 @@ extensions.extend([
     'sphinx.ext.ifconfig',
     'sphinx.ext.extlinks',
     'patches',
-    'doxylinks',
 ])
+
+try:
+    import lxml
+    extensions.append('doxylinks')
+except ImportError:
+    pass
 
 # Suppress benign warnings about non-local images.
 suppress_warnings = ['image.nonlocal_uri']
