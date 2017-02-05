@@ -105,7 +105,7 @@ def lookup_url(app, tagfile, symbol):
             {'class': cls.strip('\\').replace('\\', '::')}
     try:
         if member:
-            query = "/member/name[text()='%(member)s']/.." % {'member': member}
+            query += "/member/name[text()='%(member)s']/.." % {'member': member}
             elem = doc.xpath(query)
             filename = elem[0].find('anchorfile').text
             anchor = elem[0].find('anchor').text
