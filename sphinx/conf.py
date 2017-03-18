@@ -44,6 +44,12 @@ try:
 except ImportError:
     pass
 
+try:
+    import sphinxcontrib.varlinks
+    extensions.append('sphinxcontrib.varlinks')'
+except ImportError:
+    pass
+
 # Suppress benign warnings about non-local images.
 suppress_warnings = ['image.nonlocal_uri']
 
