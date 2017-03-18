@@ -46,7 +46,7 @@ except ImportError:
 
 try:
     import sphinxcontrib.varlinks
-    extensions.append('sphinxcontrib.varlinks')'
+    extensions.append('sphinxcontrib.varlinks')
 except ImportError:
     pass
 
