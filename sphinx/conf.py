@@ -38,17 +38,13 @@ extensions.extend([
     'patches',
 ])
 
-try:
-    import lxml
-    extensions.append('doxylinks')
-except ImportError:
-    pass
-
-try:
-    import sphinxcontrib.varlinks
-    extensions.append('sphinxcontrib.varlinks')
-except ImportError:
-    pass
+import importlib
+for ext in ('sphinxcontrib.varlinks', 'sphinxcontrib.paradoxy'):
+    try:
+        importlib.import_module(ext)
+        extensions.append(ext)
+    except ImportError:
+        pass
 
 # Suppress benign warnings about non-local images.
 suppress_warnings = ['image.nonlocal_uri']
