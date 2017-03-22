@@ -280,7 +280,7 @@ extlinks = {
     'psr': ('http://www.php-fig.org/psr/psr-%s/', 'PSR-'),
 }
 
-doxylinks = {
+paradoxy = {
     'api:erebot': (
         'http://docs.erebot.net/%(language)s/latest/apidoc/' % {
             'language': language,
@@ -316,7 +316,7 @@ for module in (
     'WatchList', 'WebGetter', 'Wordlists',
     ):
     subproject = module.lower()
-    doxylinks['api:%s' % subproject] = (
+    paradoxy['api:%s' % subproject] = (
         'http://docs.erebot.net/projects/%(subproject)s/%(language)s/latest/apidoc/' % {
             'subproject': subproject,
             'language': language,
