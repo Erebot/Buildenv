@@ -157,5 +157,5 @@ def prepare(globs, locs):
 
 old_html_context = globals().get('html_context', {})
 html_context = Context(globals(), locals())
-html_context.update(old_html_context)   
+html_context.update(old_html_context)
 prepare(globals(), locals())
