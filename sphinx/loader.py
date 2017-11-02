@@ -15,6 +15,10 @@ class TemplateLoader(BuiltinTemplateLoader):
 <script type="text/javascript">
   var _paq = _paq || [];
   _paq.push(["setDocumentTitle", document.domain + " / " + document.title]);
+  if (document.domain != 'docs.erebot.net') {'
+      _paq.push(["setCookieDomain", "*.readthedocs.org"]);
+  }
+  _paq.push(["setDomains", ["*.readthedocs.io", "*.rtfd.io", "*.rtfd.org", "*.erebot.net"]]);
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
