@@ -283,32 +283,3 @@ paradoxy = {
         },
     ),
 }
-
-for module in (
-    'Admin', 'AutoConnect', 'AutoIdent', 'AutoJoin', 'AZ',
-    'Countdown', 'CtcpResponder',
-    'GoF',
-    'Helper',
-    'IrcConnector', 'IrcTracker',
-    'LagChecker',
-    'Math', 'MiniSed',
-    'PhpFilter', 'PingReply',
-    'RateLimiter', 'Roulette',
-    'ServerCapabilities',
-    'TriggerRegistry', 'TV',
-    'Uno',
-    'WatchList', 'WebGetter', 'Wordlists',
-    ):
-    subproject = module.lower()
-    paradoxy['api:%s' % subproject] = (
-        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/latest/apidoc/' % {
-            'subproject': subproject,
-            'language': language,
-        },
-        'http://docs.erebot.net/projects/%(subproject)s/%(language)s/latest/apidoc/Module_%(module)s.tagfile.xml' % {
-            'module': module,
-            'subproject': subproject,
-            'language': language,
-        },
-    )
-
