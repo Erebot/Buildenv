@@ -50,7 +50,7 @@ request=$(cat <<EOF
 {
   "request": {
     "branch": "$TRAVIS_BRANCH",
-    "message": "Triggered by commit $TRAVIS_COMMIT on $TRAVIS_REPO_SLUG",
+    "message": "Triggered by ${TRAVIS_COMMIT:0:7} in $TRAVIS_REPO_SLUG",
     "config": {
       "merge_mode": "deep_merge",
       "env": {$environment}
