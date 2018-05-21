@@ -49,8 +49,8 @@ done < <(env -0)
 request=$(cat <<EOF
 {
   "request": {
-    "branch": "$TRAVIS_BRANCH",
-    "message": "Triggered by ${TRAVIS_COMMIT:0:7} in $TRAVIS_REPO_SLUG",
+    "branch": "build",
+    "message": "See ${TRAVIS_COMMIT:0:7} in $TRAVIS_REPO_SLUG ($TRAVIS_BRANCH)",
     "config": {
       "merge_mode": "deep_merge",
       "env": {$environment}
